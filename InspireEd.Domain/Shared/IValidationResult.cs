@@ -8,7 +8,7 @@ public interface IValidationResult
     // A standard error indicating a validation problem
     public static readonly Error ValidationError = new(
         "ValidationError",
-        "A vaidation problem occurred!");
+        "A validation problem occurred!");
 
     // Array of errors that occurred during validation
     Error[] Errors { get; }

@@ -1,6 +1,5 @@
-﻿using InspireEd.Application.Abstractions;
+﻿using InspireEd.Application.Abstractions.Security;
 using InspireEd.Application.Abstractions.Messaging;
-using InspireEd.Domain.Entities;
 using InspireEd.Domain.Errors;
 using InspireEd.Domain.Repositories;
 using InspireEd.Domain.Shared;
@@ -8,29 +7,55 @@ using InspireEd.Domain.ValueObjects;
 
 namespace InspireEd.Application.Users.Commands.Login;
 
-internal sealed class LoginCommandHandler(IUserRepository userRepository,
-    IJwtProvider jwtProvider, IPasswordHasher passwordHasher) : ICommandHandler<LoginCommand, string>
+/// <summary>
+/// Handles the command to log in a user.
+/// </summary>
+internal sealed class LoginCommandHandler(
+    IUserRepository userRepository,
+    IJwtProvider jwtProvider,
+    IPasswordHasher passwordHasher) : ICommandHandler<LoginCommand, string>
 {
-    private readonly IUserRepository _userRepository = userRepository;
-    private readonly IJwtProvider _jwtProvider = jwtProvider;
-    private readonly IPasswordHasher _passwordHasher = passwordHasher;
-
-    public async Task<Result<string>> Handle(LoginCommand request, CancellationToken cancellationToken)
+    /// <summary>
+    /// Processes the LoginCommand and logs in the user by generating a JWT.
+    /// </summary>
+    /// <param name="request">The command request containing the user's email and password.</param>
+    /// <param name="cancellationToken">Optional cancellation token.</param>
+    /// <returns>A Result containing the JWT token if successful or an error.</returns>
+    public async Task<Result<string>> Handle(LoginCommand request,
+        CancellationToken cancellationToken)
     {
-        Result<Email> email = Email.Create(request.Email);
+        #region Checking user exists by this email
 
-        User user = await _userRepository.GetByEmailAsync(
-            email.Value,
+        // Validate and create the Email value object
+        Result<Email> createEmailResult = Email.Create(request.Email);
+        if (createEmailResult.IsFailure)
+        {
+            return Result.Failure<string>(
+                createEmailResult.Error);
+        }
+
+        // Retrieve the user by email
+        var user = await userRepository.GetByEmailAsync(
+            createEmailResult.Value,
             cancellationToken);
 
-        if (user is null || !_passwordHasher.Verify(request.Password, user.PasswordHash))
+        // Verify if user exists and the password matches
+        if (user is null || !passwordHasher.Verify(request.Password, user.PasswordHash))
         {
             return Result.Failure<string>(
                 DomainErrors.User.InvalidCredentials);
         }
 
-        string token = await _jwtProvider.GenerateAsync(user);
-        return token;
+        #endregion
+
+        #region Generate token
+
+        // Generate a JWT token for the authenticated user
+        var token = jwtProvider.Generate(user);
+
+        #endregion
+
+        // Return the generated token
+        return Result.Success(token);
     }
 }
-

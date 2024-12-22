@@ -9,9 +9,15 @@ namespace InspireEd.Domain.Primitives;
 public abstract class Enumeration<TEnum> : IEquatable<Enumeration<TEnum>>
     where TEnum : Enumeration<TEnum>
 {
+    #region Private fields
+    
     private static readonly Lazy<Dictionary<int, TEnum>> EnumerationsDictionary =
         new(() => CreateEnumerationDictionary(typeof(TEnum)));
+    
+    #endregion
 
+    #region Constructors
+    
     /// <summary>
     /// Initializes a new instance of the <see cref="Enumeration{TEnum}"/> class.
     /// </summary>
@@ -32,6 +38,10 @@ public abstract class Enumeration<TEnum> : IEquatable<Enumeration<TEnum>>
     /// </remarks>
     protected Enumeration() => Name = string.Empty;
 
+    #endregion
+    
+    #region Properties
+    
     /// <summary>
     /// Gets the identifier.
     /// </summary>
@@ -41,6 +51,10 @@ public abstract class Enumeration<TEnum> : IEquatable<Enumeration<TEnum>>
     /// Gets the name.
     /// </summary>
     public string Name { get; protected init; }
+    
+    #endregion
+    
+    #region Operators
 
     public static bool operator ==(Enumeration<TEnum> a, Enumeration<TEnum> b)
     {
@@ -56,7 +70,11 @@ public abstract class Enumeration<TEnum> : IEquatable<Enumeration<TEnum>>
     }
 
     public static bool operator !=(Enumeration<TEnum> a, Enumeration<TEnum> b) => !(a == b);
+    
+    #endregion
 
+    #region Methods
+    
     /// <summary>
     /// Gets the enumeration values.
     /// </summary>
@@ -68,14 +86,15 @@ public abstract class Enumeration<TEnum> : IEquatable<Enumeration<TEnum>>
     /// </summary>
     /// <param name="id">The enumeration identifier.</param>
     /// <returns>The enumeration instance that matches the specified identifier, if it exists.</returns>
-    public static TEnum FromId(int id) => EnumerationsDictionary.Value.TryGetValue(id, out TEnum enumeration) ? enumeration : null;
+    public static TEnum FromId(int id) => EnumerationsDictionary.Value.GetValueOrDefault(id);
 
     /// <summary>
     /// Creates an enumeration of the specified type based on the specified name.
     /// </summary>
     /// <param name="name">The enumeration name.</param>
     /// <returns>The enumeration instance that matches the specified name, if it exists.</returns>
-    public static TEnum FromName(string name) => EnumerationsDictionary.Value.Values.SingleOrDefault(x => x.Name == name);
+    public static TEnum FromName(string name) => EnumerationsDictionary.Value.Values
+        .SingleOrDefault(x => x.Name == name);
 
     /// <summary>
     /// Checks if the enumeration with the specified identifier exists.
@@ -83,6 +102,10 @@ public abstract class Enumeration<TEnum> : IEquatable<Enumeration<TEnum>>
     /// <param name="id">The enumeration identifier.</param>
     /// <returns>True if an enumeration with the specified identifier exists, otherwise false.</returns>
     public static bool Contains(int id) => EnumerationsDictionary.Value.ContainsKey(id);
+    
+    #endregion
+    
+    #region Virtual methods
 
     /// <inheritdoc />
     public virtual bool Equals(Enumeration<TEnum> other)
@@ -93,7 +116,11 @@ public abstract class Enumeration<TEnum> : IEquatable<Enumeration<TEnum>>
         }
         return GetType() == other.GetType() && other.Id.Equals(Id);
     }
+    
+    #endregion
 
+    #region Overrides
+    
     /// <inheritdoc />
     public override bool Equals(object obj)
     {
@@ -110,12 +137,18 @@ public abstract class Enumeration<TEnum> : IEquatable<Enumeration<TEnum>>
 
     /// <inheritdoc />
     public override int GetHashCode() => Id.GetHashCode() * 37;
+    
+    #endregion
 
+    #region Private methods
+    
     private static Dictionary<int, TEnum> CreateEnumerationDictionary(Type enumType)
         => GetFieldsForType(enumType).ToDictionary(t => t.Id);
 
     private static IEnumerable<TEnum> GetFieldsForType(Type enumType) =>
         enumType.GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy)
             .Where(fieldInfo => enumType.IsAssignableFrom(fieldInfo.FieldType))
-            .Select(fieldInfo => (TEnum)fieldInfo.GetValue(default)!);
+            .Select(fieldInfo => (TEnum)fieldInfo.GetValue(null)!);
+    
+    #endregion
 }

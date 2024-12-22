@@ -10,7 +10,7 @@ public abstract class DomainException : Exception
     /// Initializes a new instance of the <see cref="DomainException"/> class with a specified error message. 
     /// </summary> 
     /// <param name="message">The message that describes the error.</param>
-    public DomainException(string message) : base(message)
+    protected DomainException(string message) : base(message)
     {
 
     }

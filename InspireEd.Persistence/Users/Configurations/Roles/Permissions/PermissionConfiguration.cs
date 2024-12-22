@@ -1,9 +1,9 @@
 ﻿using InspireEd.Domain.Entities;
-using InspireEd.Persistence.Constants;
+using InspireEd.Persistence.Users.Constants;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace InspireEd.Persistence.Configurations;
+namespace InspireEd.Persistence.Users.Configurations.Roles.Permissions;
 
 /// <summary> 
 /// Configures the Permission entity for Entity Framework Core. 
@@ -13,7 +13,7 @@ internal sealed class PermissionConfiguration : IEntityTypeConfiguration<Permiss
     public void Configure(EntityTypeBuilder<Permission> builder)
     {
         // Map to the Permissions table
-        builder.ToTable(TableNames.Permissions);
+        builder.ToTable(UserTableNames.Permissions);
 
         // Configure the primary key
         builder.HasKey(p => p.Id);

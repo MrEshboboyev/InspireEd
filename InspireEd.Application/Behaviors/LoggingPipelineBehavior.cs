@@ -14,8 +14,14 @@ public class LoggingPipelineBehavior<TRequest, TResponse>
     where TRequest : IRequest<TResponse>
     where TResponse : Result
 {
+    #region Private properties
+    
     private readonly ILogger<LoggingPipelineBehavior<TRequest, TResponse>> _logger;
+    
+    #endregion
 
+    #region Constructors
+    
     /// <summary> 
     /// Initializes a new instance of the <see cref="LoggingPipelineBehavior{TRequest, TResponse}"/> class. 
     /// </summary> 
@@ -25,7 +31,11 @@ public class LoggingPipelineBehavior<TRequest, TResponse>
     {
         _logger = logger;
     }
+    
+    #endregion
 
+    #region Handlers
+    
     /// <summary> 
     /// Handles the logging of the request, its completion, and any failures. 
     /// </summary> 
@@ -65,4 +75,6 @@ public class LoggingPipelineBehavior<TRequest, TResponse>
 
         return result;
     }
+    
+    #endregion
 }

@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Permission = InspireEd.Domain.Enums.Permission;
 
-namespace InspireEd.Persistence.Configurations;
+namespace InspireEd.Persistence.Users.Configurations.Roles.Permissions;
 
 /// <summary> 
 /// Configures the RolePermission entity for Entity Framework Core. 

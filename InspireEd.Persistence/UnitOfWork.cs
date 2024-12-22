@@ -12,21 +12,17 @@ namespace InspireEd.Persistence;
 /// <summary> 
 /// Implements the unit of work pattern, managing the application database context. 
 /// </summary>
-internal sealed class UnitOfWork : IUnitOfWork
+internal sealed class UnitOfWork(ApplicationDbContext dbContext) : IUnitOfWork
 {
-    private readonly ApplicationDbContext _dbContext;
-    public UnitOfWork(ApplicationDbContext dbContext)
-    {
-        _dbContext = dbContext;
-    }
-
+    #region Implementations
+    
     /// <summary> 
     /// Begins a new database transaction. 
     /// </summary> 
     /// <returns>IDbTransaction representing the transaction.</returns>
     public IDbTransaction BeginTransaction()
     {
-        var transaction = _dbContext.Database.BeginTransaction();
+        var transaction = dbContext.Database.BeginTransaction();
         return transaction.GetDbTransaction();
     }
 
@@ -39,8 +35,10 @@ internal sealed class UnitOfWork : IUnitOfWork
     {
         ConvertDomainEventsToOutboxMessages();
         UpdateAuditableEntities();
-        return _dbContext.SaveChangesAsync(cancellationToken);
+        return dbContext.SaveChangesAsync(cancellationToken);
     }
+    
+    #endregion
 
     #region Private Methods
     /// <summary> 
@@ -48,7 +46,7 @@ internal sealed class UnitOfWork : IUnitOfWork
     /// </summary>
     private void ConvertDomainEventsToOutboxMessages()
     {
-        var outboxMessages = _dbContext.ChangeTracker
+        var outboxMessages = dbContext.ChangeTracker
             .Entries<AggregateRoot>()
             .Select(x => x.Entity)
             .SelectMany(aggregateRoot =>
@@ -70,7 +68,7 @@ internal sealed class UnitOfWork : IUnitOfWork
                     })
             })
             .ToList();
-        _dbContext.Set<OutboxMessage>().AddRange(outboxMessages);
+        dbContext.Set<OutboxMessage>().AddRange(outboxMessages);
     }
 
     /// <summary> 
@@ -79,7 +77,7 @@ internal sealed class UnitOfWork : IUnitOfWork
     private void UpdateAuditableEntities()
     {
         IEnumerable<EntityEntry<IAuditableEntity>> entries =
-           _dbContext
+           dbContext
               .ChangeTracker
               .Entries<IAuditableEntity>();
         foreach (EntityEntry<IAuditableEntity> entityEntry in entries)

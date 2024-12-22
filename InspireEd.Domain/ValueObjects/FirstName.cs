@@ -6,13 +6,28 @@ namespace InspireEd.Domain.ValueObjects;
 
 public sealed class FirstName : ValueObject
 {
-    public const int MaxLength = 50;
+    #region Constants
+    
+    public const int MaxLength = 50; // Maximum length for an FirstName
+    
+    #endregion
+    
+    #region Constructors
+    
     private FirstName(string value)
     {
         Value = value;
     }
+    
+    #endregion
+    
+    #region Properties
+    
     public string Value { get; }
+    
+    #endregion
 
+    #region Factory Methods
 
     /// <summary> 
     /// Creates a FirstName instance after validating the input. 
@@ -25,18 +40,26 @@ public sealed class FirstName : ValueObject
         {
             return Result.Failure<FirstName>(DomainErrors.FirstName.Empty);
         }
+        
         if (firstName.Length > MaxLength)
         {
             return Result.Failure<FirstName>(DomainErrors.FirstName.TooLong);
         }
-        return new FirstName(firstName);
+        
+        return Result.Success(new FirstName(firstName));
     }
+    
+    #endregion
 
+    #region Overrides
+    
     /// <summary> 
     /// Returns the atomic values of the FirstName object for equality checks. 
     /// </summary>
-    public override IEnumerable<object> GetAtomicValues()
+    protected override IEnumerable<object> GetAtomicValues()
     {
         yield return Value;
     }
+    
+    #endregion
 }

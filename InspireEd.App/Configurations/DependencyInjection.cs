@@ -20,14 +20,14 @@ public static class DependencyInjection
         params Assembly[] assemblies)
     {
         // Scan provided assemblies for types implementing IServiceInstaller
-        IEnumerable<IServiceInstaller> serviceInstallers = assemblies
+        var serviceInstallers = assemblies
              .SelectMany(a => a.DefinedTypes)
              .Where(IsAssignableToType<IServiceInstaller>)
              .Select(Activator.CreateInstance)
              .Cast<IServiceInstaller>();
 
         // Register services using each IServiceInstaller implementation
-        foreach (IServiceInstaller serviceInstaller in serviceInstallers)
+        foreach (var serviceInstaller in serviceInstallers)
         {
             serviceInstaller.Install(services, configuration);
         }
@@ -37,7 +37,6 @@ public static class DependencyInjection
         // Helper method to check if a type implements a specific interface
         static bool IsAssignableToType<T>(TypeInfo typeInfo) =>
           typeof(T).IsAssignableFrom(typeInfo) &&
-          !typeInfo.IsInterface &&
-          !typeInfo.IsAbstract;
+          typeInfo is { IsInterface: false, IsAbstract: false };
     }
 }

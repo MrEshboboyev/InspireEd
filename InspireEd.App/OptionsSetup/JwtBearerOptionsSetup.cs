@@ -6,10 +6,20 @@ using System.Text;
 
 namespace InspireEd.App.OptionsSetup;
 
-public class JwtBearerOptionsSetup(IOptions<JwtOptions> jwtOptions) : IPostConfigureOptions<JwtBearerOptions>
+/// <summary>
+/// Configures JWT Bearer options for authentication.
+/// </summary>
+/// <param name="jwtOptions">The JWT options for configuration.</param>
+public class JwtBearerOptionsSetup(IOptions<JwtOptions> jwtOptions)
+    : IPostConfigureOptions<JwtBearerOptions>
 {
     private readonly JwtOptions _jwtOptions = jwtOptions.Value;
 
+    /// <summary>
+    /// Configures the JWT Bearer options post configuration.
+    /// </summary>
+    /// <param name="name">The name of the options instance being configured.</param>
+    /// <param name="options">The JWT Bearer options to configure.</param>
     public void PostConfigure(string? name, JwtBearerOptions options)
     {
         options.TokenValidationParameters.ValidIssuer = _jwtOptions.Issuer;

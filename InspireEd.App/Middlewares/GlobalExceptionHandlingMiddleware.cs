@@ -50,7 +50,7 @@ public class GlobalExceptionHandlingMiddleware : IMiddleware
             };
 
             // Serialize the ProblemDetails object to JSON.
-            string json = JsonSerializer.Serialize(problem);
+            var json = JsonSerializer.Serialize(problem);
 
             // Set the response content type to application/json.
             context.Response.ContentType = "application/json";

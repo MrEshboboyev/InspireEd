@@ -9,29 +9,59 @@ namespace InspireEd.Domain.ValueObjects;
 /// </summary>
 public sealed class LastName : ValueObject
 {
-    public const int MaxLength = 50; // Maximum length for an email
+    #region Constants
+    
+    public const int MaxLength = 50; // Maximum length for an LastName
+    
+    #endregion
 
+    #region Constructors
+    
     private LastName(string value)
     {
         Value = value;
     }
     
+    #endregion
+    
+    #region Properties
     public string Value { get; }
+    
+    #endregion
+    
+    #region Factory Methods
+    
+    /// <summary> 
+    /// Creates a LastName instance after validating the input. 
+    /// </summary> 
+    /// <param name="lastName">The last name string to create the LastName value object from.</param> 
+    /// <returns>A Result object containing the LastName value object or an error.</returns>
     public static Result<LastName> Create(string lastName)
     {
         if (string.IsNullOrWhiteSpace(lastName))
         {
             return Result.Failure<LastName>(DomainErrors.LastName.Empty);
         }
+        
         if (lastName.Length > MaxLength)
         {
             return Result.Failure<LastName>(DomainErrors.LastName.TooLong);
         }
-        return new LastName(lastName);
+        
+        return Result.Success(new LastName(lastName));
     }
+    
+    #endregion
+    
+    #region Overrides
 
-    public override IEnumerable<object> GetAtomicValues()
+    /// <summary> 
+    /// Returns the atomic values of the LastName object for equality checks. 
+    /// </summary>
+    protected override IEnumerable<object> GetAtomicValues()
     {
         yield return Value;
     }
+    
+    #endregion
 }

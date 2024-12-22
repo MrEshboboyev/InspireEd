@@ -7,7 +7,7 @@ namespace InspireEd.Persistence.Specifications;
 /// Represents a specification pattern used to encapsulate the query logic in a reusable, combinable, and testable manner. 
 /// </summary> 
 /// <typeparam name="TEntity">The type of the entity.</typeparam>
-public class Specification<TEntity>
+public abstract class Specification<TEntity>
     where TEntity : Entity
 {
     /// <summary> 

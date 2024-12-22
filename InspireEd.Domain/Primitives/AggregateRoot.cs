@@ -1,6 +1,4 @@
-﻿using InspireEd.Domain.Primitives;
-
-namespace InspireEd.Domain.Primitives;
+﻿namespace InspireEd.Domain.Primitives;
 
 /// <summary>
 /// Represents an aggregate root in DDD (Domain-Driven Design).
@@ -8,19 +6,28 @@ namespace InspireEd.Domain.Primitives;
 /// </summary>
 public abstract class AggregateRoot : Entity
 {
+    #region Private fields
+    
     // List of domain events associated with the aggregate root
     private readonly List<IDomainEvent> _domainEvents = [];
 
+    #endregion
+
+    #region Constructors
+    
     // Constructor to initialize the aggregate root with an ID
     protected AggregateRoot(Guid id) : base(id)
     {
+        
     }
-
+    
     // Parameterless constructor for aggregate root
     protected AggregateRoot()
     {
 
     }
+    
+    #endregion
 
     #region Domain Events Methods
 
@@ -36,5 +43,6 @@ public abstract class AggregateRoot : Entity
     {
         _domainEvents.Add(domainEvent);
     }
+    
     #endregion
 }

@@ -1,4 +1,4 @@
-﻿using InspireEd.Application.Abstractions;
+﻿using InspireEd.Application.Abstractions.Security;
 using InspireEd.Application.Abstractions.Messaging;
 using InspireEd.Domain.Entities;
 using InspireEd.Domain.Errors;
@@ -8,45 +8,85 @@ using InspireEd.Domain.ValueObjects;
 
 namespace InspireEd.Application.Users.Commands.CreateUser;
 
-internal sealed class CreateUserCommandHandler : ICommandHandler<CreateUserCommand, Guid>
+/// <summary>
+/// Handles the command to create a new user.
+/// </summary>
+internal sealed class CreateUserCommandHandler(
+    IUserRepository userRepository,
+    IUnitOfWork unitOfWork,
+    IPasswordHasher passwordHasher)
+    : ICommandHandler<CreateUserCommand, Guid>
 {
-    private readonly IUserRepository _userRepository;
-    private readonly IUnitOfWork _unitOfWork;
-    private readonly IPasswordHasher _passwordHasher;
-
-    public CreateUserCommandHandler(
-        IUserRepository userRepository,
-        IUnitOfWork unitOfWork,
-        IPasswordHasher passwordHasher)
+    /// <summary>
+    /// Processes the CreateUserCommand and creates a new user.
+    /// </summary>
+    /// <param name="request">The command request containing user details.</param>
+    /// <param name="cancellationToken">Optional cancellation token.</param>
+    /// <returns>A Result containing the unique identifier of the created user or an error.</returns>
+    public async Task<Result<Guid>> Handle(CreateUserCommand request,
+        CancellationToken cancellationToken)
     {
-        _userRepository = userRepository;
-        _unitOfWork = unitOfWork;
-        _passwordHasher = passwordHasher;
-    }
+        #region Checking Email is Unique
 
-    public async Task<Result<Guid>> Handle(CreateUserCommand request, CancellationToken cancellationToken)
-    {
+        // Validate and create the Email value object
         Result<Email> emailResult = Email.Create(request.Email);
-        Result<FirstName> firstNameResult = FirstName.Create(request.FirstName);
-        Result<LastName> lastNameResult = LastName.Create(request.LastName);
-        string passwordHash = _passwordHasher.Hash(request.Password);
 
-        if (!await _userRepository.IsEmailUniqueAsync(emailResult.Value, cancellationToken))
+        // Check if the email is already in use
+        if (!await userRepository.IsEmailUniqueAsync(emailResult.Value, cancellationToken))
         {
             return Result.Failure<Guid>(DomainErrors.User.EmailAlreadyInUse);
         }
 
+        #endregion
+
+        #region Prepare value objects
+
+        // Validate and create the FirstName value object
+        Result<FirstName> createFirstNameResult = FirstName.Create(request.FirstName);
+        if (createFirstNameResult.IsFailure)
+        {
+            return Result.Failure<Guid>(
+                createFirstNameResult.Error);
+        }
+
+        // Validate and create the LastName value object
+        Result<LastName> createLastNameResult = LastName.Create(request.LastName);
+        if (createLastNameResult.IsFailure)
+        {
+            return Result.Failure<Guid>(
+                createFirstNameResult.Error);
+        }
+
+        #endregion
+
+        #region Password hashing
+
+        // Hash the user's password
+        var passwordHash = passwordHasher.Hash(request.Password);
+
+        #endregion
+
+        #region Create new user
+
+        // Create a new User entity with the provided details
         var user = User.Create(
             Guid.NewGuid(),
             emailResult.Value,
             passwordHash,
-            firstNameResult.Value,
-            lastNameResult.Value);
+            createFirstNameResult.Value,
+            createLastNameResult.Value);
 
-        _userRepository.Add(user);
+        #endregion
 
-        await _unitOfWork.SaveChangesAsync(cancellationToken);
+        #region Add and Update database
 
-        return user.Id;
+        // Add the new user to the repository and save changes
+        userRepository.Add(user);
+        await unitOfWork.SaveChangesAsync(cancellationToken);
+
+        #endregion
+
+        // Return the unique identifier of the newly created user
+        return Result.Success(user.Id);
     }
 }

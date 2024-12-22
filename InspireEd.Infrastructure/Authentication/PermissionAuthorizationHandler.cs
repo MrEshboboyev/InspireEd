@@ -1,32 +1,46 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace InspireEd.Infrastructure.Authentication;
 
-public class PermissionAuthorizationHandler : AuthorizationHandler<PermissionRequirement>
+/// <summary>
+/// Handles authorization requirements for checking user permissions.
+/// </summary>
+public class PermissionAuthorizationHandler
+    : AuthorizationHandler<PermissionRequirement>
 {
-    private readonly IServiceScopeFactory _serviceScopeFactory;
-    public PermissionAuthorizationHandler(IServiceScopeFactory serviceScopeFactory)
-    {
-        _serviceScopeFactory = serviceScopeFactory;
-    }
-
+    /// <summary>
+    /// Handles the requirement to check if the user has the specified permission.
+    /// </summary>
+    /// <param name="context">The authorization handler context.</param>
+    /// <param name="requirement">The permission requirement to be checked.</param>
+    /// <returns>A completed task representing the authorization result.</returns>
     protected override Task HandleRequirementAsync(
         AuthorizationHandlerContext context,
         PermissionRequirement requirement)
     {
-        HashSet<string> permissions = context
-                .User
-                .Claims
-                .Where(x => x.Type == CustomClaims.Permissions)
-                .Select(x => x.Value)
-                .ToHashSet();
+        #region Get Permissions
+        
+        // Retrieve the permissions claims from the user
+        var permissions = context
+            .User
+            .Claims
+            .Where(x => x.Type == CustomClaims.Permissions)
+            .Select(x => x.Value)
+            .ToHashSet();
+        
+        #endregion
+        
+        #region Check permissions contains
 
+        // Check if the user's permissions contain the required permission
         if (permissions.Contains(requirement.Permission))
         {
             context.Succeed(requirement);
         }
+        
+        #endregion
 
+        // Return a completed task
         return Task.CompletedTask;
     }
 }

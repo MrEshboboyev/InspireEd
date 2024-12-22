@@ -5,11 +5,9 @@ using MediatR;
 using Newtonsoft.Json;
 using Quartz;
 using Microsoft.EntityFrameworkCore;
-using Polly.Retry;
 using Polly;
 
 namespace InspireEd.Infrastructure.BackgroundJobs;
-
 
 /// <summary> 
 /// Background job for processing outbox messages. This job retrieves unprocessed outbox messages, 
@@ -38,40 +36,44 @@ public class ProcessOutboxMessagesJob : IJob
     /// <param name="context">The job execution context.</param>
     public async Task Execute(IJobExecutionContext context)
     {
+        #region Get unprocessed messages
+        
         // Retrieve unprocessed outbox messages
         var messages = await _dbContext
             .Set<OutboxMessage>()
             .Where(m => m.ProcessedOnUtc == null)
             .Take(20)
             .ToListAsync(context.CancellationToken);
+        
+        #endregion
 
+        #region Process outbox messages
+        
         // Process each outbox message
-        foreach (OutboxMessage outboxMessage in messages)
+        var policy = Policy
+            .Handle<Exception>()
+            .WaitAndRetryAsync(3, 
+                attempt => TimeSpan.FromMilliseconds(50 * attempt));
+        
+
+        foreach (var outboxMessage in messages)
         {
             // Deserialize the domain event from the message content
-            var domainEvent = JsonConvert
-                .DeserializeObject<IDomainEvent>(
-                    outboxMessage.Content,
-                    new JsonSerializerSettings 
-                    {
-                        TypeNameHandling = TypeNameHandling.All
-                    });
+            var domainEvent = JsonConvert.DeserializeObject<IDomainEvent>(
+                outboxMessage.Content,
+                new JsonSerializerSettings
+                {
+                    TypeNameHandling = TypeNameHandling.All
+                });
 
             if (domainEvent is null)
             {
                 continue;
             }
 
-            // Define a retry policy to handle transient exceptions
-            AsyncRetryPolicy policy = Policy
-                    .Handle<Exception>()
-                    .WaitAndRetryAsync(3, attempt => TimeSpan.FromMilliseconds(50 * attempt));
-
             // Execute the publish operation with retry policy
-            PolicyResult result = await policy.ExecuteAndCaptureAsync(() =>
-                _publisher.Publish(
-                    domainEvent,
-                    context.CancellationToken));
+            var result = await policy.ExecuteAndCaptureAsync(() =>
+                _publisher.Publish(domainEvent, context.CancellationToken));
 
             // Record any errors that occurred during publishing
             outboxMessage.Error = result.FinalException?.ToString();
@@ -79,6 +81,8 @@ public class ProcessOutboxMessagesJob : IJob
             // Mark the outbox message as processed
             outboxMessage.ProcessedOnUtc = DateTime.UtcNow;
         }
+        
+        #endregion
 
         // Save changes to the database
         await _dbContext.SaveChangesAsync();

@@ -20,7 +20,7 @@ public static class SpecificationEvaluator
         Specification<TEntity> specification)
         where TEntity : Entity
     {
-        IQueryable<TEntity> queryable = inputQueryable;
+        var queryable = inputQueryable;
 
         // Apply criteria if specified
         if (specification.Criteria is not null)
@@ -28,7 +28,7 @@ public static class SpecificationEvaluator
             queryable = queryable.Where(specification.Criteria);
         }
 
-        // Apply include expressions
+        // Apply to include expressions
         _ = specification.IncludeExpressions.Aggregate(
             queryable,
             (current, includeExpression) =>

@@ -3,8 +3,16 @@ using Quartz;
 
 namespace InspireEd.App.Configurations;
 
+/// <summary>
+/// Installs background job services and configuration.
+/// </summary>
 public class BackgroundJobsServiceInstaller : IServiceInstaller
 {
+    /// <summary>
+    /// Configures the background job services.
+    /// </summary>
+    /// <param name="services">The collection of services to configure.</param>
+    /// <param name="configuration">The application configuration.</param>
     public void Install(IServiceCollection services, IConfiguration configuration)
     {
         // Register the job with DI
@@ -15,15 +23,14 @@ public class BackgroundJobsServiceInstaller : IServiceInstaller
         {
             var jobKey = new JobKey(nameof(ProcessOutboxMessagesJob));
             configure
-                .AddJob<ProcessOutboxMessagesJob>(jobKey)  // Add the job
-                .AddTrigger(                               // Add a trigger
+                .AddJob<ProcessOutboxMessagesJob>(jobKey) // Add the job
+                .AddTrigger( // Add a trigger
                     trigger =>
-                        trigger.ForJob(jobKey) 
+                        trigger.ForJob(jobKey)
                             .WithSimpleSchedule(
                                 schedule =>
                                     schedule.WithIntervalInSeconds(10)
                                         .RepeatForever()));
-            // Remove the obsolete method. The default DI job factory is now used automatically.
         });
 
         // Add Quartz as a hosted service

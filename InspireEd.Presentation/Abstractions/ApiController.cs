@@ -20,7 +20,7 @@ public abstract class ApiController : ControllerBase
     /// Initializes a new instance of the <see cref="ApiController"/> class. 
     /// </summary> 
     /// <param name="sender">The sender used for sending commands and queries.</param>
-    public ApiController(ISender sender)
+    protected ApiController(ISender sender)
     {
         Sender = sender;
     }
@@ -46,6 +46,8 @@ public abstract class ApiController : ControllerBase
                     StatusCodes.Status400BadRequest,
                     result.Error))
         };
+    
+    #region Helpers
 
     /// <summary> 
     /// Creates a ProblemDetails object for detailed error responses. 
@@ -74,4 +76,6 @@ public abstract class ApiController : ControllerBase
                 } 
             }
         };
+    
+    #endregion
 }

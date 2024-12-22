@@ -1,19 +1,19 @@
-﻿using InspireEd.Persistence.Constants;
-using InspireEd.Persistence.Outbox;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using InspireEd.Persistence.Outbox.Constants;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace InspireEd.Persistence.Configurations;
+namespace InspireEd.Persistence.Outbox.Configurations;
 
 /// <summary> 
 /// Configures the OutboxMessageConsumer entity for Entity Framework Core. 
 /// </summary>
-internal sealed class OutboxMessageConsumerConfiguration : IEntityTypeConfiguration<OutboxMessageConsumer>
+internal sealed class OutboxMessageConsumerConfiguration : 
+    IEntityTypeConfiguration<OutboxMessageConsumer>
 {
     public void Configure(EntityTypeBuilder<OutboxMessageConsumer> builder)
     {
         // Map to the OutboxMessageConsumers table
-        builder.ToTable(TableNames.OutboxMessageConsumers);
+        builder.ToTable(OutboxTableNames.OutboxMessageConsumers);
 
         // Configure the composite primary key
         builder.HasKey(outboxMessageConsumer => new

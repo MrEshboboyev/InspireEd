@@ -1,6 +1,5 @@
 ﻿using InspireEd.Domain.Primitives;
 using InspireEd.Persistence.Outbox;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Newtonsoft.Json;
 
@@ -18,19 +17,29 @@ public sealed class ConvertDomainEventsToOutboxMessagesInterceptor
     /// <param name="eventData">The event data containing information about the DbContext.</param> 
     /// <param name="result">The result of the interception.</param> 
     /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
-    /// <returns></returns>
+    /// <returns>A ValueTask representing the asynchronous save operation,
+    /// including the interception result.</returns>
     public override ValueTask<InterceptionResult<int>> SavingChangesAsync(
         DbContextEventData eventData,
         InterceptionResult<int> result,
         CancellationToken cancellationToken = default)
     {
+        #region Get DbContext
+        
         // Get the current DbContext
-        DbContext dbContext = eventData.Context;
+        var dbContext = eventData.Context;
         if (dbContext is null)
         {
-            return base.SavingChangesAsync(eventData, result, cancellationToken);
+            return base.SavingChangesAsync(
+                eventData,
+                result,
+                cancellationToken);
         }
+        
+        #endregion
 
+        #region Converting
+        
         // Convert domain events to outbox messages
         var outboxMessages = dbContext.ChangeTracker
             .Entries<AggregateRoot>() // Get entries of AggregateRoot type 
@@ -41,7 +50,7 @@ public sealed class ConvertDomainEventsToOutboxMessagesInterceptor
                 aggregateRoot.ClearDomainEvents(); // Clear domain events from aggregate
                 return domainEvents; // Return domain events
             })
-            .Select(domainEvent => new OutboxMessage // Create new OutBoxMessage for adding dbContext
+            .Select(domainEvent => new OutboxMessage // Create new OutboxMessage for adding to dbContext
             {
                 Id = Guid.NewGuid(),
                 OccurredOnUtc = DateTime.UtcNow,
@@ -54,11 +63,17 @@ public sealed class ConvertDomainEventsToOutboxMessagesInterceptor
                     })
             })
             .ToList();
+        
+        #endregion
+        
+        #region Add and Update Database
 
         // Add outbox messages to the DbContext
         dbContext.Set<OutboxMessage>().AddRange(outboxMessages);
 
         // Continue with the base saving changes operation
         return base.SavingChangesAsync(eventData, result, cancellationToken);
+        
+        #endregion
     }
 }

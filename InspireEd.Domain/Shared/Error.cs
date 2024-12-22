@@ -1,6 +1,6 @@
 ﻿namespace InspireEd.Domain.Shared;
 
-public class Error : IEquatable<Error>
+public sealed class Error(string code, string message) : IEquatable<Error>
 {
     #region Readonly members (None, NullValue)
     
@@ -8,28 +8,24 @@ public class Error : IEquatable<Error>
     public static readonly Error None = new(string.Empty, string.Empty);
 
     // NullValue : specified result is nullable
-    public static readonly Error NullValue = new("Error.NullValue", 
+    public static readonly Error NullValue = new(
+        "Error.NullValue", 
         "The specified result is null");
     
     #endregion
 
-    #region Constructor
-    public Error(string code, string message)
-    {
-        Code = code;
-        Message = message;
-    }
-    #endregion
-
     #region Public Fields
-    // Code : defining a error code (Example : Member.NotFound)
-    public string Code { get; }
+    
+    // Code : defining an error code (Example : Member.NotFound)
+    public string Code { get; } = code;
 
-    // Message : defining a error message (Example : $"Member not found with Id {memberId}")
-    public string Message { get; }
+    // Message : defining an error message (Example : $"Member not found with Id {memberId}")
+    public string Message { get; } = message;
+
     #endregion
 
     #region Implicit operators
+    
     // allowing for seamless conversions between "Error" types and strings
     /* Using Example
         Error error = new Error { Code = "404 Not Found" }; 
@@ -37,11 +33,12 @@ public class Error : IEquatable<Error>
     */
     public static implicit operator string(Error error)
         => error.Code;
+    
     #endregion
 
     #region Equality operators
+    
     // Equality Operator (==)
-
     // This method defines the equality operator (==) for the Error class,
     // allowing you to compare two Error objects to see if they are equal.
     public static bool operator ==(Error a, Error b)
@@ -61,21 +58,24 @@ public class Error : IEquatable<Error>
     // This method defines the inequality operator (!=) for the Error class,
     // allowing you to compare two Error objects to see if they are not equal.
     public static bool operator !=(Error a, Error b) => !(a == b);
+    
     #endregion
 
     #region Equals() methods (virtual, override)
+    
     /// <summary>
     /// This method checks if the other Error object is null. 
     /// If it is, it returns false because you cannot compare to null. 
     /// If other is not null, it then checks if both the Code and Message properties of the current object 
     /// and the other object are equal.
     /// </summary>
-    public virtual bool Equals(Error other)
+    public bool Equals(Error other)
     {
         if (other is null)
         {
             return false;
         }
+        
         return Code == other.Code && Message == other.Message;
     }
 
@@ -85,9 +85,11 @@ public class Error : IEquatable<Error>
     /// If obj is not an Error, the method returns false.
     /// </summary>
     public override bool Equals(object obj) => obj is Error error && Equals(error);
+    
     #endregion
 
     #region Overrides
+    
     /// <summary>
     /// This method combines the hash codes of the Code and Message properties into a single hash code using 
     /// the HashCode.Combine method. This is useful for using Error objects in hash-based collections 
@@ -100,5 +102,6 @@ public class Error : IEquatable<Error>
     /// This can be useful for logging or displaying the error code in user interfaces.
     /// </summary>
     public override string ToString() => Code;
+    
     #endregion
 }

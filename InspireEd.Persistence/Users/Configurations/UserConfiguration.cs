@@ -1,10 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Microsoft.EntityFrameworkCore;
-using InspireEd.Domain.Entities;
+﻿using InspireEd.Domain.Entities;
 using InspireEd.Domain.ValueObjects;
-using InspireEd.Persistence.Constants;
+using InspireEd.Persistence.Users.Constants;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace InspireEd.Persistence.Configurations;
+namespace InspireEd.Persistence.Users.Configurations;
 
 /// <summary> 
 /// Configures the User entity for Entity Framework Core. 
@@ -14,7 +14,7 @@ internal sealed class UserConfiguration : IEntityTypeConfiguration<User>
     public void Configure(EntityTypeBuilder<User> builder)
     {
         // Map to the Users table
-        builder.ToTable(TableNames.Users);
+        builder.ToTable(UserTableNames.Users);
 
         // Configure the primary key
         builder.HasKey(x => x.Id);

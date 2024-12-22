@@ -1,9 +1,9 @@
 ﻿using InspireEd.Domain.Entities;
-using InspireEd.Persistence.Constants;
+using InspireEd.Persistence.Users.Constants;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace InspireEd.Persistence.Configurations;
+namespace InspireEd.Persistence.Users.Configurations.Roles;
 
 /// <summary> 
 /// Configures the Role entity for Entity Framework Core. 
@@ -13,7 +13,7 @@ internal sealed class RoleConfiguration : IEntityTypeConfiguration<Role>
     public void Configure(EntityTypeBuilder<Role> builder)
     {
         // Map to the Roles table
-        builder.ToTable(TableNames.Roles);
+        builder.ToTable(UserTableNames.Roles);
 
         // Configure the primary key
         builder.HasKey(x => x.Id);

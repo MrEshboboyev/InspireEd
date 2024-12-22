@@ -8,7 +8,7 @@ namespace InspireEd.Application.Abstractions.Messaging;
 /// Command handlers contain the business logic to process commands. 
 /// </summary> 
 /// <typeparam name="TCommand">The type of the command to be handled.</typeparam>
-public interface ICommandHandler<TCommand> : IRequestHandler<TCommand, Result>
+public interface ICommandHandler<in TCommand> : IRequestHandler<TCommand, Result>
     where TCommand : ICommand
 {
 }
@@ -19,7 +19,7 @@ public interface ICommandHandler<TCommand> : IRequestHandler<TCommand, Result>
 /// </summary> 
 /// <typeparam name="TCommand">The type of the command to be handled.</typeparam> 
 /// <typeparam name="TResponse">The type of the response.</typeparam>
-public interface ICommandHandler<TCommand, TResponse> : IRequestHandler<TCommand, Result<TResponse>>
+public interface ICommandHandler<in TCommand, TResponse> : IRequestHandler<TCommand, Result<TResponse>>
     where TCommand : ICommand<TResponse>
 {
 }

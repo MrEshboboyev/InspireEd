@@ -6,10 +6,16 @@
 /// </summary>
 public abstract class ValueObject : IEquatable<ValueObject>
 {
+    #region Protected methods
+    
     /// <summary>
     /// Gets the atomic values that define the equality of the value object.
     /// </summary>
-    public abstract IEnumerable<object> GetAtomicValues();
+    protected abstract IEnumerable<object> GetAtomicValues();
+    
+    #endregion
+    
+    #region Methods
 
     /// <summary>
     /// Determines whether the specified value object is equal to the current value object.
@@ -18,6 +24,10 @@ public abstract class ValueObject : IEquatable<ValueObject>
     {
         return other is not null && ValuesAreEqual(other);
     }
+    
+    #endregion
+    
+    #region Overrides
 
     /// <summary>
     /// Determines whether the specified object is equal to the current value object.
@@ -34,6 +44,10 @@ public abstract class ValueObject : IEquatable<ValueObject>
     {
         return GetAtomicValues().Aggregate(default(int), HashCode.Combine);
     }
+    
+    #endregion
+    
+    #region Private methods
 
     /// <summary>
     /// Checks if the atomic values of the current value object are equal to the specified value object's atomic values.
@@ -42,4 +56,6 @@ public abstract class ValueObject : IEquatable<ValueObject>
     {
         return GetAtomicValues().SequenceEqual(other.GetAtomicValues());
     }
+    
+    #endregion
 }

@@ -7,6 +7,10 @@ namespace InspireEd.Domain.Errors;
 /// </summary>
 public static class DomainErrors
 {
+    #region User
+    
+    #region Entities
+    
     public static class User
     {
         public static readonly Error EmailAlreadyInUse = new(
@@ -26,6 +30,10 @@ public static class DomainErrors
                "The provided credentials are invalid");
     }
 
+    #endregion
+    
+    #region Value Objects
+    
     public static class Email
     {
         public static readonly Error Empty = new(
@@ -45,7 +53,7 @@ public static class DomainErrors
             "LastName.TooLong",
             "FirstName name is too long");
     }
-
+    
     public static class LastName
     {
         public static readonly Error Empty = new(
@@ -55,5 +63,9 @@ public static class DomainErrors
             "LastName.TooLong",
             "Last name is too long");
     }
+    
+    #endregion
+    
+    #endregion
 }
 
