@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using InspireEd.Domain.ValueObjects;
+using InspireEd.Domain.Users.ValueObjects;
 
 namespace InspireEd.Application.Users.Commands.CreateUser;
 

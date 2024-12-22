@@ -1,4 +1,4 @@
-﻿namespace InspireEd.Domain.Entities;
+﻿namespace InspireEd.Domain.Users.Entities;
 
 /// <summary> 
 /// Represents the relationship between roles and permissions. 

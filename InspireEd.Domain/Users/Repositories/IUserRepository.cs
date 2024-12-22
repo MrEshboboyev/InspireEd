@@ -1,7 +1,7 @@
-﻿using InspireEd.Domain.Entities;
-using InspireEd.Domain.ValueObjects;
+﻿using InspireEd.Domain.Users.Entities;
+using InspireEd.Domain.Users.ValueObjects;
 
-namespace InspireEd.Domain.Repositories;
+namespace InspireEd.Domain.Users.Repositories;
 
 /// <summary>
 /// Repository interface for managing user data access.

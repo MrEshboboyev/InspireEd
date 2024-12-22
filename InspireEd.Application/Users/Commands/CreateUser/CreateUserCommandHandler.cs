@@ -1,10 +1,10 @@
 ﻿using InspireEd.Application.Abstractions.Security;
 using InspireEd.Application.Abstractions.Messaging;
-using InspireEd.Domain.Entities;
 using InspireEd.Domain.Errors;
 using InspireEd.Domain.Repositories;
 using InspireEd.Domain.Shared;
-using InspireEd.Domain.ValueObjects;
+using InspireEd.Domain.User.Entities;
+using InspireEd.Domain.Users.ValueObjects;
 
 namespace InspireEd.Application.Users.Commands.CreateUser;
 

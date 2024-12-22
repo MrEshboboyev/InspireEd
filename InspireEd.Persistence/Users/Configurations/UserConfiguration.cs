@@ -1,5 +1,5 @@
-﻿using InspireEd.Domain.Entities;
-using InspireEd.Domain.ValueObjects;
+﻿using InspireEd.Domain.User.Entities;
+using InspireEd.Domain.Users.ValueObjects;
 using InspireEd.Persistence.Users.Constants;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;

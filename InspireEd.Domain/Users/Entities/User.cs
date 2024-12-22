@@ -1,8 +1,8 @@
 ﻿using InspireEd.Domain.Events;
 using InspireEd.Domain.Primitives;
-using InspireEd.Domain.ValueObjects;
+using InspireEd.Domain.Users.ValueObjects;
 
-namespace InspireEd.Domain.Entities;
+namespace InspireEd.Domain.Users.Entities;
 
 /// <summary> 
 /// Represents a user in the system. 
@@ -33,13 +33,13 @@ public sealed class User : AggregateRoot, IAuditableEntity
 
     #region Properties
     
-    public string PasswordHash { get; set; }
-    public FirstName FirstName { get; set; }
-    public LastName LastName { get; set; }
-    public Email Email { get; set; }
+    public FirstName FirstName { get; private set; }
+    public LastName LastName { get; private set; }
+    public Email Email { get; private set; }
+    public string PasswordHash { get; private set; }
     public DateTime CreatedOnUtc { get; set; }
     public DateTime? ModifiedOnUtc { get; set; }
-    public ICollection<Role> Roles { get; set; }
+    public ICollection<Role> Roles { get; private set; }
     
     #endregion
     

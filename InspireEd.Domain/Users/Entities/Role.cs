@@ -1,6 +1,6 @@
 ﻿using InspireEd.Domain.Primitives;
 
-namespace InspireEd.Domain.Entities;
+namespace InspireEd.Domain.Users.Entities;
 
 /// <summary> 
 /// Represents a user role in the system. 

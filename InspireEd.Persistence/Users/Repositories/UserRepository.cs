@@ -1,6 +1,6 @@
-﻿using InspireEd.Domain.Entities;
-using InspireEd.Domain.Repositories;
-using InspireEd.Domain.ValueObjects;
+﻿using InspireEd.Domain.Repositories;
+using InspireEd.Domain.User.Entities;
+using InspireEd.Domain.Users.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 
 namespace InspireEd.Persistence.Repositories;

@@ -1,4 +1,4 @@
-﻿using InspireEd.Domain.Entities;
+﻿using InspireEd.Domain.User.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Permission = InspireEd.Domain.Enums.Permission;

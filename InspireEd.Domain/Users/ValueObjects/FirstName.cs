@@ -2,7 +2,7 @@
 using InspireEd.Domain.Primitives;
 using InspireEd.Domain.Shared;
 
-namespace InspireEd.Domain.ValueObjects;
+namespace InspireEd.Domain.Users.ValueObjects;
 
 public sealed class FirstName : ValueObject
 {
