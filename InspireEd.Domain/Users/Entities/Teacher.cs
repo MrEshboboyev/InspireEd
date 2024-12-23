@@ -1,31 +1,14 @@
-﻿using InspireEd.Domain.Primitives;
-using InspireEd.Domain.Shared;
+﻿namespace InspireEd.Domain.Users.Entities;
 
-namespace InspireEd.Domain.Users.Entities;
-
-public class Teacher : Entity, IAuditableEntity
+public class Teacher : UserRole
 {
-    #region Constructors
-
-    internal Teacher(
-        Guid id,
-        Guid userId
-    ) : base(id)
+    private Teacher(Guid userId)
     {
         UserId = userId;
     }
-    
-    private Teacher() { }
-    
-    #endregion
-    
-    #region Properties
-    
-    public Guid UserId { get; set; }
-    public DateTime CreatedOnUtc { get; set; }
-    public DateTime? ModifiedOnUtc { get; set; }
-    
-    // teacher related fields
-    
-    #endregion
+
+    public static Teacher Create(Guid userId)
+    {
+        return new Teacher(userId);
+    }
 }

@@ -1,30 +1,14 @@
-﻿using InspireEd.Domain.Primitives;
+﻿namespace InspireEd.Domain.Users.Entities;
 
-namespace InspireEd.Domain.Users.Entities;
-
-public class Admin : Entity, IAuditableEntity
+public class Admin : UserRole
 {
-    #region Constructors
-
-    internal Admin(
-        Guid id,
-        Guid userId
-        ) : base(id)
+    private Admin(Guid userId)
     {
         UserId = userId;
     }
-    
-    private Admin() { }
-    
-    #endregion
-    
-    #region Properties
-    
-    public Guid UserId { get; set; }
-    public DateTime CreatedOnUtc { get; set; }
-    public DateTime? ModifiedOnUtc { get; set; }
-    
-    // Admin related fields
-    
-    #endregion
+
+    public static Admin Create(Guid userId)
+    {
+        return new Admin(userId);
+    }
 }

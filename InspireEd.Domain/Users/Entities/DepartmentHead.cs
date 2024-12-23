@@ -1,49 +1,22 @@
-﻿using InspireEd.Domain.Primitives;
-using InspireEd.Domain.Shared;
+﻿namespace InspireEd.Domain.Users.Entities;
 
-namespace InspireEd.Domain.Users.Entities;
-
-public class DepartmentHead : Entity, IAuditableEntity
+public class DepartmentHead : UserRole
 {
-    #region Constructors
+    public Guid FacultyId { get; private set; }
 
-    internal DepartmentHead(
-        Guid id,
-        Guid userId,
-        Guid facultyId
-        ) : base(id)
+    private DepartmentHead(Guid userId, Guid facultyId)
     {
         UserId = userId;
         FacultyId = facultyId;
     }
-    
-    private DepartmentHead() { }
-    
-    #endregion
-    
-    #region Properties
-    
-    public Guid UserId { get; set; }
-    public Guid FacultyId { get; set; }
-    public DateTime CreatedOnUtc { get; set; }
-    public DateTime? ModifiedOnUtc { get; set; }
-    
-    // DepartmentHead related fields
-    
-    #endregion
-    
-    #region Own Methods
 
-    public Result ChangeFaculty(Guid facultyId)
+    public static DepartmentHead Create(Guid userId, Guid facultyId)
     {
-        #region Update Field
-        
-        FacultyId = facultyId;  
-        
-        #endregion
-        
-        return Result.Success();
+        return new DepartmentHead(userId, facultyId);
     }
-    
-    #endregion
+
+    public void ChangeFaculty(Guid newFacultyId)
+    {
+        FacultyId = newFacultyId;
+    }
 }

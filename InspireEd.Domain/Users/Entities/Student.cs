@@ -1,47 +1,22 @@
-﻿using InspireEd.Domain.Primitives;
-using InspireEd.Domain.Shared;
+﻿namespace InspireEd.Domain.Users.Entities;
 
-namespace InspireEd.Domain.Users.Entities;
-
-public sealed class Student : Entity, IAuditableEntity
+public class Student : UserRole
 {
-    #region Constructors
+    public Guid GroupId { get; private set; }
 
-    internal Student(
-        Guid id,
-        Guid userId,
-        Guid groupId
-        ) : base(id)
+    private Student(Guid userId, Guid groupId)
     {
         UserId = userId;
         GroupId = groupId;
     }
-    
-    private Student() { }
-    
-    #endregion
-    
-    #region Properties
-    
-    public Guid UserId { get; set; }
-    public Guid GroupId { get; set; }
-    public DateTime CreatedOnUtc { get; set; }
-    public DateTime? ModifiedOnUtc { get; set; }
-    
-    #endregion
-    
-    #region Own Methods
 
-    public Result ChangeGroup(Guid groupId)
+    public static Student Create(Guid userId, Guid groupId)
     {
-        #region Update Field
-        
-        GroupId = groupId;  
-        
-        #endregion
-        
-        return Result.Success();
+        return new Student(userId, groupId);
     }
-    
-    #endregion
+
+    public void ChangeGroup(Guid newGroupId)
+    {
+        GroupId = newGroupId;
+    }
 }

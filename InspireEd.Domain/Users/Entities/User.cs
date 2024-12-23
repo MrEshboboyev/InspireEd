@@ -1,5 +1,4 @@
-﻿using InspireEd.Domain.Events;
-using InspireEd.Domain.Primitives;
+﻿using InspireEd.Domain.Primitives;
 using InspireEd.Domain.Users.ValueObjects;
 
 namespace InspireEd.Domain.Users.Entities;
@@ -16,13 +15,14 @@ public sealed class User : AggregateRoot, IAuditableEntity
         Email email,
         string passwordHash,
         FirstName firstName,
-        LastName lastName): base(id)
+        LastName lastName, 
+        ICollection<UserRole> roles): base(id)
     {
         Email = email;
         PasswordHash = passwordHash;
         FirstName = firstName;
         LastName = lastName;
-        LastName = lastName;
+        Roles = roles;
     }
 
     private User()
@@ -39,7 +39,7 @@ public sealed class User : AggregateRoot, IAuditableEntity
     public string PasswordHash { get; private set; }
     public DateTime CreatedOnUtc { get; set; }
     public DateTime? ModifiedOnUtc { get; set; }
-    public ICollection<Role> Roles { get; private set; }
+    private ICollection<UserRole> Roles { get; set; }
     
     #endregion
     
@@ -53,7 +53,8 @@ public sealed class User : AggregateRoot, IAuditableEntity
         Email email,
         string passwordHash,
         FirstName firstName,
-        LastName lastName
+        LastName lastName,
+        UserRole role
         )
     {
         #region Create new User
@@ -63,13 +64,13 @@ public sealed class User : AggregateRoot, IAuditableEntity
             email,
             passwordHash,
             firstName,
-            lastName);
+            lastName, 
+            [role]);
         
         #endregion
-
+        
         return user;
     }
     
     #endregion
 }
-
