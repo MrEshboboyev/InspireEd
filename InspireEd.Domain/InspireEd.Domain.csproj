@@ -12,8 +12,6 @@
 
   <ItemGroup>
     <Folder Include="Classes\ValueObjects\" />
-    <Folder Include="Entities\" />
-    <Folder Include="ValueObjects\" />
   </ItemGroup>
 
 </Project>

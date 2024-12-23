@@ -66,46 +66,8 @@ public sealed class User : AggregateRoot, IAuditableEntity
             lastName);
         
         #endregion
-        
-        #region Domain Events
-        
-        user.RaiseDomainEvent(new UserRegisteredDomainEvent(
-            Guid.NewGuid(),
-            user.Id));
-        
-        #endregion
 
         return user;
-    }
-    
-    #endregion
-
-    #region Own Methods
-    
-    /// <summary> 
-    /// Changes the user's name and raises a domain event if the name has changed. 
-    /// </summary>
-    public void ChangeName(
-        FirstName firstName,
-        LastName lastName)
-    {
-        #region Checking new values are equals old valus
-        
-        if (!FirstName.Equals(firstName) || !LastName.Equals(lastName))
-        {
-            RaiseDomainEvent(new UserNameChangedDomainEvent(
-                Guid.NewGuid(),
-                Id));
-        }
-        
-        #endregion
-
-        #region Update fields
-        
-        FirstName = firstName;
-        LastName = lastName;
-        
-        #endregion
     }
     
     #endregion

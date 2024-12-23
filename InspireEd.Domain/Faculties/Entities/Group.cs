@@ -26,7 +26,7 @@ public sealed class Group : Entity, IAuditableEntity
     /// <param name="id">The unique identifier of the group.</param>
     /// <param name="facultyId">The unique identifier of the faculty to which the group belongs.</param>
     /// <param name="name">The name of the group.</param>
-    private Group(
+    internal Group(
         Guid id,
         Guid facultyId,
         GroupName name) : base(id)

@@ -92,4 +92,25 @@ public sealed class Class : AggregateRoot
     public IReadOnlyCollection<Attendance> Attendances => _attendances.AsReadOnly();
 
     #endregion
+    
+    #region Factory methods
+
+    public static Class Create(
+        Guid id,
+        SubjectCode subject,
+        Guid teacherId,
+        ClassType type,
+        List<GroupName> groups,
+        DateTime scheduledDate)
+    {
+        return new Class(
+            id,
+            subject,
+            teacherId,
+            type,
+            groups,
+            scheduledDate);
+    }
+    
+    #endregion
 }

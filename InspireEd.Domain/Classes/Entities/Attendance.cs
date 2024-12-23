@@ -18,7 +18,7 @@ public sealed class Attendance : Entity, IAuditableEntity
     /// <param name="classId">The unique identifier of the class.</param>
     /// <param name="status">The attendance status.</param>
     /// <param name="notes">Additional notes for the attendance record.</param>
-    private Attendance(
+    internal Attendance(
         Guid id,
         Guid studentId,
         Guid classId,

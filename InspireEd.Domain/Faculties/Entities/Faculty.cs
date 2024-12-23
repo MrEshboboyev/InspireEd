@@ -58,4 +58,17 @@ public sealed class Faculty : AggregateRoot, IAuditableEntity
     public DateTime? ModifiedOnUtc { get; set; }
 
     #endregion
+    
+    #region Factory methods
+
+    public static Faculty Create(
+        Guid id,
+        FacultyName name)
+    {
+        return new Faculty(
+            id,
+            name);
+    }
+    
+    #endregion
 }
