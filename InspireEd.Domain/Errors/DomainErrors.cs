@@ -131,11 +131,72 @@ public static class DomainErrors
             "Group Name is empty");
         public static readonly Error TooLong = new(
             "GroupName.TooLong",
-            "Group name name is too long");
+            "Group name is too long");
+    }
+    
+    #endregion
+    
+    #endregion
+    
+    #region Subjects
+    
+    #region Entities
+    
+    public static class Subject
+    {
+        public static readonly Error EmailAlreadyInUse = new(
+            "User.EmailAlreadyInUse",
+            "The specified email is already in use");
+
+        public static readonly Func<Guid, Error> NotFound = id => new Error(
+            "Subject.NotFound",
+            $"The subject with the identifier {id} was not found.");
+
+        public static readonly Error NotExist = new(
+            "Subjects.NotExist",
+            $"There is no subjects");
+
+        public static readonly Error InvalidCredentials = new(
+            "User.InvalidCredentials",
+            "The provided credentials are invalid");
+    }
+
+    #endregion
+    
+    #region Value Objects
+
+    public static class SubjectCode
+    {
+        public static readonly Error Empty = new(
+            "SubjectCode.Empty",
+            "Subject Code is empty");
+        public static readonly Error TooLong = new(
+            "SubjectCode.TooLong",
+            "Subject code is too long");
+    }
+    
+    public static class SubjectName
+    {
+        public static readonly Error Empty = new(
+            "SubjectName.Empty",
+            "Subject Name is empty");
+        public static readonly Error TooLong = new(
+            "SubjectName.TooLong",
+            "Subject name is too long");
+    }
+    
+    public static class SubjectCredit
+    {
+        public static readonly Error InvalidCredit = new(
+            "SubjectCredit.InvalidCredit", 
+            "Subject credit must be greater than zero.");
+        
+        public static readonly Error TooHigh = new( 
+            "SubjectCredit.TooHigh",
+            $"Subject credit must not exceed {Subjects.ValueObjects.SubjectCredit.MaxCredit}.");
     }
     
     #endregion
     
     #endregion
 }
-
