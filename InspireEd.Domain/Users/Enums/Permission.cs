@@ -1,4 +1,4 @@
-﻿namespace InspireEd.Domain.Enums;
+﻿namespace InspireEd.Domain.Users.Enums;
 
 /// <summary> 
 /// Represents different permissions that can be assigned to roles. 

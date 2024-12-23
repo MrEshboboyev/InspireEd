@@ -1,4 +1,5 @@
 ﻿using InspireEd.Domain.User.Entities;
+using InspireEd.Domain.Users.Enums;
 using InspireEd.Persistence.Users.Constants;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -20,7 +21,7 @@ internal sealed class PermissionConfiguration : IEntityTypeConfiguration<Permiss
 
         // Seed initial data
         IEnumerable<Permission> permissions = Enum
-            .GetValues<Domain.Enums.Permission>()
+            .GetValues<Permission>()
             .Select(p => new Permission
             {
                 Id = (int)p,

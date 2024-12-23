@@ -1,7 +1,7 @@
 ﻿using InspireEd.Domain.User.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Permission = InspireEd.Domain.Enums.Permission;
+using Permission = InspireEd.Domain.Users.Enums.Permission;
 
 namespace InspireEd.Persistence.Users.Configurations.Roles.Permissions;
 
