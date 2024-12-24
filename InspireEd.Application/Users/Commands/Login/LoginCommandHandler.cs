@@ -1,8 +1,8 @@
 ﻿using InspireEd.Application.Abstractions.Security;
 using InspireEd.Application.Abstractions.Messaging;
 using InspireEd.Domain.Errors;
-using InspireEd.Domain.Repositories;
 using InspireEd.Domain.Shared;
+using InspireEd.Domain.Users.Repositories;
 using InspireEd.Domain.Users.ValueObjects;
 
 namespace InspireEd.Application.Users.Commands.Login;

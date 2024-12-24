@@ -1,6 +1,5 @@
 ﻿using InspireEd.Domain.Faculties.ValueObjects;
 using InspireEd.Domain.Primitives;
-using InspireEd.Domain.Users.Entities;
 
 namespace InspireEd.Domain.Faculties.Entities;
 
@@ -9,15 +8,6 @@ namespace InspireEd.Domain.Faculties.Entities;
 /// </summary>
 public sealed class Group : Entity, IAuditableEntity
 {
-    #region Private Fields
-
-    /// <summary>
-    /// A list of students associated with the group.
-    /// </summary>
-    private readonly List<Student> _students = [];
-
-    #endregion
-
     #region Constructors
 
     /// <summary>

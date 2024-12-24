@@ -1,4 +1,4 @@
-﻿using InspireEd.Domain.User.Entities;
+﻿using InspireEd.Domain.Users.Entities;
 using InspireEd.Persistence.Users.Constants;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;

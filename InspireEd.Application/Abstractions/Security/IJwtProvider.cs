@@ -1,4 +1,4 @@
-﻿using InspireEd.Domain.User.Entities;
+﻿using InspireEd.Domain.Users.Entities;
 
 namespace InspireEd.Application.Abstractions.Security;
 

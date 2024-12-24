@@ -28,6 +28,10 @@ public static class DomainErrors
         public static readonly Error InvalidCredentials = new(
                "User.InvalidCredentials",
                "The provided credentials are invalid");
+        
+        public static readonly Error InvalidRoleName = new Error(
+            "User.InvalidRoleName",
+            "The provided role name is invalid.");
     }
 
     #endregion

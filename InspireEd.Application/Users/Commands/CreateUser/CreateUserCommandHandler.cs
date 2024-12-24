@@ -3,7 +3,8 @@ using InspireEd.Application.Abstractions.Messaging;
 using InspireEd.Domain.Errors;
 using InspireEd.Domain.Repositories;
 using InspireEd.Domain.Shared;
-using InspireEd.Domain.User.Entities;
+using InspireEd.Domain.Users.Entities;
+using InspireEd.Domain.Users.Repositories;
 using InspireEd.Domain.Users.ValueObjects;
 
 namespace InspireEd.Application.Users.Commands.CreateUser;
@@ -65,6 +66,18 @@ internal sealed class CreateUserCommandHandler(
         var passwordHash = passwordHasher.Hash(request.Password);
 
         #endregion
+        
+        #region Convert Role Name to Role
+
+        // Convert the RoleName string into a Role instance using FromName
+        var role = Role.FromName(request.RoleName);
+        if (role == null)
+        {
+            return Result.Failure<Guid>(
+                DomainErrors.User.InvalidRoleName);
+        }
+
+        #endregion
 
         #region Create new user
 
@@ -74,7 +87,8 @@ internal sealed class CreateUserCommandHandler(
             emailResult.Value,
             passwordHash,
             createFirstNameResult.Value,
-            createLastNameResult.Value);
+            createLastNameResult.Value, 
+            role); // fix this coming soon
 
         #endregion
 

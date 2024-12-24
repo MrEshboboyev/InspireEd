@@ -1,4 +1,4 @@
-﻿using InspireEd.Domain.User.Entities;
+﻿using InspireEd.Domain.Users.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Permission = InspireEd.Domain.Users.Enums.Permission;
@@ -18,12 +18,13 @@ internal sealed class RolePermissionConfiguration
 
         // Seed initial data
         builder.HasData(
-            Create(Role.Registered, Permission.ReadUser),
-            Create(Role.Registered, Permission.UpdateUser));
+            Create(Role.Admin, Permission.ReadUser),
+            Create(Role.Admin, Permission.UpdateUser));
     }
 
     private static RolePermission Create(
-        Role role, Permission permission)
+        Role role, 
+        Permission permission)
     {
         return new RolePermission
         {

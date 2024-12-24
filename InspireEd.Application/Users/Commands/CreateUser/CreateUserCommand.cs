@@ -1,4 +1,5 @@
 ﻿using InspireEd.Application.Abstractions.Messaging;
+using InspireEd.Domain.Users.Entities;
 
 namespace InspireEd.Application.Users.Commands.CreateUser;
 
@@ -13,4 +14,5 @@ public sealed record CreateUserCommand(
     string Email,
     string Password,
     string FirstName,
-    string LastName) : ICommand<Guid>;
+    string LastName,
+    string RoleName) : ICommand<Guid>;

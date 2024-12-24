@@ -63,7 +63,8 @@ public sealed class UsersController(ISender sender) : ApiController(sender)
             request.Email,
             request.Password,
             request.FirstName,
-            request.LastName);
+            request.LastName, 
+            request.RoleName);
 
         var result = await Sender.Send(command, cancellationToken);
         if (result.IsFailure)

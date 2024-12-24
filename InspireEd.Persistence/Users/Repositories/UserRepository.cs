@@ -1,9 +1,9 @@
-﻿using InspireEd.Domain.Repositories;
-using InspireEd.Domain.User.Entities;
+﻿using InspireEd.Domain.Users.Entities;
+using InspireEd.Domain.Users.Repositories;
 using InspireEd.Domain.Users.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 
-namespace InspireEd.Persistence.Repositories;
+namespace InspireEd.Persistence.Users.Repositories;
 
 public sealed class UserRepository(ApplicationDbContext dbContext) : IUserRepository
 {
