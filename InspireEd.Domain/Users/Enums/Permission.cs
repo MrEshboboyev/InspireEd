@@ -6,5 +6,8 @@
 public enum Permission
 {
     ReadUser = 1,
-    UpdateUser = 2
+    UpdateUser = 2,
+    AssignGroups = 3,
+    AssignClasses = 4,
+    ManageAttendance = 5
 }

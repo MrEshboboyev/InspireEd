@@ -24,7 +24,7 @@ internal sealed class PermissionConfiguration : IEntityTypeConfiguration<Permiss
             .Select(p => new Permission
             {
                 Id = (int)p,
-                Name = p.ToString(),
+                Name = p.ToString()
             });
         
         builder.HasData(permissions);

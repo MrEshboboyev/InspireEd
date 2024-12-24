@@ -7,7 +7,7 @@
 /// <param name="Password">The password for the new user.</param>
 /// <param name="FirstName">The first name of the new user.</param>
 /// <param name="LastName">The last name of the new user.</param>
-public sealed record RegisterUserRequest(
+public sealed record CreateUserRequest(
     string Email,
     string Password,
     string FirstName,

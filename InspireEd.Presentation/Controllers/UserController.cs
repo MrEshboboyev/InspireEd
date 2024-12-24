@@ -21,7 +21,9 @@ public sealed class UsersController(ISender sender) : ApiController(sender)
     /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
     /// <returns>An IActionResult containing the user details if found, or an error message.</returns>
     [HttpGet("{id:guid}")]
-    public async Task<IActionResult> GetUserById(Guid id, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetUserById(
+        Guid id, 
+        CancellationToken cancellationToken)
     {
         var query = new GetUserByIdQuery(id);
 
@@ -54,9 +56,9 @@ public sealed class UsersController(ISender sender) : ApiController(sender)
     /// <param name="request">The registration request containing the user's details.</param>
     /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
     /// <returns>An IActionResult containing the new user's ID if successful, or an error message.</returns>
-    [HttpPost]
-    public async Task<IActionResult> RegisterUser(
-        [FromBody] RegisterUserRequest request,
+    [HttpPost("create")]
+    public async Task<IActionResult> CreateUser(
+        [FromBody] CreateUserRequest request,
         CancellationToken cancellationToken)
     {
         var command = new CreateUserCommand(

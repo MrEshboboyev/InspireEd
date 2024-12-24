@@ -19,7 +19,10 @@ internal sealed class RolePermissionConfiguration
         // Seed initial data
         builder.HasData(
             Create(Role.Admin, Permission.ReadUser),
-            Create(Role.Admin, Permission.UpdateUser));
+            Create(Role.Admin, Permission.UpdateUser),
+            Create(Role.DepartmentHead, Permission.AssignGroups),
+            Create(Role.DepartmentHead, Permission.AssignClasses),
+            Create(Role.Teacher, Permission.ManageAttendance));
     }
 
     private static RolePermission Create(

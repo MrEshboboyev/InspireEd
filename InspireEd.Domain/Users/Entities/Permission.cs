@@ -1,7 +1,7 @@
 ﻿namespace InspireEd.Domain.Users.Entities;
 
 /// <summary> 
-/// Represents a user role in the system. 
+/// Represents a role permission in the system. 
 /// </summary>
 public class Permission
 {
