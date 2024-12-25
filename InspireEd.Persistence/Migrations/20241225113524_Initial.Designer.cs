@@ -3,17 +3,17 @@ using System;
 using InspireEd.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
 namespace InspireEd.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241125123659_AddDefaultTables")]
-    partial class AddDefaultTables
+    [Migration("20241225113524_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -21,20 +21,20 @@ namespace InspireEd.Persistence.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "9.0.0")
-                .HasAnnotation("Relational:MaxIdentifierLength", 128);
+                .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
-            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+            NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("InspireEd.Domain.Entities.Permission", b =>
+            modelBuilder.Entity("InspireEd.Domain.Users.Entities.Permission", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
@@ -50,19 +50,34 @@ namespace InspireEd.Persistence.Migrations
                         {
                             Id = 2,
                             Name = "UpdateUser"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "AssignGroups"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Name = "AssignClasses"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Name = "ManageAttendance"
                         });
                 });
 
-            modelBuilder.Entity("InspireEd.Domain.Entities.Role", b =>
+            modelBuilder.Entity("InspireEd.Domain.Users.Entities.Role", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
@@ -72,17 +87,32 @@ namespace InspireEd.Persistence.Migrations
                         new
                         {
                             Id = 1,
-                            Name = "Registered"
+                            Name = "Admin"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "DepartmentHead"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Teacher"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Name = "Student"
                         });
                 });
 
-            modelBuilder.Entity("InspireEd.Domain.Entities.RolePermission", b =>
+            modelBuilder.Entity("InspireEd.Domain.Users.Entities.RolePermission", b =>
                 {
                     b.Property<int>("RoleId")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<int>("PermissionId")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.HasKey("RoleId", "PermissionId");
 
@@ -100,40 +130,54 @@ namespace InspireEd.Persistence.Migrations
                         {
                             RoleId = 1,
                             PermissionId = 2
+                        },
+                        new
+                        {
+                            RoleId = 2,
+                            PermissionId = 3
+                        },
+                        new
+                        {
+                            RoleId = 2,
+                            PermissionId = 4
+                        },
+                        new
+                        {
+                            RoleId = 3,
+                            PermissionId = 5
                         });
                 });
 
-            modelBuilder.Entity("InspireEd.Domain.Entities.User", b =>
+            modelBuilder.Entity("InspireEd.Domain.Users.Entities.User", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedOnUtc")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Email")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("text");
 
                     b.Property<string>("FirstName")
                         .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("character varying(50)");
 
                     b.Property<string>("LastName")
                         .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("character varying(50)");
 
                     b.Property<DateTime?>("ModifiedOnUtc")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("PasswordHash")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
                     b.HasIndex("Email")
-                        .IsUnique()
-                        .HasFilter("[Email] IS NOT NULL");
+                        .IsUnique();
 
                     b.ToTable("Users", (string)null);
                 });
@@ -142,22 +186,22 @@ namespace InspireEd.Persistence.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Content")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<string>("Error")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<DateTime>("OccurredOnUtc")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime?>("ProcessedOnUtc")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Type")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
@@ -167,10 +211,10 @@ namespace InspireEd.Persistence.Migrations
             modelBuilder.Entity("InspireEd.Persistence.Outbox.OutboxMessageConsumer", b =>
                 {
                     b.Property<Guid>("Id")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("text");
 
                     b.HasKey("Id", "Name");
 
@@ -180,10 +224,10 @@ namespace InspireEd.Persistence.Migrations
             modelBuilder.Entity("RoleUser", b =>
                 {
                     b.Property<int>("RolesId")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<Guid>("UsersId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.HasKey("RolesId", "UsersId");
 
@@ -192,15 +236,15 @@ namespace InspireEd.Persistence.Migrations
                     b.ToTable("RoleUser");
                 });
 
-            modelBuilder.Entity("InspireEd.Domain.Entities.RolePermission", b =>
+            modelBuilder.Entity("InspireEd.Domain.Users.Entities.RolePermission", b =>
                 {
-                    b.HasOne("InspireEd.Domain.Entities.Permission", null)
+                    b.HasOne("InspireEd.Domain.Users.Entities.Permission", null)
                         .WithMany()
                         .HasForeignKey("PermissionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("InspireEd.Domain.Entities.Role", null)
+                    b.HasOne("InspireEd.Domain.Users.Entities.Role", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -209,13 +253,13 @@ namespace InspireEd.Persistence.Migrations
 
             modelBuilder.Entity("RoleUser", b =>
                 {
-                    b.HasOne("InspireEd.Domain.Entities.Role", null)
+                    b.HasOne("InspireEd.Domain.Users.Entities.Role", null)
                         .WithMany()
                         .HasForeignKey("RolesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("InspireEd.Domain.Entities.User", null)
+                    b.HasOne("InspireEd.Domain.Users.Entities.User", null)
                         .WithMany()
                         .HasForeignKey("UsersId")
                         .OnDelete(DeleteBehavior.Cascade)
