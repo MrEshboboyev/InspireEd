@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "FOO8nkX45wQ=",
+  "success": true,
+  "projectFilePath": "D:\\Backend\\MrEshboboyev\\InspireEd\\InspireEd.Domain\\InspireEd.Domain.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\dev\\.nuget\\packages\\mediatr\\11.1.0\\mediatr.11.1.0.nupkg.sha512",
+    "C:\\Users\\dev\\.nuget\\packages\\mediatr.contracts\\1.0.1\\mediatr.contracts.1.0.1.nupkg.sha512"
+  ],
+  "logs": []
+}

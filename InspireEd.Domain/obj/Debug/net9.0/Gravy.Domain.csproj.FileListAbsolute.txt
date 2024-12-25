@@ -1,0 +1,13 @@
+D:\Backend\TimesPro\Gravy\Gravy.Domain\bin\Debug\net9.0\Gravy.Domain.deps.json
+D:\Backend\TimesPro\Gravy\Gravy.Domain\bin\Debug\net9.0\Gravy.Domain.dll
+D:\Backend\TimesPro\Gravy\Gravy.Domain\bin\Debug\net9.0\Gravy.Domain.pdb
+D:\Backend\TimesPro\Gravy\Gravy.Domain\obj\Debug\net9.0\Gravy.Domain.csproj.AssemblyReference.cache
+D:\Backend\TimesPro\Gravy\Gravy.Domain\obj\Debug\net9.0\Gravy.Domain.GeneratedMSBuildEditorConfig.editorconfig
+D:\Backend\TimesPro\Gravy\Gravy.Domain\obj\Debug\net9.0\Gravy.Domain.AssemblyInfoInputs.cache
+D:\Backend\TimesPro\Gravy\Gravy.Domain\obj\Debug\net9.0\Gravy.Domain.AssemblyInfo.cs
+D:\Backend\TimesPro\Gravy\Gravy.Domain\obj\Debug\net9.0\Gravy.Domain.csproj.CoreCompileInputs.cache
+D:\Backend\TimesPro\Gravy\Gravy.Domain\obj\Debug\net9.0\Gravy.Domain.sourcelink.json
+D:\Backend\TimesPro\Gravy\Gravy.Domain\obj\Debug\net9.0\Gravy.Domain.dll
+D:\Backend\TimesPro\Gravy\Gravy.Domain\obj\Debug\net9.0\refint\Gravy.Domain.dll
+D:\Backend\TimesPro\Gravy\Gravy.Domain\obj\Debug\net9.0\Gravy.Domain.pdb
+D:\Backend\TimesPro\Gravy\Gravy.Domain\obj\Debug\net9.0\ref\Gravy.Domain.dll
