@@ -1,4 +1,5 @@
 ﻿using InspireEd.Domain.Primitives;
+using InspireEd.Domain.Users.Events;
 using InspireEd.Domain.Users.ValueObjects;
 
 namespace InspireEd.Domain.Users.Entities;
@@ -22,6 +23,15 @@ public sealed class User : AggregateRoot, IAuditableEntity
         FirstName = firstName;
         LastName = lastName;
         Roles = [];
+        
+        #region Domain Events
+        
+        RaiseDomainEvent(new UserCreatedDomainEvent(
+            Guid.NewGuid(),
+            id,
+            email.Value));
+        
+        #endregion
     }
 
     private User() { }
