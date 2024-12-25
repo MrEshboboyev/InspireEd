@@ -1,41 +1,26 @@
-﻿# Rider/JetBrains
+# Ignore Rider-specific files and settings
 .idea/
-*.iml
+*.sln.DotSettings.user
 
-# Build artifacts
+# Ignore build artifacts
 bin/
 obj/
 
-# Compiled binaries
-*.dll
-*.exe
-*.pdb
-*.apphost
-
-# Temporary files
+# Ignore temporary and cache files
 *.log
 *.tmp
 *.cache
-*.csproj.user
-*.db
 
-# Visual Studio
-.vscode/
+# Ignore Visual Studio settings
 .vs/
-*.suo
 *.user
-*.opendb
-*.VC.db
+*.suo
 
-# NuGet
+# Ignore NuGet packages
 *.nupkg
 packages/
 project.lock.json
 
-# OS-specific files
-.DS_Store
-Thumbs.db
-
-# Environment variables
+# Ignore environment secrets
 .env
 secrets.json
