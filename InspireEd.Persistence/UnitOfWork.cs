@@ -76,11 +76,11 @@ internal sealed class UnitOfWork(ApplicationDbContext dbContext) : IUnitOfWork
     /// </summary>
     private void UpdateAuditableEntities()
     {
-        IEnumerable<EntityEntry<IAuditableEntity>> entries =
+        var entries =
            dbContext
               .ChangeTracker
               .Entries<IAuditableEntity>();
-        foreach (EntityEntry<IAuditableEntity> entityEntry in entries)
+        foreach (var entityEntry in entries)
         {
             if (entityEntry.State == EntityState.Added)
             {

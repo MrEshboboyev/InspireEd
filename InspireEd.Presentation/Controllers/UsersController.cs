@@ -51,9 +51,9 @@ public sealed class UsersController(ISender sender) : ApiController(sender)
     }
 
     /// <summary>
-    /// Registers a new user by creating their account with the provided details.
+    /// Create a new user by creating their account with the provided details.
     /// </summary>
-    /// <param name="request">The registration request containing the user's details.</param>
+    /// <param name="request">The create request containing the user's details.</param>
     /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
     /// <returns>An IActionResult containing the new user's ID if successful, or an error message.</returns>
     [HttpPost("create")]

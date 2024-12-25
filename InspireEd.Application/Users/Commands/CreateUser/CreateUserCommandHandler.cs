@@ -14,6 +14,7 @@ namespace InspireEd.Application.Users.Commands.CreateUser;
 /// </summary>
 internal sealed class CreateUserCommandHandler(
     IUserRepository userRepository,
+    IRoleRepository roleRepository,
     IUnitOfWork unitOfWork,
     IPasswordHasher passwordHasher)
     : ICommandHandler<CreateUserCommand, Guid>
@@ -78,6 +79,18 @@ internal sealed class CreateUserCommandHandler(
         }
 
         #endregion
+        
+        #region Get this role from db
+        
+        var roleFromDb = await roleRepository.GetByNameAsync(request.RoleName,
+            cancellationToken);
+        if (roleFromDb is null)
+        {
+            return Result.Failure<Guid>(
+                DomainErrors.User.InvalidRoleName);
+        }
+        
+        #endregion
 
         #region Create new user
 
@@ -88,7 +101,7 @@ internal sealed class CreateUserCommandHandler(
             passwordHash,
             createFirstNameResult.Value,
             createLastNameResult.Value, 
-            role); // fix this coming soon
+            roleFromDb); // fix this coming soon
 
         #endregion
 
