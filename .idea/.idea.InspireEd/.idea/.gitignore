@@ -1,0 +1,41 @@
+﻿# Rider/JetBrains
+.idea/
+*.iml
+
+# Build artifacts
+bin/
+obj/
+
+# Compiled binaries
+*.dll
+*.exe
+*.pdb
+*.apphost
+
+# Temporary files
+*.log
+*.tmp
+*.cache
+*.csproj.user
+*.db
+
+# Visual Studio
+.vscode/
+.vs/
+*.suo
+*.user
+*.opendb
+*.VC.db
+
+# NuGet
+*.nupkg
+packages/
+project.lock.json
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Environment variables
+.env
+secrets.json
