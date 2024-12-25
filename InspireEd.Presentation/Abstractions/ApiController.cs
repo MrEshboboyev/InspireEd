@@ -1,4 +1,5 @@
-﻿using InspireEd.Domain.Shared;
+﻿using System.Security.Claims;
+using InspireEd.Domain.Shared;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -46,6 +47,15 @@ public abstract class ApiController : ControllerBase
                     StatusCodes.Status400BadRequest,
                     result.Error))
         };
+
+    #region User claims
+
+    protected Guid GetCurrentUserId()
+    {
+        return Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+    }
+    
+    #endregion
     
     #region Helpers
 

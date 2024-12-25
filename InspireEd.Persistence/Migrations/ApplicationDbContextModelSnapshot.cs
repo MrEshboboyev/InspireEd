@@ -41,27 +41,47 @@ namespace InspireEd.Persistence.Migrations
                         new
                         {
                             Id = 1,
-                            Name = "ReadUser"
+                            Name = "ViewProfile"
                         },
                         new
                         {
                             Id = 2,
-                            Name = "UpdateUser"
+                            Name = "ViewAttendance"
                         },
                         new
                         {
                             Id = 3,
-                            Name = "AssignGroups"
+                            Name = "ManageAttendance"
                         },
                         new
                         {
                             Id = 4,
-                            Name = "AssignClasses"
+                            Name = "ViewAssignedClasses"
                         },
                         new
                         {
                             Id = 5,
-                            Name = "ManageAttendance"
+                            Name = "AddStudents"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Name = "AssignGroups"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Name = "AssignClasses"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            Name = "ViewFacultyData"
+                        },
+                        new
+                        {
+                            Id = 9,
+                            Name = "FullAccess"
                         });
                 });
 
@@ -120,28 +140,48 @@ namespace InspireEd.Persistence.Migrations
                     b.HasData(
                         new
                         {
-                            RoleId = 1,
+                            RoleId = 4,
                             PermissionId = 1
                         },
                         new
                         {
-                            RoleId = 1,
+                            RoleId = 4,
                             PermissionId = 2
                         },
                         new
                         {
-                            RoleId = 2,
-                            PermissionId = 3
-                        },
-                        new
-                        {
-                            RoleId = 2,
+                            RoleId = 3,
                             PermissionId = 4
                         },
                         new
                         {
                             RoleId = 3,
+                            PermissionId = 3
+                        },
+                        new
+                        {
+                            RoleId = 2,
                             PermissionId = 5
+                        },
+                        new
+                        {
+                            RoleId = 2,
+                            PermissionId = 6
+                        },
+                        new
+                        {
+                            RoleId = 2,
+                            PermissionId = 7
+                        },
+                        new
+                        {
+                            RoleId = 2,
+                            PermissionId = 8
+                        },
+                        new
+                        {
+                            RoleId = 1,
+                            PermissionId = 9
                         });
                 });
 

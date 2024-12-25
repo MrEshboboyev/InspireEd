@@ -1,4 +1,4 @@
-﻿using InspireEd.Domain.Users.Entities;
+﻿using InspireEd.Domain.Users.Enums;
 using Microsoft.AspNetCore.Authorization;
 
 namespace InspireEd.Infrastructure.Authentication;

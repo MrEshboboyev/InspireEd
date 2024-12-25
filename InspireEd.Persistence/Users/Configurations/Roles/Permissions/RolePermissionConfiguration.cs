@@ -18,11 +18,23 @@ internal sealed class RolePermissionConfiguration
 
         // Seed initial data
         builder.HasData(
-            Create(Role.Admin, Permission.ReadUser),
-            Create(Role.Admin, Permission.UpdateUser),
+            // Student Permissions
+            Create(Role.Student, Permission.ViewProfile),
+            Create(Role.Student, Permission.ViewAttendance),
+
+            // Teacher Permissions
+            Create(Role.Teacher, Permission.ViewAssignedClasses),
+            Create(Role.Teacher, Permission.ManageAttendance),
+
+            // Department Head Permissions
+            Create(Role.DepartmentHead, Permission.AddStudents),
             Create(Role.DepartmentHead, Permission.AssignGroups),
             Create(Role.DepartmentHead, Permission.AssignClasses),
-            Create(Role.Teacher, Permission.ManageAttendance));
+            Create(Role.DepartmentHead, Permission.ViewFacultyData),
+
+            // Admin Permissions
+            Create(Role.Admin, Permission.FullAccess)
+        );
     }
 
     private static RolePermission Create(

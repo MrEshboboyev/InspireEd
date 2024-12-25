@@ -11,12 +11,15 @@ namespace InspireEd.Infrastructure.Authentication;
 /// <summary>
 /// Provides functionality for generating JSON Web Tokens (JWT) for authenticated users.
 /// </summary>
-internal sealed class JwtProvider(IOptions<JwtOptions> options) : IJwtProvider
+internal sealed class JwtProvider(
+    IOptions<JwtOptions> options,
+    IPermissionService permissionService) : IJwtProvider
 {
     #region Private fields
 
     // Holds the JWT options configuration
     private readonly JwtOptions _options = options.Value;
+    private readonly IPermissionService _permissionService = permissionService;
 
     #endregion
 
@@ -25,16 +28,26 @@ internal sealed class JwtProvider(IOptions<JwtOptions> options) : IJwtProvider
     /// </summary>
     /// <param name="user">The user for whom the token is being generated.</param>
     /// <returns>A JWT as a string.</returns>
-    public string Generate(User user)
+    public async Task<string> GenerateAsync(User user)
     {
         #region Create Claims List
 
         // Create a list of claims for the JWT
-        var claims = new Claim[]
+        var claims = new List<Claim>
         {
             new(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
             new(JwtRegisteredClaimNames.Email, user.Email.Value)
         };
+
+        #endregion
+        
+        #region Permissions
+        
+        var permissions = await _permissionService
+            .GetPermissionsAsync(user.Id);
+
+        claims.AddRange(permissions.Select(permission => 
+            new Claim(CustomClaims.Permissions, permission)));
 
         #endregion
 
