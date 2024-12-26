@@ -1,8 +1,10 @@
 ﻿using InspireEd.Application.Faculties.Commands.CreateFaculty;
+using InspireEd.Application.Faculties.Commands.DeleteFaculty;
 using InspireEd.Application.Faculties.Commands.DepartmentHeads.AddDepartmentHead;
 using InspireEd.Application.Faculties.Commands.DepartmentHeads.CreateDepartmentHead;
 using InspireEd.Application.Faculties.Commands.DepartmentHeads.DeleteDepartmentHeadCommand;
 using InspireEd.Application.Faculties.Commands.DepartmentHeads.RemoveDepartmentHead;
+using InspireEd.Application.Faculties.Commands.UpdateFaculty;
 using InspireEd.Domain.Users.Enums;
 using InspireEd.Infrastructure.Authentication;
 using InspireEd.Presentation.Abstractions;
@@ -88,6 +90,33 @@ public class AdminsController(ISender sender) : ApiController(sender)
     {
         var command = new CreateFacultyCommand(
             request.FacultyName);
+        
+        var response = await Sender.Send(command, cancellationToken);
+        
+        return response.IsSuccess ? NoContent() : BadRequest(response);
+    }
+    
+    [HttpPost("update-faculty")]
+    public async Task<IActionResult> UpdateFaculty(
+        [FromBody] UpdateFacultyRequest request,
+        CancellationToken cancellationToken)
+    {
+        var command = new UpdateFacultyCommand(
+            request.FacultyId,
+            request.FacultyName);
+        
+        var response = await Sender.Send(command, cancellationToken);
+        
+        return response.IsSuccess ? NoContent() : BadRequest(response);
+    }
+
+    [HttpPost("delete-faculty")]
+    public async Task<IActionResult> DeleteFaculty(
+        [FromBody] DeleteFacultyRequest request,
+        CancellationToken cancellationToken)
+    {
+        var command = new DeleteFacultyCommand(
+            request.FacultyId);
         
         var response = await Sender.Send(command, cancellationToken);
         

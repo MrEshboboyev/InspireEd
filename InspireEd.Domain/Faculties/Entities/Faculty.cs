@@ -62,8 +62,23 @@ public sealed class Faculty : AggregateRoot, IAuditableEntity
     }
 
     #endregion
+    
+    #region Own methods
 
-    #region Methods
+    public Result UpdateName(FacultyName name)
+    {
+        #region Modified fields
+        
+        Name = name;
+        
+        #endregion
+
+        return Result.Success();
+    }
+    
+    #endregion
+
+    #region Department Head Methods
 
     /// <summary>
     /// Assigns a department head to the faculty.
