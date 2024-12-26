@@ -101,6 +101,14 @@ public static class DomainErrors
         public static readonly Func<Guid, Error> DepartmentHeadIdDoesNotExist = id => new Error(
             "Faculty.DepartmentHeadIdDoesNotExist",
             $"The department head with the identifier {id} does not exist.");
+        
+        public static readonly Func<string, Error> GroupNameAlreadyExists = groupName => new Error( 
+            "Faculty.GroupNameAlreadyExists",
+            $"The group name '{groupName}' is already in use.");
+        
+        public static readonly Func<Guid, Error> GroupDoesNotExist = groupId => new Error( 
+            "Faculty.GroupDoesNotExist", 
+            $"The group with the identifier {groupId} does not exist.");
     }
     
     public static class Group

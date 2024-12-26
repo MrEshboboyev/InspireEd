@@ -119,4 +119,143 @@ public sealed class Faculty : AggregateRoot, IAuditableEntity
     }
 
     #endregion
+    
+    #region Group Methods
+
+    /// <summary>
+    /// Creates a new group within the faculty.
+    /// </summary>
+    /// <param name="id">The unique identifier of the group.</param>
+    /// <param name="groupName">The name of the group.</param>
+    /// <returns>The created group.</returns>
+    public Result<Group> AddGroup(
+        Guid id,
+        GroupName groupName)
+    {
+        #region Checking group already exists
+        
+        if (_groups.Any(g => g.Name.Equals(groupName)))
+        {
+            return Result.Failure<Group>(
+                DomainErrors.Faculty.GroupNameAlreadyExists(groupName.Value));
+        }
+        
+        #endregion
+
+        #region Create new group
+        
+        var group = new Group(
+            id, 
+            Id, 
+            groupName);
+        
+        #endregion
+        
+        #region Add group to this faculty
+        
+        _groups.Add(group);
+        
+        #endregion
+        
+        return Result.Success(group);
+    }
+
+    /// <summary>
+    /// Removes a group from the faculty.
+    /// </summary>
+    /// <param name="groupId">The ID of the group to remove.</param>
+    /// <returns>A result indicating success or failure.</returns>
+    public Result RemoveGroup(
+        Guid groupId)
+    {
+        #region Checking group exists
+        
+        var group = _groups.FirstOrDefault(g => g.Id == groupId);
+        if (group is null)
+        {
+            return Result.Failure(
+                DomainErrors.Faculty.GroupDoesNotExist(groupId));
+        }
+        
+        #endregion
+
+        #region Remove group from this faculty
+        
+        _groups.Remove(group);
+        
+        #endregion
+        
+        return Result.Success();
+    }
+
+    /// <summary>
+    /// Updates the name of a group.
+    /// </summary>
+    /// <param name="groupId">The ID of the group to update.</param>
+    /// <param name="newName">The new name for the group.</param>
+    /// <returns>A result indicating success or failure.</returns>
+    public Result UpdateGroup(
+        Guid groupId,
+        GroupName newName)
+    {
+        #region Checking group exists
+        
+        var group = _groups.FirstOrDefault(g => g.Id == groupId);
+        if (group is null)
+        {
+            return Result.Failure(
+                DomainErrors.Faculty.GroupDoesNotExist(groupId));
+        }
+        
+        #endregion
+
+        #region Checking this group name already exists in this faculty
+        
+        if (_groups.Any(g => 
+                g.Name.Equals(newName) && 
+                g.Id != groupId))
+        {
+            return Result.Failure(
+                DomainErrors.Faculty.GroupNameAlreadyExists(newName.Value));
+        }
+        
+        #endregion
+
+        #region Update this group name
+        
+        var updateGroupNameResult = group.UpdateName(newName);
+        if (updateGroupNameResult.IsFailure)
+        {
+            return Result.Failure(
+                updateGroupNameResult.Error);
+        }
+        
+        #endregion
+        
+        return Result.Success();
+    }
+
+    /// <summary>
+    /// Retrieves a group by its ID.
+    /// </summary>
+    /// <param name="groupId">The ID of the group.</param>
+    /// <returns>The group if found.</returns>
+    public Result<Group> GetGroupById(
+        Guid groupId)
+    {
+        #region Checking group exists
+        
+        var group = _groups.FirstOrDefault(g => g.Id == groupId);
+        if (group is null)
+        {
+            return Result.Failure<Group>(
+                DomainErrors.Faculty.GroupDoesNotExist(groupId));
+        }
+        
+        #endregion
+
+        return Result.Success(group);
+    }
+
+    #endregion 
 }

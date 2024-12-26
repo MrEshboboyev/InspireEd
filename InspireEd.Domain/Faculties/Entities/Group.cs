@@ -1,5 +1,7 @@
 ﻿using InspireEd.Domain.Faculties.ValueObjects;
 using InspireEd.Domain.Primitives;
+using InspireEd.Domain.Shared;
+using InspireEd.Domain.Users.Entities;
 
 namespace InspireEd.Domain.Faculties.Entities;
 
@@ -56,5 +58,20 @@ public sealed class Group : Entity, IAuditableEntity
     /// </summary>
     public DateTime? ModifiedOnUtc { get; set; }
 
+    #endregion
+    
+    #region Own methods
+
+    public Result UpdateName(GroupName newName)
+    {
+        #region Update fields
+        
+        Name = newName;
+        
+        #endregion
+        
+        return Result.Success();
+    }
+    
     #endregion
 }
