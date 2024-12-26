@@ -8,6 +8,8 @@ namespace InspireEd.Domain.Faculties.Repositories;
 /// </summary>
 public interface IFacultyRepository : IRepository<Faculty>
 {
+    Task<IEnumerable<Faculty>> GetFacultiesAsync(CancellationToken cancellationToken = default);
+    
     /// <summary>
     /// Retrieves a faculty entity by its unique identifier.
     /// </summary>

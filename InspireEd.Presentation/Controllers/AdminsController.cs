@@ -5,6 +5,7 @@ using InspireEd.Application.Faculties.Commands.DepartmentHeads.CreateDepartmentH
 using InspireEd.Application.Faculties.Commands.DepartmentHeads.DeleteDepartmentHeadCommand;
 using InspireEd.Application.Faculties.Commands.DepartmentHeads.RemoveDepartmentHead;
 using InspireEd.Application.Faculties.Commands.UpdateFaculty;
+using InspireEd.Application.Faculties.Queries.GetFaculties;
 using InspireEd.Domain.Users.Enums;
 using InspireEd.Infrastructure.Authentication;
 using InspireEd.Presentation.Abstractions;
@@ -82,6 +83,17 @@ public class AdminsController(ISender sender) : ApiController(sender)
     #endregion
     
     #region Faculties
+
+    [HttpGet("faculties")]
+    public async Task<IActionResult> GetAllFaculties(
+        CancellationToken cancellationToken)
+    {
+        var query = new GetFacultiesQuery();
+        
+        var response = await Sender.Send(query, cancellationToken);
+        
+        return response.IsSuccess ? Ok(response.Value) : NotFound(response.Error);
+    }
 
     [HttpPost("create-faculty")]
     public async Task<IActionResult> CreateFaculty(
