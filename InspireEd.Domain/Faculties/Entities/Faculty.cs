@@ -20,13 +20,15 @@ public sealed class Faculty : AggregateRoot, IAuditableEntity
     /// <summary>
     /// A list of department head IDs for the faculty.
     /// </summary>
-    private readonly List<Guid> _departmentHeadIds = new();
+    private readonly List<Guid> _departmentHeadIds = [];
 
     #endregion
 
     #region Constructors
 
-    private Faculty(Guid id, FacultyName name) : base(id)
+    private Faculty(
+        Guid id,
+        FacultyName name) : base(id)
     {
         Name = name;
     }
@@ -52,7 +54,9 @@ public sealed class Faculty : AggregateRoot, IAuditableEntity
 
     #region Factory Methods
 
-    public static Faculty Create(Guid id, FacultyName name)
+    public static Faculty Create(
+        Guid id, 
+        FacultyName name)
     {
         return new Faculty(id, name);
     }

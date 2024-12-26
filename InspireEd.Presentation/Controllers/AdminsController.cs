@@ -1,4 +1,5 @@
-﻿using InspireEd.Application.Faculties.Commands.DepartmentHeads.AddDepartmentHead;
+﻿using InspireEd.Application.Faculties.Commands.CreateFaculty;
+using InspireEd.Application.Faculties.Commands.DepartmentHeads.AddDepartmentHead;
 using InspireEd.Application.Faculties.Commands.DepartmentHeads.CreateDepartmentHead;
 using InspireEd.Application.Faculties.Commands.DepartmentHeads.DeleteDepartmentHeadCommand;
 using InspireEd.Application.Faculties.Commands.DepartmentHeads.RemoveDepartmentHead;
@@ -7,6 +8,7 @@ using InspireEd.Infrastructure.Authentication;
 using InspireEd.Presentation.Abstractions;
 using InspireEd.Presentation.Contracts.Admins;
 using InspireEd.Presentation.Contracts.Admins.DepartmentHeads;
+using InspireEd.Presentation.Contracts.Admins.Faculties;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -69,6 +71,23 @@ public class AdminsController(ISender sender) : ApiController(sender)
         var command = new RemoveDepartmentHeadFromFacultyCommand(
             request.FacultyId,
             request.DepartmentHeadId);
+        
+        var response = await Sender.Send(command, cancellationToken);
+        
+        return response.IsSuccess ? NoContent() : BadRequest(response);
+    }
+    
+    #endregion
+    
+    #region Faculties
+
+    [HttpPost("create-faculty")]
+    public async Task<IActionResult> CreateFaculty(
+        [FromBody] CreateFacultyRequest request,
+        CancellationToken cancellationToken)
+    {
+        var command = new CreateFacultyCommand(
+            request.FacultyName);
         
         var response = await Sender.Send(command, cancellationToken);
         
