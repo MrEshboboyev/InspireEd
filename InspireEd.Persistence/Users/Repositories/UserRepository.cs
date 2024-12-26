@@ -29,9 +29,12 @@ public sealed class UserRepository(ApplicationDbContext dbContext) : IUserReposi
             .Set<User>()
             .AnyAsync(member => member.Email == email, cancellationToken);
 
-    public void Add(User member) =>
-        _dbContext.Set<User>().Add(member);
+    public void Add(User user) =>
+        _dbContext.Set<User>().Add(user);
 
-    public void Update(User member) =>
-        _dbContext.Set<User>().Update(member);
+    public void Update(User user) =>
+        _dbContext.Set<User>().Update(user);
+    
+    public void Delete(User user) =>
+        _dbContext.Set<User>().Remove(user);
 }

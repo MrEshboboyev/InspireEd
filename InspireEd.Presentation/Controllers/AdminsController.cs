@@ -1,10 +1,12 @@
-﻿using InspireEd.Application.Faculties.Commands.AddDepartmentHead;
-using InspireEd.Application.Faculties.Commands.CreateDepartmentHead;
-using InspireEd.Application.Faculties.Commands.RemoveDepartmentHeadCommand;
+﻿using InspireEd.Application.Faculties.Commands.DepartmentHeads.AddDepartmentHead;
+using InspireEd.Application.Faculties.Commands.DepartmentHeads.CreateDepartmentHead;
+using InspireEd.Application.Faculties.Commands.DepartmentHeads.DeleteDepartmentHeadCommand;
+using InspireEd.Application.Faculties.Commands.DepartmentHeads.RemoveDepartmentHead;
 using InspireEd.Domain.Users.Enums;
 using InspireEd.Infrastructure.Authentication;
 using InspireEd.Presentation.Abstractions;
 using InspireEd.Presentation.Contracts.Admins;
+using InspireEd.Presentation.Contracts.Admins.DepartmentHeads;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,6 +18,7 @@ public class AdminsController(ISender sender) : ApiController(sender)
 {
     #region Department Head
 
+    [HttpPost("create-department-head")]
     public async Task<IActionResult> CreateDepartmentHead(
         [FromBody] CreateDepartmentHeadRequest request,
         CancellationToken cancellationToken)
@@ -30,9 +33,22 @@ public class AdminsController(ISender sender) : ApiController(sender)
         
         return response.IsSuccess ? NoContent() : BadRequest(response);
     }
+    
+    [HttpPost("delete-department-head")]
+    public async Task<IActionResult> DeleteDepartmentHead(
+        [FromBody] DeleteDepartmentHeadRequest request,
+        CancellationToken cancellationToken)
+    {
+        var command = new DeleteDepartmentHeadCommand(
+            request.DepartmentHeadId);
+        
+        var response = await Sender.Send(command, cancellationToken);
+        
+        return response.IsSuccess ? NoContent() : BadRequest(response);
+    }
 
-    [HttpGet("add-department-head")]
-    public async Task<IActionResult> AddDepartmentHead(
+    [HttpPut("add-department-head-to-faculty")]
+    public async Task<IActionResult> AddDepartmentHeadToFaculty(
         [FromBody] AddDepartmentHeadRequest request,
         CancellationToken cancellationToken)
     {
@@ -45,12 +61,12 @@ public class AdminsController(ISender sender) : ApiController(sender)
         return response.IsSuccess ? NoContent() : BadRequest(response);
     }
     
-    [HttpGet("remove-department-head")]
-    public async Task<IActionResult> AddDepartmentHead(
+    [HttpPut("remove-department-head-from-faculty")]
+    public async Task<IActionResult> RemoveDepartmentHeadFromFaculty(
         [FromBody] RemoveDepartmentHeadRequest request,
         CancellationToken cancellationToken)
     {
-        var command = new RemoveDepartmentHeadCommand(
+        var command = new RemoveDepartmentHeadFromFacultyCommand(
             request.FacultyId,
             request.DepartmentHeadId);
         
