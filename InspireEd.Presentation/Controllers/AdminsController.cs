@@ -1,4 +1,5 @@
 ﻿using InspireEd.Application.Faculties.Commands.AddDepartmentHead;
+using InspireEd.Application.Faculties.Commands.CreateDepartmentHead;
 using InspireEd.Application.Faculties.Commands.RemoveDepartmentHeadCommand;
 using InspireEd.Domain.Users.Enums;
 using InspireEd.Infrastructure.Authentication;
@@ -10,11 +11,26 @@ using Microsoft.AspNetCore.Mvc;
 namespace InspireEd.Presentation.Controllers;
 
 [Route("api/admin")]
-public class AdminController(ISender sender) : ApiController(sender)
+[HasPermission(Permission.FullAccess)]
+public class AdminsController(ISender sender) : ApiController(sender)
 {
     #region Department Head
 
-    [HasPermission(Permission.FullAccess)]
+    public async Task<IActionResult> CreateDepartmentHead(
+        [FromBody] CreateDepartmentHeadRequest request,
+        CancellationToken cancellationToken)
+    {
+        var command = new CreateDepartmentHeadCommand(
+            request.Email,
+            request.FirstName,
+            request.LastName,
+            request.Password);
+        
+        var response = await Sender.Send(command, cancellationToken);
+        
+        return response.IsSuccess ? NoContent() : BadRequest(response);
+    }
+
     [HttpGet("add-department-head")]
     public async Task<IActionResult> AddDepartmentHead(
         [FromBody] AddDepartmentHeadRequest request,
@@ -29,7 +45,6 @@ public class AdminController(ISender sender) : ApiController(sender)
         return response.IsSuccess ? NoContent() : BadRequest(response);
     }
     
-    [HasPermission(Permission.FullAccess)]
     [HttpGet("remove-department-head")]
     public async Task<IActionResult> AddDepartmentHead(
         [FromBody] RemoveDepartmentHeadRequest request,
