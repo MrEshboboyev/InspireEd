@@ -1,5 +1,7 @@
-﻿using InspireEd.Domain.Faculties.ValueObjects;
+﻿using InspireEd.Domain.Errors;
+using InspireEd.Domain.Faculties.ValueObjects;
 using InspireEd.Domain.Primitives;
+using InspireEd.Domain.Shared;
 
 namespace InspireEd.Domain.Faculties.Entities;
 
@@ -15,60 +17,87 @@ public sealed class Faculty : AggregateRoot, IAuditableEntity
     /// </summary>
     private readonly List<Group> _groups = [];
 
+    /// <summary>
+    /// A list of department head IDs for the faculty.
+    /// </summary>
+    private readonly List<Guid> _departmentHeadIds = new();
+
     #endregion
 
     #region Constructors
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="Faculty"/> class with the specified ID and name.
-    /// </summary>
-    /// <param name="id">The unique identifier of the faculty.</param>
-    /// <param name="name">The name of the faculty.</param>
-    private Faculty(
-        Guid id,
-        FacultyName name) : base(id)
+    private Faculty(Guid id, FacultyName name) : base(id)
     {
         Name = name;
     }
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="Faculty"/> class.
-    /// </summary>
-    private Faculty()
-    {
-    }
+    private Faculty() { }
 
     #endregion
 
     #region Properties
 
-    /// <summary>
-    /// Gets or sets the name of the faculty.
-    /// </summary>
     public FacultyName Name { get; set; }
 
-    /// <summary>
-    /// Gets or sets the date and time when the faculty was created in UTC.
-    /// </summary>
     public DateTime CreatedOnUtc { get; set; }
 
-    /// <summary>
-    /// Gets or sets the date and time when the faculty was last modified in UTC.
-    /// </summary>
     public DateTime? ModifiedOnUtc { get; set; }
 
-    #endregion
-    
-    #region Factory methods
+    /// <summary>
+    /// Gets the IDs of the department heads assigned to this faculty.
+    /// </summary>
+    public IReadOnlyCollection<Guid> DepartmentHeadIds => _departmentHeadIds.AsReadOnly();
 
-    public static Faculty Create(
-        Guid id,
-        FacultyName name)
+    #endregion
+
+    #region Factory Methods
+
+    public static Faculty Create(Guid id, FacultyName name)
     {
-        return new Faculty(
-            id,
-            name);
+        return new Faculty(id, name);
     }
-    
+
+    #endregion
+
+    #region Methods
+
+    /// <summary>
+    /// Assigns a department head to the faculty.
+    /// </summary>
+    /// <param name="departmentHeadId">The ID of the department head.</param>
+    /// <returns>A result indicating success or failure.</returns>
+    public Result AddDepartmentHead(Guid departmentHeadId)
+    {
+        // Check if the department head is already assigned
+        if (_departmentHeadIds.Contains(departmentHeadId))
+        {
+            return Result.Failure(
+                DomainErrors.Faculty.DepartmentHeadIdAlreadyExists(departmentHeadId));
+        }
+
+        // Add the department head
+        _departmentHeadIds.Add(departmentHeadId);
+
+        return Result.Success();
+    }
+
+    /// <summary>
+    /// Removes a department head from the faculty.
+    /// </summary>
+    /// <param name="departmentHeadId">The ID of the department head to remove.</param>
+    /// <returns>A result indicating success or failure.</returns>
+    public Result RemoveDepartmentHead(Guid departmentHeadId)
+    {
+        if (!_departmentHeadIds.Contains(departmentHeadId))
+        {
+            return Result.Failure(
+                DomainErrors.Faculty.DepartmentHeadIdDoesNotExist(departmentHeadId));
+        }
+
+        _departmentHeadIds.Remove(departmentHeadId);
+
+        return Result.Success();
+    }
+
     #endregion
 }

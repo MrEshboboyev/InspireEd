@@ -93,6 +93,14 @@ public static class DomainErrors
         public static readonly Error InvalidCredentials = new(
             "User.InvalidCredentials",
             "The provided credentials are invalid");
+        
+        public static readonly Func<Guid, Error> DepartmentHeadIdAlreadyExists = id => new Error(
+            "Faculty.DepartmentHeadIdAlreadyExists",
+            $"The department head with the identifier {id} is already assigned.");
+
+        public static readonly Func<Guid, Error> DepartmentHeadIdDoesNotExist = id => new Error(
+            "Faculty.DepartmentHeadIdDoesNotExist",
+            $"The department head with the identifier {id} does not exist.");
     }
     
     public static class Group
