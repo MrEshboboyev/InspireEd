@@ -5,19 +5,19 @@ using InspireEd.Domain.Repositories;
 using InspireEd.Domain.Shared;
 using InspireEd.Domain.Users.Repositories;
 
-namespace InspireEd.Application.Faculties.Commands.DepartmentHeads.RemoveDepartmentHeadFromFaculty;
+namespace InspireEd.Application.Faculties.Commands.AddDepartmentHead;
 
-internal sealed class RemoveDepartmentHeadFromFacultyCommandHandler(
+internal sealed class AddDepartmentHeadCommandHandler(
     IFacultyRepository facultyRepository,
     IUserRepository userRepository,
-    IUnitOfWork unitOfWork) : ICommandHandler<DepartmentHeads.RemoveDepartmentHead.RemoveDepartmentHeadFromFacultyCommand>
+    IUnitOfWork unitOfWork) : ICommandHandler<AddDepartmentHeadCommand>
 {
     private readonly IFacultyRepository _facultyRepository = facultyRepository;
     private readonly IUserRepository _userRepository = userRepository;
     private readonly IUnitOfWork _unitOfWork = unitOfWork;
     
     public async Task<Result> Handle(
-        DepartmentHeads.RemoveDepartmentHead.RemoveDepartmentHeadFromFacultyCommand request,
+        AddDepartmentHeadCommand request,
         CancellationToken cancellationToken)
     {
         var (facultyId, departmentHeadId) = request;
@@ -44,13 +44,13 @@ internal sealed class RemoveDepartmentHeadFromFacultyCommandHandler(
         
         #endregion
         
-        #region Remove this department head from faculty
+        #region Add this department head to faculty
 
-        var removeDepartmentHeadResult = faculty.RemoveDepartmentHead(departmentHeadId);
-        if (removeDepartmentHeadResult.IsFailure)
+        var addDepartmentHeadResult = faculty.AddDepartmentHead(departmentHeadId);
+        if (addDepartmentHeadResult.IsFailure)
         {
             return Result.Failure(
-                removeDepartmentHeadResult.Error);
+                addDepartmentHeadResult.Error);
         }
 
         #endregion

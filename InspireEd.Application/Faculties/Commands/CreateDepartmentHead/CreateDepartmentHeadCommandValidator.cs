@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace InspireEd.Application.Faculties.Commands.DepartmentHeads.CreateDepartmentHead;
+namespace InspireEd.Application.Faculties.Commands.CreateDepartmentHead;
 
 internal class CreateDepartmentHeadCommandValidator : AbstractValidator<CreateDepartmentHeadCommand>
 {

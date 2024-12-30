@@ -1,6 +1,6 @@
 ﻿using InspireEd.Application.Abstractions.Messaging;
 
-namespace InspireEd.Application.Faculties.Commands.Groups.RemoveGroupFromFaculty;
+namespace InspireEd.Application.Faculties.Commands.RemoveGroupFromFaculty;
 
 public sealed record RemoveGroupFromFacultyCommand(
     Guid FacultyId,

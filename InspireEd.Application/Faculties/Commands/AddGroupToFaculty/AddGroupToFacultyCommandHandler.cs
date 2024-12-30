@@ -5,7 +5,7 @@ using InspireEd.Domain.Faculties.ValueObjects;
 using InspireEd.Domain.Repositories;
 using InspireEd.Domain.Shared;
 
-namespace InspireEd.Application.Faculties.Commands.Groups.AddGroupToFaculty;
+namespace InspireEd.Application.Faculties.Commands.AddGroupToFaculty;
 
 internal sealed class AddGroupToFacultyCommandHandler(
     IFacultyRepository facultyRepository,

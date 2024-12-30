@@ -4,7 +4,7 @@ using InspireEd.Domain.Faculties.Repositories;
 using InspireEd.Domain.Repositories;
 using InspireEd.Domain.Shared;
 
-namespace InspireEd.Application.Faculties.Commands.Groups.RemoveGroupFromFaculty;
+namespace InspireEd.Application.Faculties.Commands.RemoveGroupFromFaculty;
 
 internal sealed class RemoveGroupFromFacultyCommandHandler(
     IFacultyRepository facultyRepository,

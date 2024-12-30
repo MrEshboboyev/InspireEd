@@ -1,6 +1,6 @@
 ﻿using InspireEd.Application.Abstractions.Messaging;
 
-namespace InspireEd.Application.Faculties.Commands.DepartmentHeads.RemoveDepartmentHead;
+namespace InspireEd.Application.Faculties.Commands.RemoveDepartmentHeadFromFaculty;
 
 public sealed record RemoveDepartmentHeadFromFacultyCommand(
     Guid FacultyId,
