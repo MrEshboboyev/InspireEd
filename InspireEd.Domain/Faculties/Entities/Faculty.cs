@@ -240,21 +240,12 @@ public sealed class Faculty : AggregateRoot, IAuditableEntity
     /// </summary>
     /// <param name="groupId">The ID of the group.</param>
     /// <returns>The group if found.</returns>
-    public Result<Group> GetGroupById(
+    public Group GetGroupById(
         Guid groupId)
     {
-        #region Checking group exists
-        
         var group = _groups.FirstOrDefault(g => g.Id == groupId);
-        if (group is null)
-        {
-            return Result.Failure<Group>(
-                DomainErrors.Faculty.GroupDoesNotExist(groupId));
-        }
-        
-        #endregion
 
-        return Result.Success(group);
+        return group;
     }
 
     #endregion 

@@ -10,6 +10,12 @@ namespace InspireEd.Domain.Faculties.Entities;
 /// </summary>
 public sealed class Group : Entity, IAuditableEntity
 {
+    #region Private Fields
+    
+    private readonly List<Guid> _studentIds = [];
+    
+    #endregion
+    
     #region Constructors
 
     /// <summary>
@@ -47,6 +53,8 @@ public sealed class Group : Entity, IAuditableEntity
     /// Gets or sets the name of the group.
     /// </summary>
     public GroupName Name { get; set; }
+    
+    public IReadOnlyCollection<Guid> StudentIds => _studentIds.AsReadOnly();
 
     /// <summary>
     /// Gets or sets the date and time when the group was created in UTC.
@@ -67,6 +75,17 @@ public sealed class Group : Entity, IAuditableEntity
         #region Update fields
         
         Name = newName;
+        
+        #endregion
+        
+        return Result.Success();
+    }
+
+    public Result AddStudent(Guid studentId)
+    {
+        #region Add student id to group
+        
+        _studentIds.Add(studentId);
         
         #endregion
         

@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using InspireEd.Application;
 using InspireEd.Application.Behaviors;
+using InspireEd.Application.Users.Services;
 using InspireEd.Infrastructure.Idempotence;
 using MediatR;
 
@@ -34,5 +35,9 @@ public class ApplicationServiceInstaller : IServiceInstaller
         services.AddValidatorsFromAssembly(
             AssemblyReference.Assembly,
             includeInternalTypes: true);
+        
+        // Add Services lifetimes
+        services.AddScoped<IUserCreationService, UserCreationService>();
+
     }
 }
