@@ -1,7 +1,7 @@
-﻿using InspireEd.Domain.Faculties.ValueObjects;
+﻿using InspireEd.Domain.Errors;
+using InspireEd.Domain.Faculties.ValueObjects;
 using InspireEd.Domain.Primitives;
 using InspireEd.Domain.Shared;
-using InspireEd.Domain.Users.Entities;
 
 namespace InspireEd.Domain.Faculties.Entities;
 
@@ -80,12 +80,38 @@ public sealed class Group : Entity, IAuditableEntity
         
         return Result.Success();
     }
-
+    
+    #endregion
+    
+    #region Student related methods
+    
     public Result AddStudent(Guid studentId)
     {
         #region Add student id to group
         
         _studentIds.Add(studentId);
+        
+        #endregion
+        
+        return Result.Success();
+    }
+
+    public Result RemoveStudent(Guid studentId)
+    {
+        #region Checking studentId exist in this group
+        
+        var studentIdExists = _studentIds.Contains(studentId);
+        if (!studentIdExists)
+        {
+            return Result.Failure(
+                DomainErrors.Group.StudentNotExist(Id, studentId));
+        }
+        
+        #endregion
+        
+        #region Remove studentId from group
+        
+        _studentIds.Remove(studentId);
         
         #endregion
         

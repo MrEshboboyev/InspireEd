@@ -113,10 +113,6 @@ public static class DomainErrors
     
     public static class Group
     {
-        public static readonly Error EmailAlreadyInUse = new(
-            "User.EmailAlreadyInUse",
-            "The specified email is already in use");
-
         public static readonly Func<Guid, Error> NotFound = id => new Error(
             "Group.NotFound",
             $"The group with the identifier {id} was not found.");
@@ -124,10 +120,11 @@ public static class DomainErrors
         public static readonly Error NotExist = new(
             "Group.NotExist",
             $"There is no groups");
-
-        public static readonly Error InvalidCredentials = new(
-            "User.InvalidCredentials",
-            "The provided credentials are invalid");
+        
+        public static readonly Func<Guid, Guid, Error> StudentNotExist = (groupId, studentId) => new Error(
+            "Group.StudentNotExist", 
+            $"The student with the identifier {studentId} does not" +
+            $" exist in the group with the identifier {groupId}.");
     }
 
     #endregion
