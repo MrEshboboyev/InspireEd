@@ -7,7 +7,7 @@ using InspireEd.Domain.Users.Entities;
 using InspireEd.Domain.Users.Repositories;
 using InspireEd.Domain.Users.ValueObjects;
 
-namespace InspireEd.Application.Faculties.Commands.CreateDepartmentHead;
+namespace InspireEd.Application.Faculties.DepartmentHeads.Commands.CreateDepartmentHead;
 
 internal sealed class CreateDepartmentHeadCommandHandler(
     IUserRepository userRepository,

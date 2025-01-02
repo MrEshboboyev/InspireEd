@@ -1,56 +1,58 @@
 ﻿using InspireEd.Application.Abstractions.Messaging;
 using InspireEd.Domain.Errors;
 using InspireEd.Domain.Faculties.Repositories;
+using InspireEd.Domain.Faculties.ValueObjects;
 using InspireEd.Domain.Repositories;
 using InspireEd.Domain.Shared;
-using InspireEd.Domain.Users.Repositories;
 
-namespace InspireEd.Application.Faculties.Commands.AddDepartmentHead;
+namespace InspireEd.Application.Faculties.Groups.Commands.UpdateGroup;
 
-internal sealed class AddDepartmentHeadCommandHandler(
+internal sealed class UpdateGroupCommandHandler(
     IFacultyRepository facultyRepository,
-    IUserRepository userRepository,
-    IUnitOfWork unitOfWork) : ICommandHandler<AddDepartmentHeadCommand>
+    IUnitOfWork unitOfWork) : ICommandHandler<UpdateGroupCommand>
 {
     private readonly IFacultyRepository _facultyRepository = facultyRepository;
-    private readonly IUserRepository _userRepository = userRepository;
     private readonly IUnitOfWork _unitOfWork = unitOfWork;
-    
+
     public async Task<Result> Handle(
-        AddDepartmentHeadCommand request,
+        UpdateGroupCommand request,
         CancellationToken cancellationToken)
     {
-        var (facultyId, departmentHeadId) = request;
+        var (facultyId, groupId, groupName) = request;
         
-        #region Get Faculty and Department Head
+        #region Get this Faculty
         
         var faculty = await _facultyRepository.GetByIdAsync(
             facultyId,
             cancellationToken);
-        if (faculty is null)
+        if (faculty == null)
         {
             return Result.Failure(
                 DomainErrors.Faculty.NotFound(facultyId));
         }
         
-        var departmentHead = await _userRepository.GetByIdAsync(
-            departmentHeadId,
-            cancellationToken);
-        if (departmentHead is null)
+        #endregion
+        
+        #region Prepare value objects
+        
+        var createGroupNameResult = GroupName.Create(groupName);
+        if (createGroupNameResult.IsFailure)
         {
             return Result.Failure(
-                DomainErrors.User.NotFound(departmentHeadId));
+                createGroupNameResult.Error);
         }
         
         #endregion
         
-        #region Add this department head to faculty
+        #region Update group
 
-        var addDepartmentHeadResult = faculty.AddDepartmentHead(departmentHeadId);
-        if (addDepartmentHeadResult.IsFailure)
+        var updateGroupResult = faculty.UpdateGroup(
+            groupId,
+            createGroupNameResult.Value);
+        if (updateGroupResult.IsFailure)
         {
             return Result.Failure(
-                addDepartmentHeadResult.Error);
+                updateGroupResult.Error);
         }
 
         #endregion

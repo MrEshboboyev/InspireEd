@@ -1,13 +1,13 @@
-﻿using InspireEd.Application.Faculties.Commands.AddDepartmentHead;
+﻿using InspireEd.Application.Faculties.Commands.AddDepartmentHeadToFaculty;
 using InspireEd.Application.Faculties.Commands.AddGroupToFaculty;
-using InspireEd.Application.Faculties.Commands.CreateDepartmentHead;
 using InspireEd.Application.Faculties.Commands.CreateFaculty;
-using InspireEd.Application.Faculties.Commands.DeleteDepartmentHeadCommand;
 using InspireEd.Application.Faculties.Commands.DeleteFaculty;
-using InspireEd.Application.Faculties.Commands.Groups.UpdateGroup;
 using InspireEd.Application.Faculties.Commands.RemoveDepartmentHeadFromFaculty;
 using InspireEd.Application.Faculties.Commands.RemoveGroupFromFaculty;
 using InspireEd.Application.Faculties.Commands.UpdateFaculty;
+using InspireEd.Application.Faculties.DepartmentHeads.Commands.CreateDepartmentHead;
+using InspireEd.Application.Faculties.DepartmentHeads.Commands.DeleteDepartmentHead;
+using InspireEd.Application.Faculties.Groups.Commands.UpdateGroup;
 using InspireEd.Application.Faculties.Queries.GetFaculties;
 using InspireEd.Domain.Users.Enums;
 using InspireEd.Infrastructure.Authentication;
@@ -61,7 +61,7 @@ public class AdminsController(ISender sender) : ApiController(sender)
         [FromBody] AddDepartmentHeadRequest request,
         CancellationToken cancellationToken)
     {
-        var command = new AddDepartmentHeadCommand(
+        var command = new AddDepartmentHeadToFacultyCommand(
             request.FacultyId,
             request.DepartmentHeadId);
         

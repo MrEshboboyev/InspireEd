@@ -15,4 +15,8 @@
     <ProjectReference Include="..\InspireEd.Domain\InspireEd.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Faculties\DepartmentHeads\Commands\" />
+  </ItemGroup>
+
 </Project>

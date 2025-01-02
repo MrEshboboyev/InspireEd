@@ -4,17 +4,17 @@ using InspireEd.Domain.Repositories;
 using InspireEd.Domain.Shared;
 using InspireEd.Domain.Users.Repositories;
 
-namespace InspireEd.Application.Faculties.Commands.DeleteDepartmentHeadCommand;
+namespace InspireEd.Application.Faculties.DepartmentHeads.Commands.DeleteDepartmentHead;
 
 internal sealed class DeleteDepartmentHeadCommandHandler(
     IUserRepository userRepository,
-    IUnitOfWork unitOfWork) : ICommandHandler<Commands.DeleteDepartmentHeadCommand.DeleteDepartmentHeadCommand>
+    IUnitOfWork unitOfWork) : ICommandHandler<DeleteDepartmentHeadCommand>
 {
     private readonly IUserRepository _userRepository = userRepository;
     private readonly IUnitOfWork _unitOfWork = unitOfWork;
     
     public async Task<Result> Handle(
-        Commands.DeleteDepartmentHeadCommand.DeleteDepartmentHeadCommand request,
+        DeleteDepartmentHeadCommand request,
         CancellationToken cancellationToken)
     {
         var departmentHeadId = request.DepartmentHeadId;

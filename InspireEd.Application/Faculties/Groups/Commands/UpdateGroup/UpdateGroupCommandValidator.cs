@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using InspireEd.Domain.Faculties.ValueObjects;
 
-namespace InspireEd.Application.Faculties.Commands.Groups.UpdateGroup;
+namespace InspireEd.Application.Faculties.Groups.Commands.UpdateGroup;
 
 internal class UpdateGroupCommandValidator : AbstractValidator<UpdateGroupCommand>
 {

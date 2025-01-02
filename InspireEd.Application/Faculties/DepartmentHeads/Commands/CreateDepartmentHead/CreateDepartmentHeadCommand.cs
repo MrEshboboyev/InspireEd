@@ -1,6 +1,6 @@
 ﻿using InspireEd.Application.Abstractions.Messaging;
 
-namespace InspireEd.Application.Faculties.Commands.CreateDepartmentHead;
+namespace InspireEd.Application.Faculties.DepartmentHeads.Commands.CreateDepartmentHead;
 
 public sealed record CreateDepartmentHeadCommand(
     string Email,
