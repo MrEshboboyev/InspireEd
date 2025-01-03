@@ -2,6 +2,7 @@
 using InspireEd.Application.Faculties.Groups.Commands.AddStudentToGroup;
 using InspireEd.Application.Faculties.Groups.Commands.RemoveAllStudentsFromGroup;
 using InspireEd.Application.Faculties.Groups.Commands.RemoveStudentFromGroup;
+using InspireEd.Application.Faculties.Groups.Commands.TransferStudentBetweenGroups;
 using InspireEd.Domain.Users.Enums;
 using InspireEd.Infrastructure.Authentication;
 using InspireEd.Presentation.Abstractions;
@@ -94,7 +95,27 @@ public class DepartmentHeadsController(ISender sender) : ApiController(sender)
         return response.IsSuccess ? NoContent() : BadRequest(response);
     }
     
-    
+    [HasPermission(Permission.AddStudents)]
+    [HttpPut("faculties/{facultyId:guid}/groups/{sourceGroupId:guid}" +
+             "/students/{studentId:guid}/transfer/{targetGroupId:guid}")]
+    public async Task<IActionResult> TransferStudentBetweenGroups(
+        Guid facultyId,
+        Guid sourceGroupId,
+        Guid targetGroupId,
+        Guid studentId,
+        CancellationToken cancellationToken)
+    {
+        var command = new TransferStudentBetweenGroupsCommand(
+            facultyId,
+            sourceGroupId,
+            targetGroupId,
+            studentId);
+
+        var response = await Sender.Send(command, cancellationToken);
+
+        return response.IsSuccess ? NoContent() : BadRequest(response);
+    }
+
     
     #endregion
 }
