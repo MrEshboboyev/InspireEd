@@ -1,4 +1,5 @@
 ﻿using InspireEd.Application.Faculties.Commands.MergeGroups;
+using InspireEd.Application.Faculties.Commands.SplitGroup;
 using InspireEd.Application.Faculties.Groups.Commands.AddMultipleStudentsToGroup;
 using InspireEd.Application.Faculties.Groups.Commands.AddStudentToGroup;
 using InspireEd.Application.Faculties.Groups.Commands.RemoveAllStudentsFromGroup;
@@ -128,6 +129,24 @@ public class DepartmentHeadsController(ISender sender) : ApiController(sender)
         var command = new MergeGroupsCommand(
             facultyId,
             request.GroupIds);
+
+        var response = await Sender.Send(command, cancellationToken);
+
+        return response.IsSuccess ? NoContent() : BadRequest(response);
+    }
+
+    [HasPermission(Permission.ManageGroups)]
+    [HttpPost("faculties/{facultyId:guid}/groups/{groupId:guid}/split")]
+    public async Task<IActionResult> SplitGroup(
+        Guid facultyId,
+        Guid groupId,
+        [FromBody] SplitGroupRequest request,
+        CancellationToken cancellationToken)
+    {
+        var command = new SplitGroupCommand(
+            facultyId,
+            groupId,
+            request.NumberOfGroups);
 
         var response = await Sender.Send(command, cancellationToken);
 

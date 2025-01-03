@@ -109,6 +109,10 @@ public static class DomainErrors
         public static readonly Error MergeGroupCountInsufficient = new Error(
             "Faculty.MergeGroupCountInsufficient",
             "At least two groups are required to merge.");
+        
+        public static readonly Error InvalidSplitGroupParameters = new Error( 
+            "Faculty.InvalidSplitGroupParameters", 
+            "Invalid parameters for splitting the group.");
     }
     
     public static class Group

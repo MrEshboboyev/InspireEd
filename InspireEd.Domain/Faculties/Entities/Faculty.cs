@@ -265,15 +265,15 @@ public sealed class Faculty : AggregateRoot, IAuditableEntity
     public Result<Group> MergeGroups(List<Group> groups)
     {
         #region Checking groups count
-        
+
         if (groups.Count < 2)
         {
             return Result.Failure<Group>(
                 DomainErrors.Faculty.MergeGroupCountInsufficient);
         }
-        
+
         #endregion
-        
+
         #region Prepare value objects (GroupName)
 
         var newGroupName = GroupName.Create(
@@ -283,35 +283,82 @@ public sealed class Faculty : AggregateRoot, IAuditableEntity
             return Result.Failure<Group>(
                 newGroupName.Error);
         }
-        
+
         #endregion
-        
+
         #region Create new Group
 
         var mergedGroup = new Group(
             Guid.NewGuid(),
-            Id, 
+            Id,
             newGroupName.Value);
-        
+
         #endregion
 
         #region All merged group students add new group
-        
+
         // Collect all student IDs from the groups being merged
         foreach (var studentId in groups.SelectMany(group => group.StudentIds))
         {
             mergedGroup.AddStudent(studentId);
         }
-        
+
         #endregion
-        
+
         #region Add new group to faculty groupList
 
         _groups.Add(mergedGroup);
-        
+
         #endregion
 
         return Result.Success(mergedGroup);
+    }
+
+
+    /// <summary>
+    /// Splits a group into multiple smaller groups.
+    /// </summary>
+    /// <param name="group">The group to split.</param>
+    /// <param name="numberOfGroups">The number of smaller groups to create.</param>
+    /// <returns>The result of the split operation.</returns>
+    public Result SplitGroup(Group group, int numberOfGroups)
+    {
+        if (numberOfGroups < 2 || group.StudentIds.Count < numberOfGroups)
+        {
+            return Result.Failure(
+                DomainErrors.Faculty.InvalidSplitGroupParameters);
+        }
+
+        var studentIds = group.StudentIds.ToList();
+        var studentsPerGroup = studentIds.Count / numberOfGroups;
+
+        for (var i = 0; i < numberOfGroups; i++)
+        {
+            var newGroupName = GroupName.Create(
+                $"{group.Name.Value}-Part{i + 1}");
+            if (newGroupName.IsFailure)
+            {
+                return Result.Failure(newGroupName.Error);
+            }
+
+            var newGroup = new Group(
+                Guid.NewGuid(),
+                Id,
+                newGroupName.Value);
+
+            foreach (var studentId in studentIds
+                         .Skip(i * studentsPerGroup)
+                         .Take(studentsPerGroup))
+            {
+                newGroup.AddStudent(studentId);
+            }
+
+            _groups.Add(newGroup);
+        }
+
+        _groups.Remove(group);
+
+        return Result.Success();
     }
 
     #endregion
