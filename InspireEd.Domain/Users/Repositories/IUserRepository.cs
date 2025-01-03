@@ -15,6 +15,8 @@ public interface IUserRepository
     /// <param name="cancellationToken">Optional cancellation token.</param>
     /// <returns>The user corresponding to the given identifier.</returns>
     Task<User> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
+    
+    Task<List<User>> GetByIdsAsync(List<Guid> ids, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Retrieves a user by their email address.

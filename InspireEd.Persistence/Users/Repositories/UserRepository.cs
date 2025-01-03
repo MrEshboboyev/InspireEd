@@ -17,6 +17,13 @@ public sealed class UserRepository(ApplicationDbContext dbContext) : IUserReposi
             .Set<User>()
             .FirstOrDefaultAsync(member => member.Id == id, cancellationToken);
 
+    public async Task<List<User>> GetByIdsAsync(List<Guid> ids,
+        CancellationToken cancellationToken = default) =>
+            await _dbContext
+                .Set<User>()
+                .Where(user => ids.Contains(user.Id))
+                .ToListAsync(cancellationToken);
+
     public async Task<User> GetByEmailAsync(Email email, CancellationToken cancellationToken = default) =>
         await _dbContext
             .Set<User>()
@@ -34,7 +41,7 @@ public sealed class UserRepository(ApplicationDbContext dbContext) : IUserReposi
 
     public void Update(User user) =>
         _dbContext.Set<User>().Update(user);
-    
+
     public void Delete(User user) =>
         _dbContext.Set<User>().Remove(user);
 }

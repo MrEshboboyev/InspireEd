@@ -1,5 +1,6 @@
 ﻿using InspireEd.Application.Faculties.Groups.Commands.AddMultipleStudentsToGroup;
 using InspireEd.Application.Faculties.Groups.Commands.AddStudentToGroup;
+using InspireEd.Application.Faculties.Groups.Commands.RemoveAllStudentsFromGroup;
 using InspireEd.Application.Faculties.Groups.Commands.RemoveStudentFromGroup;
 using InspireEd.Domain.Users.Enums;
 using InspireEd.Infrastructure.Authentication;
@@ -51,6 +52,23 @@ public class DepartmentHeadsController(ISender sender) : ApiController(sender)
             request.LastName,
             request.Email,
             request.Password);
+        
+        var response = await Sender.Send(command, cancellationToken);
+        
+        return response.IsSuccess ? NoContent() : BadRequest(response);
+    }
+    
+    [HasPermission(Permission.AddStudents)]
+    [HttpDelete("faculties/{facultyId:guid}/groups/" +
+                "{groupId:guid}/remove-all-students")]
+    public async Task<IActionResult> RemoveAllStudentsFromGroup(
+        Guid facultyId,
+        Guid groupId,
+        CancellationToken cancellationToken)
+    {
+        var command = new RemoveAllStudentsFromGroupCommand(
+            facultyId,
+            groupId);
         
         var response = await Sender.Send(command, cancellationToken);
         
