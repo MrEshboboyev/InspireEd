@@ -6,19 +6,20 @@
 public enum Permission
 {
     // General User Permissions
-    ViewProfile = 1,          // View personal information (name, group, etc.)
-    ViewAttendance = 2,       // View attendance records
+    ViewProfile = 10,          // View personal information (name, group, etc.)
+    ViewAttendance = 20,       // View attendance records
 
     // Teacher Permissions
-    ManageAttendance = 3,     // Mark attendance for assigned lessons
-    ViewAssignedClasses = 4,  // View the list of assigned classes/groups
+    ManageAttendance = 30,     // Mark attendance for assigned lessons
+    ViewAssignedClasses = 40,  // View the list of assigned classes/groups
 
     // Department Head Permissions
-    AddStudents = 5,          // Add new students to the system
-    AssignGroups = 6,         // Assign students to groups
-    AssignClasses = 7,        // Assign teachers to classes
-    ViewFacultyData = 8,      // View all students and teachers in the faculty
+    AddStudents = 50,          // Add new students to the system
+    AssignGroups = 60,         // Assign students to groups
+    AssignClasses = 70,        // Assign teachers to classes
+    ViewFacultyData = 80,      // View all students and teachers in the faculty
+    ManageGroups = 90,
 
     // Admin Permissions
-    FullAccess = 9            // Unrestricted access to all system resources
+    FullAccess = 100            // Unrestricted access to all system resources
 }

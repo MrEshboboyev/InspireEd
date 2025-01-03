@@ -33,7 +33,9 @@ public sealed class Faculty : AggregateRoot, IAuditableEntity
         Name = name;
     }
 
-    private Faculty() { }
+    private Faculty()
+    {
+    }
 
     #endregion
 
@@ -55,27 +57,27 @@ public sealed class Faculty : AggregateRoot, IAuditableEntity
     #region Factory Methods
 
     public static Faculty Create(
-        Guid id, 
+        Guid id,
         FacultyName name)
     {
         return new Faculty(id, name);
     }
 
     #endregion
-    
+
     #region Own methods
 
     public Result UpdateName(FacultyName name)
     {
         #region Modified fields
-        
+
         Name = name;
-        
+
         #endregion
 
         return Result.Success();
     }
-    
+
     #endregion
 
     #region Department Head Methods
@@ -119,7 +121,7 @@ public sealed class Faculty : AggregateRoot, IAuditableEntity
     }
 
     #endregion
-    
+
     #region Group Methods
 
     /// <summary>
@@ -133,30 +135,30 @@ public sealed class Faculty : AggregateRoot, IAuditableEntity
         GroupName groupName)
     {
         #region Checking group already exists
-        
+
         if (_groups.Any(g => g.Name.Equals(groupName)))
         {
             return Result.Failure<Group>(
                 DomainErrors.Faculty.GroupNameAlreadyExists(groupName.Value));
         }
-        
+
         #endregion
 
         #region Create new group
-        
+
         var group = new Group(
-            id, 
-            Id, 
+            id,
+            Id,
             groupName);
-        
+
         #endregion
-        
+
         #region Add group to this faculty
-        
+
         _groups.Add(group);
-        
+
         #endregion
-        
+
         return Result.Success(group);
     }
 
@@ -169,22 +171,22 @@ public sealed class Faculty : AggregateRoot, IAuditableEntity
         Guid groupId)
     {
         #region Checking group exists
-        
+
         var group = _groups.FirstOrDefault(g => g.Id == groupId);
         if (group is null)
         {
             return Result.Failure(
                 DomainErrors.Faculty.GroupDoesNotExist(groupId));
         }
-        
+
         #endregion
 
         #region Remove group from this faculty
-        
+
         _groups.Remove(group);
-        
+
         #endregion
-        
+
         return Result.Success();
     }
 
@@ -199,39 +201,39 @@ public sealed class Faculty : AggregateRoot, IAuditableEntity
         GroupName newName)
     {
         #region Checking group exists
-        
+
         var group = _groups.FirstOrDefault(g => g.Id == groupId);
         if (group is null)
         {
             return Result.Failure(
                 DomainErrors.Faculty.GroupDoesNotExist(groupId));
         }
-        
+
         #endregion
 
         #region Checking this group name already exists in this faculty
-        
-        if (_groups.Any(g => 
-                g.Name.Equals(newName) && 
+
+        if (_groups.Any(g =>
+                g.Name.Equals(newName) &&
                 g.Id != groupId))
         {
             return Result.Failure(
                 DomainErrors.Faculty.GroupNameAlreadyExists(newName.Value));
         }
-        
+
         #endregion
 
         #region Update this group name
-        
+
         var updateGroupNameResult = group.UpdateName(newName);
         if (updateGroupNameResult.IsFailure)
         {
             return Result.Failure(
                 updateGroupNameResult.Error);
         }
-        
+
         #endregion
-        
+
         return Result.Success();
     }
 
@@ -248,5 +250,69 @@ public sealed class Faculty : AggregateRoot, IAuditableEntity
         return group;
     }
 
-    #endregion 
+    public List<Group> GetGroupsByIds(List<Guid> groupIds)
+    {
+        return _groups
+            .Where(g => groupIds.Contains(g.Id))
+            .ToList();
+    }
+
+    /// <summary>
+    /// Merges multiple groups into a single group.
+    /// </summary>
+    /// <param name="groups">The list of groups to merge.</param>
+    /// <returns>The merged group result.</returns>
+    public Result<Group> MergeGroups(List<Group> groups)
+    {
+        #region Checking groups count
+        
+        if (groups.Count < 2)
+        {
+            return Result.Failure<Group>(
+                DomainErrors.Faculty.MergeGroupCountInsufficient);
+        }
+        
+        #endregion
+        
+        #region Prepare value objects (GroupName)
+
+        var newGroupName = GroupName.Create(
+            $"{string.Join("-", groups.Select(g => g.Name.Value))}-Merged");
+        if (newGroupName.IsFailure)
+        {
+            return Result.Failure<Group>(
+                newGroupName.Error);
+        }
+        
+        #endregion
+        
+        #region Create new Group
+
+        var mergedGroup = new Group(
+            Guid.NewGuid(),
+            Id, 
+            newGroupName.Value);
+        
+        #endregion
+
+        #region All merged group students add new group
+        
+        // Collect all student IDs from the groups being merged
+        foreach (var studentId in groups.SelectMany(group => group.StudentIds))
+        {
+            mergedGroup.AddStudent(studentId);
+        }
+        
+        #endregion
+        
+        #region Add new group to faculty groupList
+
+        _groups.Add(mergedGroup);
+        
+        #endregion
+
+        return Result.Success(mergedGroup);
+    }
+
+    #endregion
 }

@@ -78,22 +78,14 @@ public static class DomainErrors
     
     public static class Faculty
     {
-        public static readonly Error EmailAlreadyInUse = new(
-            "User.EmailAlreadyInUse",
-            "The specified email is already in use");
-
         public static readonly Func<Guid, Error> NotFound = id => new Error(
             "Faculty.NotFound",
             $"The faculty with the identifier {id} was not found.");
 
         public static readonly Error NotExist = new(
             "Faculties.NotExist",
-            $"There is no faculties");
-
-        public static readonly Error InvalidCredentials = new(
-            "User.InvalidCredentials",
-            "The provided credentials are invalid");
-        
+            "There is no faculties");
+    
         public static readonly Func<Guid, Error> DepartmentHeadIdAlreadyExists = id => new Error(
             "Faculty.DepartmentHeadIdAlreadyExists",
             $"The department head with the identifier {id} is already assigned.");
@@ -101,14 +93,22 @@ public static class DomainErrors
         public static readonly Func<Guid, Error> DepartmentHeadIdDoesNotExist = id => new Error(
             "Faculty.DepartmentHeadIdDoesNotExist",
             $"The department head with the identifier {id} does not exist.");
-        
+    
         public static readonly Func<string, Error> GroupNameAlreadyExists = groupName => new Error( 
             "Faculty.GroupNameAlreadyExists",
             $"The group name '{groupName}' is already in use.");
-        
+    
         public static readonly Func<Guid, Error> GroupDoesNotExist = groupId => new Error( 
             "Faculty.GroupDoesNotExist", 
             $"The group with the identifier {groupId} does not exist.");
+        
+        public static readonly Error SomeGroupsNotFound = new Error(
+            "Faculty.SomeGroupsNotFound",
+            "Some of the specified groups were not found.");
+        
+        public static readonly Error MergeGroupCountInsufficient = new Error(
+            "Faculty.MergeGroupCountInsufficient",
+            "At least two groups are required to merge.");
     }
     
     public static class Group
