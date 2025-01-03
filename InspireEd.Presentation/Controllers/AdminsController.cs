@@ -7,6 +7,7 @@ using InspireEd.Application.Faculties.Commands.RemoveGroupFromFaculty;
 using InspireEd.Application.Faculties.Commands.UpdateFaculty;
 using InspireEd.Application.Faculties.DepartmentHeads.Commands.CreateDepartmentHead;
 using InspireEd.Application.Faculties.DepartmentHeads.Commands.DeleteDepartmentHead;
+using InspireEd.Application.Faculties.DepartmentHeads.Commands.UpdateDepartmentHeadDetails;
 using InspireEd.Application.Faculties.Groups.Commands.UpdateGroup;
 using InspireEd.Application.Faculties.Queries.GetFaculties;
 using InspireEd.Domain.Users.Enums;
@@ -37,12 +38,32 @@ public class AdminsController(ISender sender) : ApiController(sender)
             request.FirstName,
             request.LastName,
             request.Password);
-        
+
         var response = await Sender.Send(command, cancellationToken);
-        
+
         return response.IsSuccess ? NoContent() : BadRequest(response);
     }
-    
+
+    [HttpPut("department-heads/{departmentHeadId:guid}")]
+    public async Task<IActionResult> UpdateDepartmentHeadDetails(
+        Guid facultyId,
+        Guid departmentHeadId,
+        [FromBody] UpdateDepartmentHeadDetailsRequest request,
+        CancellationToken cancellationToken)
+    {
+        var command = new UpdateDepartmentHeadDetailsCommand(
+            facultyId,
+            departmentHeadId,
+            request.FirstName,
+            request.LastName,
+            request.Email);
+
+        var response = await Sender.Send(command, cancellationToken);
+
+        return response.IsSuccess ? NoContent() : BadRequest(response);
+    }
+
+
     [HttpPost("delete-department-head")]
     public async Task<IActionResult> DeleteDepartmentHead(
         [FromBody] DeleteDepartmentHeadRequest request,
@@ -50,9 +71,9 @@ public class AdminsController(ISender sender) : ApiController(sender)
     {
         var command = new DeleteDepartmentHeadCommand(
             request.DepartmentHeadId);
-        
+
         var response = await Sender.Send(command, cancellationToken);
-        
+
         return response.IsSuccess ? NoContent() : BadRequest(response);
     }
 
@@ -64,12 +85,12 @@ public class AdminsController(ISender sender) : ApiController(sender)
         var command = new AddDepartmentHeadToFacultyCommand(
             request.FacultyId,
             request.DepartmentHeadId);
-        
+
         var response = await Sender.Send(command, cancellationToken);
-        
+
         return response.IsSuccess ? NoContent() : BadRequest(response);
     }
-    
+
     [HttpPut("remove-department-head-from-faculty")]
     public async Task<IActionResult> RemoveDepartmentHeadFromFaculty(
         [FromBody] RemoveDepartmentHeadRequest request,
@@ -78,14 +99,14 @@ public class AdminsController(ISender sender) : ApiController(sender)
         var command = new RemoveDepartmentHeadFromFacultyCommand(
             request.FacultyId,
             request.DepartmentHeadId);
-        
+
         var response = await Sender.Send(command, cancellationToken);
-        
+
         return response.IsSuccess ? NoContent() : BadRequest(response);
     }
-    
+
     #endregion
-    
+
     #region Faculties
 
     [HttpGet("faculties")]
@@ -93,9 +114,9 @@ public class AdminsController(ISender sender) : ApiController(sender)
         CancellationToken cancellationToken)
     {
         var query = new GetFacultiesQuery();
-        
+
         var response = await Sender.Send(query, cancellationToken);
-        
+
         return response.IsSuccess ? Ok(response.Value) : NotFound(response.Error);
     }
 
@@ -106,12 +127,12 @@ public class AdminsController(ISender sender) : ApiController(sender)
     {
         var command = new CreateFacultyCommand(
             request.FacultyName);
-        
+
         var response = await Sender.Send(command, cancellationToken);
-        
+
         return response.IsSuccess ? NoContent() : BadRequest(response);
     }
-    
+
     [HttpPost("update-faculty")]
     public async Task<IActionResult> UpdateFaculty(
         [FromBody] UpdateFacultyRequest request,
@@ -120,9 +141,9 @@ public class AdminsController(ISender sender) : ApiController(sender)
         var command = new UpdateFacultyCommand(
             request.FacultyId,
             request.FacultyName);
-        
+
         var response = await Sender.Send(command, cancellationToken);
-        
+
         return response.IsSuccess ? NoContent() : BadRequest(response);
     }
 
@@ -133,14 +154,14 @@ public class AdminsController(ISender sender) : ApiController(sender)
     {
         var command = new DeleteFacultyCommand(
             request.FacultyId);
-        
+
         var response = await Sender.Send(command, cancellationToken);
-        
+
         return response.IsSuccess ? NoContent() : BadRequest(response);
     }
-    
+
     #endregion
-    
+
     #region Groups
 
     [HttpPost("faculties/{facultyId:guid}/groups")]
@@ -152,12 +173,12 @@ public class AdminsController(ISender sender) : ApiController(sender)
         var command = new AddGroupToFacultyCommand(
             facultyId,
             request.GroupName);
-        
+
         var response = await Sender.Send(command, cancellationToken);
-        
+
         return response.IsSuccess ? NoContent() : BadRequest(response);
     }
-    
+
     [HttpDelete("faculties/{facultyId:guid}/groups/{groupId:guid}")]
     public async Task<IActionResult> RemoveGroup(
         Guid facultyId,
@@ -167,12 +188,12 @@ public class AdminsController(ISender sender) : ApiController(sender)
         var command = new RemoveGroupFromFacultyCommand(
             facultyId,
             groupId);
-        
+
         var response = await Sender.Send(command, cancellationToken);
-        
+
         return response.IsSuccess ? NoContent() : BadRequest(response);
     }
-    
+
     [HttpPut("faculties/{facultyId:guid}/groups/{groupId:guid}")]
     public async Task<IActionResult> UpdateGroup(
         Guid facultyId,
@@ -184,11 +205,11 @@ public class AdminsController(ISender sender) : ApiController(sender)
             facultyId,
             groupId,
             request.GroupName);
-        
+
         var response = await Sender.Send(command, cancellationToken);
-        
+
         return response.IsSuccess ? NoContent() : BadRequest(response);
     }
-    
+
     #endregion
 }

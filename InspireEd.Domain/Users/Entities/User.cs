@@ -1,4 +1,5 @@
 ﻿using InspireEd.Domain.Primitives;
+using InspireEd.Domain.Shared;
 using InspireEd.Domain.Users.Events;
 using InspireEd.Domain.Users.ValueObjects;
 
@@ -23,18 +24,20 @@ public sealed class User : AggregateRoot, IAuditableEntity
         FirstName = firstName;
         LastName = lastName;
         Roles = [];
-        
+
         #region Domain Events
-        
+
         RaiseDomainEvent(new UserCreatedDomainEvent(
             Guid.NewGuid(),
             id,
             email.Value));
-        
+
         #endregion
     }
 
-    private User() { }
+    private User()
+    {
+    }
 
     #endregion
 
@@ -74,15 +77,36 @@ public sealed class User : AggregateRoot, IAuditableEntity
 
     public void AddRole(Role role)
     {
-        if (role == null) throw new ArgumentNullException(nameof(role));
+        ArgumentNullException.ThrowIfNull(role);
         if (!Roles.Contains(role))
             Roles.Add(role);
     }
 
     public void RemoveRole(Role role)
     {
-        if (role == null) throw new ArgumentNullException(nameof(role));
+        ArgumentNullException.ThrowIfNull(role);
         Roles.Remove(role);
+    }
+
+    /// <summary>
+    /// Updates the details of the user.
+    /// </summary>
+    /// <param name="firstName">The new first name of the user.</param>
+    /// <param name="lastName">The new last name of the user.</param>
+    /// <param name="email">The new email of the user.</param>
+    public Result UpdateDetails(FirstName firstName, LastName lastName, Email email)
+    {
+        FirstName = firstName;
+        LastName = lastName;
+        Email = email;
+
+        // RaiseDomainEvent(new UserUpdatedDomainEvent(
+        //     Id,
+        //     firstName.Value,
+        //     lastName.Value,
+        //     email.Value));
+
+        return Result.Success();
     }
 
     #endregion
