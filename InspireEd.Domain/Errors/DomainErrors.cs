@@ -70,6 +70,29 @@ public static class DomainErrors
     
     #endregion
     
+    #region Roles
+    
+    public static class Teacher
+    {
+        public static readonly Error EmailAlreadyInUse = new(
+            "User.EmailAlreadyInUse",
+            "The specified email is already in use");
+
+        public static readonly Func<Guid, Error> NotFound = id => new Error(
+            "Teacher.NotFound",
+            $"The teacher with the identifier {id} was not found.");
+
+        public static readonly Error NotExist = new(
+            "Teachers.NotExist",
+            $"There is no teachers");
+
+        public static readonly Error InvalidCredentials = new(
+            "Teacher.InvalidCredentials",
+            "The provided credentials are invalid");
+    }
+    
+    #endregion
+    
     #endregion
     
     #region Faculties
@@ -129,7 +152,12 @@ public static class DomainErrors
             "Group.StudentNotExist", 
             $"The student with the identifier {studentId} does not" +
             $" exist in the group with the identifier {groupId}.");
+        
+        public static readonly Func<IEnumerable<Guid>, Error> MissingGroups = ids => new Error(
+            "Group.MissingGroups",
+            $"The following groups are missing: {string.Join(", ", ids)}");
     }
+
 
     #endregion
     

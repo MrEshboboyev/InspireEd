@@ -19,7 +19,7 @@ public class ClassConfiguration : IEntityTypeConfiguration<Class>
         builder.HasKey(c => c.Id);
 
         // Property configurations
-        builder.Property(c => c.Subject)
+        builder.Property(c => c.SubjectId)
             .IsRequired();
 
         builder.Property(c => c.TeacherId)

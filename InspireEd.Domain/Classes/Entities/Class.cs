@@ -30,20 +30,20 @@ public sealed class Class : AggregateRoot
     /// Initializes a new instance of the <see cref="Class"/> class with the specified parameters.
     /// </summary>
     /// <param name="id">The unique identifier of the class.</param>
-    /// <param name="subject">The subject code of the class.</param>
+    /// <param name="subjectId">The subject id of the class.</param>
     /// <param name="teacherId">The unique identifier of the teacher.</param>
     /// <param name="type">The type of the class.</param>
     /// <param name="groupIds">The list of group ids associated with the class.</param>
     /// <param name="scheduledDate">The scheduled date of the class.</param>
     private Class(
         Guid id,
-        SubjectCode subject,
+        Guid subjectId,
         Guid teacherId,
         ClassType type,
         List<Guid> groupIds,
         DateTime scheduledDate) : base(id)
     {
-        Subject = subject;
+        SubjectId = subjectId;
         TeacherId = teacherId;
         Type = type;
         _groupIds = groupIds;
@@ -64,7 +64,7 @@ public sealed class Class : AggregateRoot
     /// <summary>
     /// Gets or sets the subject code of the class.
     /// </summary>
-    public SubjectCode Subject { get; set; }
+    public Guid SubjectId { get; set; }
 
     /// <summary>
     /// Gets or sets the unique identifier of the teacher.
@@ -97,7 +97,7 @@ public sealed class Class : AggregateRoot
 
     public static Class Create(
         Guid id,
-        SubjectCode subject,
+        Guid subjectId,
         Guid teacherId,
         ClassType type,
         List<Guid> groupIds,
@@ -105,7 +105,7 @@ public sealed class Class : AggregateRoot
     {
         return new Class(
             id,
-            subject,
+            subjectId,
             teacherId,
             type,
             groupIds,

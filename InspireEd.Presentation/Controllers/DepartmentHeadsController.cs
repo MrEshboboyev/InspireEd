@@ -1,4 +1,5 @@
-﻿using InspireEd.Application.Faculties.Commands.MergeGroups;
+﻿using InspireEd.Application.Classes.Commands.CreateClass;
+using InspireEd.Application.Faculties.Commands.MergeGroups;
 using InspireEd.Application.Faculties.Commands.SplitGroup;
 using InspireEd.Application.Faculties.Groups.Commands.AddMultipleStudentsToGroup;
 using InspireEd.Application.Faculties.Groups.Commands.AddStudentToGroup;
@@ -8,6 +9,7 @@ using InspireEd.Application.Faculties.Groups.Commands.TransferStudentBetweenGrou
 using InspireEd.Domain.Users.Enums;
 using InspireEd.Infrastructure.Authentication;
 using InspireEd.Presentation.Abstractions;
+using InspireEd.Presentation.Contracts.DepartmentHeads.Classes;
 using InspireEd.Presentation.Contracts.DepartmentHeads.Groups;
 using InspireEd.Presentation.Contracts.Users;
 using MediatR;
@@ -153,5 +155,28 @@ public class DepartmentHeadsController(ISender sender) : ApiController(sender)
         return response.IsSuccess ? NoContent() : BadRequest(response);
     }
 
+    #endregion
+    
+    #region Class related
+    
+    [HasPermission(Permission.AssignClasses)]
+    [HttpPost("classes")]
+    public async Task<IActionResult> CreateClass(
+        [FromBody] CreateClassRequest request,
+        CancellationToken cancellationToken)
+    {
+        var command = new CreateClassCommand(
+            request.SubjectId,
+            request.TeacherId,
+            request.ClassType,
+            request.GroupIds,
+            request.ScheduledDate);
+
+        var response = await Sender.Send(command, cancellationToken);
+
+        return response.IsSuccess ? NoContent() : BadRequest(response);
+    }
+
+    
     #endregion
 }

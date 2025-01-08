@@ -7,6 +7,10 @@ namespace InspireEd.Domain.Faculties.Repositories;
 /// </summary>
 public interface IGroupRepository
 {
+    Task<List<Group>> GetByIdsAsync(
+        List<Guid> groupIds,
+        CancellationToken cancellationToken = default);
+    
     /// <summary>
     /// Adds a new group entity to the repository.
     /// </summary>
