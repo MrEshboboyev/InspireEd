@@ -47,11 +47,13 @@ public sealed class Faculty : AggregateRoot, IAuditableEntity
 
     public DateTime? ModifiedOnUtc { get; set; }
 
+    public IReadOnlyCollection<Group> Groups => _groups.AsReadOnly();
+
     /// <summary>
     /// Gets the IDs of the department heads assigned to this faculty.
     /// </summary>
     public IReadOnlyCollection<Guid> DepartmentHeadIds => _departmentHeadIds.AsReadOnly();
-
+    
     #endregion
 
     #region Factory Methods
