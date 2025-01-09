@@ -264,6 +264,12 @@ public static class DomainErrors
             $"The following students with identifiers {string.Join(", ", studentIds)} do not exist in the class with the identifier {classId}.");
     }
 
+    public static class Attendance
+    {
+        public static readonly Func<Guid, Error> NotFound = id => new Error(
+            "Attendance.NotFound",
+            $"The attendance record with the identifier {id} was not found.");
+    }
     
     #endregion
     

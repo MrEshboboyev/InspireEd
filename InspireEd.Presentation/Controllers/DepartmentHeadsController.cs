@@ -1,4 +1,5 @@
-﻿using InspireEd.Application.Classes.Commands.CreateClass;
+﻿using InspireEd.Application.Classes.Attendances.Commands.UpdateAttendance;
+using InspireEd.Application.Classes.Commands.CreateClass;
 using InspireEd.Application.Faculties.Commands.MergeGroups;
 using InspireEd.Application.Faculties.Commands.SplitGroup;
 using InspireEd.Application.Faculties.Groups.Commands.AddMultipleStudentsToGroup;
@@ -10,6 +11,7 @@ using InspireEd.Domain.Users.Enums;
 using InspireEd.Infrastructure.Authentication;
 using InspireEd.Presentation.Abstractions;
 using InspireEd.Presentation.Contracts.DepartmentHeads.Classes;
+using InspireEd.Presentation.Contracts.DepartmentHeads.Classes.Attendances;
 using InspireEd.Presentation.Contracts.DepartmentHeads.Groups;
 using InspireEd.Presentation.Contracts.Users;
 using MediatR;
@@ -156,9 +158,9 @@ public class DepartmentHeadsController(ISender sender) : ApiController(sender)
     }
 
     #endregion
-    
+
     #region Class related
-    
+
     [HasPermission(Permission.AssignClasses)]
     [HttpPost("classes")]
     public async Task<IActionResult> CreateClass(
@@ -177,6 +179,35 @@ public class DepartmentHeadsController(ISender sender) : ApiController(sender)
         return response.IsSuccess ? NoContent() : BadRequest(response);
     }
 
-    
+    #region Attendance related
+
+    /// <summary>
+    /// Updates an attendance record for a student in a class.
+    /// </summary>
+    /// <param name="classId">The unique identifier of the class.</param>
+    /// <param name="attendanceId">The unique identifier of the attendance record.</param>
+    /// <param name="request">The request containing updated attendance details.</param>
+    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+    /// <returns>A task that represents the asynchronous operation, containing the action result.</returns>
+    [HttpPut("classes/{classId:guid}/attendances/{attendanceId:guid}")]
+    public async Task<IActionResult> UpdateAttendance(
+        Guid classId,
+        Guid attendanceId,
+        [FromBody] UpdateAttendanceRequest request,
+        CancellationToken cancellationToken)
+    {
+        var command = new UpdateAttendanceCommand(
+            classId,
+            attendanceId,
+            request.AttendanceStatus,
+            request.Notes);
+
+        var response = await Sender.Send(command, cancellationToken);
+
+        return response.IsSuccess ? NoContent() : BadRequest(response);
+    }
+
+    #endregion
+
     #endregion
 }

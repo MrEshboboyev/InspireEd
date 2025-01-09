@@ -1,4 +1,5 @@
 ﻿using InspireEd.Domain.Classes.Enums;
+using InspireEd.Domain.Errors;
 using InspireEd.Domain.Primitives;
 using InspireEd.Domain.Shared;
 
@@ -113,7 +114,7 @@ public sealed class Class : AggregateRoot
     
     #endregion
     
-    #region Attendace methods
+    #region Attendance methods
 
     public Result<Attendance> AddAttendance(
         Guid studentId,
@@ -128,6 +129,23 @@ public sealed class Class : AggregateRoot
             notes);
     
         _attendances.Add(attendance);
+        return Result.Success(attendance);
+    }
+    
+    public Result<Attendance> UpdateAttendance(
+        Guid attendanceId, 
+        AttendanceStatus status,
+        string notes)
+    {
+        var attendance = _attendances
+            .FirstOrDefault(a => a.Id == attendanceId);
+        if (attendance == null)
+        {
+            return Result.Failure<Attendance>(
+                DomainErrors.Attendance.NotFound(attendanceId));
+        }
+    
+        attendance.UpdateStatus(status, notes);
         return Result.Success(attendance);
     }
     

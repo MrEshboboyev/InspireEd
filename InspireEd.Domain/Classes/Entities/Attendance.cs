@@ -66,4 +66,15 @@ public sealed class Attendance : Entity, IAuditableEntity
     public DateTime? ModifiedOnUtc { get; set; }
 
     #endregion
+    
+    #region Own methods
+    
+    public void UpdateStatus(AttendanceStatus status, string notes)
+    {
+        Status = status;
+        Notes = notes;
+        ModifiedOnUtc = DateTime.UtcNow;
+    }
+    
+    #endregion
 }
