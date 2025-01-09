@@ -248,4 +248,24 @@ public static class DomainErrors
     #endregion
     
     #endregion
+    
+    #region Classes
+    
+    #region Entities
+    
+    public static class Class
+    {
+        public static readonly Func<Guid, Error> NotFound = id => new Error(
+            "Class.NotFound",
+            $"The class with the identifier {id} was not found.");
+
+        public static readonly Func<Guid, List<Guid>, Error> StudentNotExist = (classId, studentIds) => new Error(
+            "Class.StudentNotExist", 
+            $"The following students with identifiers {string.Join(", ", studentIds)} do not exist in the class with the identifier {classId}.");
+    }
+
+    
+    #endregion
+    
+    #endregion
 }

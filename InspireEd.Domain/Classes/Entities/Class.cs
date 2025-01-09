@@ -1,7 +1,6 @@
 ﻿using InspireEd.Domain.Classes.Enums;
-using InspireEd.Domain.Faculties.ValueObjects;
 using InspireEd.Domain.Primitives;
-using InspireEd.Domain.Subjects.ValueObjects;
+using InspireEd.Domain.Shared;
 
 namespace InspireEd.Domain.Classes.Entities;
 
@@ -110,6 +109,26 @@ public sealed class Class : AggregateRoot
             type,
             groupIds,
             scheduledDate);
+    }
+    
+    #endregion
+    
+    #region Attendace methods
+
+    public Result<Attendance> AddAttendance(
+        Guid studentId,
+        AttendanceStatus attendanceStatus,
+        string notes)
+    {
+        var attendance = new Attendance(
+            Guid.NewGuid(),
+            studentId,
+            this.Id,
+            attendanceStatus,
+            notes);
+    
+        _attendances.Add(attendance);
+        return Result.Success(attendance);
     }
     
     #endregion
