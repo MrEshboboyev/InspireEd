@@ -1,5 +1,6 @@
 ﻿using InspireEd.Application.Classes.Attendances.Commands.UpdateAttendance;
 using InspireEd.Application.Classes.Commands.CreateClass;
+using InspireEd.Application.Classes.Commands.UpdateClass;
 using InspireEd.Application.Faculties.Commands.MergeGroups;
 using InspireEd.Application.Faculties.Commands.SplitGroup;
 using InspireEd.Application.Faculties.Groups.Commands.AddMultipleStudentsToGroup;
@@ -172,6 +173,31 @@ public class DepartmentHeadsController(ISender sender) : ApiController(sender)
             request.TeacherId,
             request.ClassType,
             request.GroupIds,
+            request.ScheduledDate);
+
+        var response = await Sender.Send(command, cancellationToken);
+
+        return response.IsSuccess ? NoContent() : BadRequest(response);
+    }
+
+    /// <summary>
+    /// Updates a class's details.
+    /// </summary>
+    /// <param name="classId">The unique identifier of the class.</param>
+    /// <param name="request">The request containing updated class details.</param>
+    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+    /// <returns>A task that represents the asynchronous operation, containing the action result.</returns>
+    [HttpPut("classes/{classId:guid}")]
+    public async Task<IActionResult> UpdateClass(
+        Guid classId,
+        [FromBody] UpdateClassRequest request,
+        CancellationToken cancellationToken)
+    {
+        var command = new UpdateClassCommand(
+            classId,
+            request.SubjectId,
+            request.TeacherId,
+            request.Type,
             request.ScheduledDate);
 
         var response = await Sender.Send(command, cancellationToken);

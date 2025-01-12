@@ -114,6 +114,28 @@ public sealed class Class : AggregateRoot
     
     #endregion
     
+    #region Own Methods
+    
+    public Result UpdateClassDetails(
+        Guid subjectId,
+        Guid teacherId,
+        ClassType type,
+        DateTime scheduledDate)
+    {
+        #region Update fields
+        
+        SubjectId = subjectId;
+        TeacherId = teacherId;
+        Type = type;
+        ScheduledDate = scheduledDate;
+        
+        #endregion
+        
+        return Result.Success();
+    }
+    
+    #endregion
+    
     #region Attendance methods
 
     public Result<Attendance> AddAttendance(
