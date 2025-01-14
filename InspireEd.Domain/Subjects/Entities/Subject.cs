@@ -1,4 +1,5 @@
 ﻿using InspireEd.Domain.Primitives;
+using InspireEd.Domain.Shared;
 using InspireEd.Domain.Subjects.ValueObjects;
 
 namespace InspireEd.Domain.Subjects.Entities;
@@ -79,6 +80,26 @@ public sealed class Subject : AggregateRoot, IAuditableEntity
             name,
             code,
             credit);
+    }
+    
+    #endregion
+    
+    #region Own methods
+    
+    public Result UpdateSubjectDetails(
+        SubjectName name,
+        SubjectCode code,
+        SubjectCredit credit)
+    {
+        #region Update fields
+        
+        Name = name;
+        Code = code;
+        Credit = credit;
+        
+        #endregion
+        
+        return Result.Success();
     }
     
     #endregion

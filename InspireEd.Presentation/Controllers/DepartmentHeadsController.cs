@@ -9,6 +9,7 @@ using InspireEd.Application.Faculties.Groups.Commands.RemoveAllStudentsFromGroup
 using InspireEd.Application.Faculties.Groups.Commands.RemoveStudentFromGroup;
 using InspireEd.Application.Faculties.Groups.Commands.TransferStudentBetweenGroups;
 using InspireEd.Application.Subjects.Commands.CreateSubject;
+using InspireEd.Application.Subjects.Commands.UpdateSubject;
 using InspireEd.Domain.Users.Enums;
 using InspireEd.Infrastructure.Authentication;
 using InspireEd.Presentation.Abstractions;
@@ -247,12 +248,36 @@ public class DepartmentHeadsController(ISender sender) : ApiController(sender)
     /// <param name="request">The request containing subject details.</param>
     /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
     /// <returns>A task that represents the asynchronous operation, containing the action result.</returns>
-    [HttpPost]
+    [HttpPost("subjects")]
     public async Task<IActionResult> CreateSubject(
         [FromBody] CreateSubjectRequest request,
         CancellationToken cancellationToken)
     {
         var command = new CreateSubjectCommand(
+            request.Name,
+            request.Code,
+            request.Credit);
+
+        var response = await Sender.Send(command, cancellationToken);
+
+        return response.IsSuccess ? NoContent() : BadRequest(response);
+    }
+
+    /// <summary>
+    /// Updates an existing subject's details.
+    /// </summary>
+    /// <param name="id">The unique identifier of the subject.</param>
+    /// <param name="request">The request containing updated subject details.</param>
+    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+    /// <returns>A task that represents the asynchronous operation, containing the action result.</returns>
+    [HttpPut("subjects/{id:guid}")]
+    public async Task<IActionResult> UpdateSubject(
+        Guid id,
+        [FromBody] UpdateSubjectRequest request,
+        CancellationToken cancellationToken)
+    {
+        var command = new UpdateSubjectCommand(
+            id,
             request.Name,
             request.Code,
             request.Credit);
