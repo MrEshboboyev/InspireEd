@@ -65,4 +65,21 @@ public sealed class Subject : AggregateRoot, IAuditableEntity
     public DateTime? ModifiedOnUtc { get; set; }
 
     #endregion
+    
+    #region Factory Methods
+
+    public static Subject Create(
+        Guid id,
+        SubjectName name,
+        SubjectCode code,
+        SubjectCredit credit)
+    {
+        return new Subject(
+            id,
+            name,
+            code,
+            credit);
+    }
+    
+    #endregion
 }

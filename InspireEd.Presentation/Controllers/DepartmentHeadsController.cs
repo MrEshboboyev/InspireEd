@@ -8,12 +8,14 @@ using InspireEd.Application.Faculties.Groups.Commands.AddStudentToGroup;
 using InspireEd.Application.Faculties.Groups.Commands.RemoveAllStudentsFromGroup;
 using InspireEd.Application.Faculties.Groups.Commands.RemoveStudentFromGroup;
 using InspireEd.Application.Faculties.Groups.Commands.TransferStudentBetweenGroups;
+using InspireEd.Application.Subjects.Commands.CreateSubject;
 using InspireEd.Domain.Users.Enums;
 using InspireEd.Infrastructure.Authentication;
 using InspireEd.Presentation.Abstractions;
 using InspireEd.Presentation.Contracts.DepartmentHeads.Classes;
 using InspireEd.Presentation.Contracts.DepartmentHeads.Classes.Attendances;
 using InspireEd.Presentation.Contracts.DepartmentHeads.Groups;
+using InspireEd.Presentation.Contracts.DepartmentHeads.Subjects;
 using InspireEd.Presentation.Contracts.Users;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -234,6 +236,31 @@ public class DepartmentHeadsController(ISender sender) : ApiController(sender)
     }
 
     #endregion
+
+    #endregion
+
+    #region Subject related
+
+    /// <summary>
+    /// Creates a new subject.
+    /// </summary>
+    /// <param name="request">The request containing subject details.</param>
+    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+    /// <returns>A task that represents the asynchronous operation, containing the action result.</returns>
+    [HttpPost]
+    public async Task<IActionResult> CreateSubject(
+        [FromBody] CreateSubjectRequest request,
+        CancellationToken cancellationToken)
+    {
+        var command = new CreateSubjectCommand(
+            request.Name,
+            request.Code,
+            request.Credit);
+
+        var response = await Sender.Send(command, cancellationToken);
+
+        return response.IsSuccess ? NoContent() : BadRequest(response);
+    }
 
     #endregion
 }
