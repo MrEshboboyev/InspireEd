@@ -8,6 +8,7 @@ using InspireEd.Application.Faculties.Groups.Commands.AddStudentToGroup;
 using InspireEd.Application.Faculties.Groups.Commands.RemoveAllStudentsFromGroup;
 using InspireEd.Application.Faculties.Groups.Commands.RemoveStudentFromGroup;
 using InspireEd.Application.Faculties.Groups.Commands.TransferStudentBetweenGroups;
+using InspireEd.Application.Subjects.Commands.ChangeSubjectCredit;
 using InspireEd.Application.Subjects.Commands.CreateSubject;
 using InspireEd.Application.Subjects.Commands.DeleteSubject;
 using InspireEd.Application.Subjects.Commands.UpdateSubject;
@@ -300,6 +301,28 @@ public class DepartmentHeadsController(ISender sender) : ApiController(sender)
         CancellationToken cancellationToken)
     {
         var command = new DeleteSubjectCommand(id);
+
+        var response = await Sender.Send(command, cancellationToken);
+
+        return response.IsSuccess ? NoContent() : BadRequest(response);
+    }
+
+    /// <summary>
+    /// Changes the credit value of a subject.
+    /// </summary>
+    /// <param name="id">The unique identifier of the subject.</param>
+    /// <param name="request">The request containing the new credit value.</param>
+    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+    /// <returns>A task that represents the asynchronous operation, containing the action result.</returns>
+    [HttpPut("subjects/{id:guid}/change-credit")]
+    public async Task<IActionResult> ChangeSubjectCredit(
+        Guid id,
+        [FromBody] ChangeSubjectCreditRequest request,
+        CancellationToken cancellationToken)
+    {
+        var command = new ChangeSubjectCreditCommand(
+            id,
+            request.NewCredit);
 
         var response = await Sender.Send(command, cancellationToken);
 
