@@ -9,6 +9,7 @@ using InspireEd.Application.Faculties.Groups.Commands.RemoveAllStudentsFromGroup
 using InspireEd.Application.Faculties.Groups.Commands.RemoveStudentFromGroup;
 using InspireEd.Application.Faculties.Groups.Commands.TransferStudentBetweenGroups;
 using InspireEd.Application.Subjects.Commands.CreateSubject;
+using InspireEd.Application.Subjects.Commands.DeleteSubject;
 using InspireEd.Application.Subjects.Commands.UpdateSubject;
 using InspireEd.Domain.Users.Enums;
 using InspireEd.Infrastructure.Authentication;
@@ -281,6 +282,24 @@ public class DepartmentHeadsController(ISender sender) : ApiController(sender)
             request.Name,
             request.Code,
             request.Credit);
+
+        var response = await Sender.Send(command, cancellationToken);
+
+        return response.IsSuccess ? NoContent() : BadRequest(response);
+    }
+
+    /// <summary>
+    /// Deletes a subject by its unique identifier.
+    /// </summary>
+    /// <param name="id">The unique identifier of the subject.</param>
+    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+    /// <returns>A task that represents the asynchronous operation, containing the action result.</returns>
+    [HttpDelete("subjects/{id:guid}")]
+    public async Task<IActionResult> DeleteSubject(
+        Guid id,
+        CancellationToken cancellationToken)
+    {
+        var command = new DeleteSubjectCommand(id);
 
         var response = await Sender.Send(command, cancellationToken);
 
