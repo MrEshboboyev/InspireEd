@@ -11,6 +11,7 @@ using InspireEd.Application.Faculties.Groups.Commands.TransferStudentBetweenGrou
 using InspireEd.Application.Subjects.Commands.ChangeSubjectCredit;
 using InspireEd.Application.Subjects.Commands.CreateSubject;
 using InspireEd.Application.Subjects.Commands.DeleteSubject;
+using InspireEd.Application.Subjects.Commands.RenameSubject;
 using InspireEd.Application.Subjects.Commands.UpdateSubject;
 using InspireEd.Domain.Users.Enums;
 using InspireEd.Infrastructure.Authentication;
@@ -323,6 +324,28 @@ public class DepartmentHeadsController(ISender sender) : ApiController(sender)
         var command = new ChangeSubjectCreditCommand(
             id,
             request.NewCredit);
+
+        var response = await Sender.Send(command, cancellationToken);
+
+        return response.IsSuccess ? NoContent() : BadRequest(response);
+    }
+
+    /// <summary>
+    /// Renames a subject.
+    /// </summary>
+    /// <param name="id">The unique identifier of the subject.</param>
+    /// <param name="request">The request containing the new name for the subject.</param>
+    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+    /// <returns>A task that represents the asynchronous operation, containing the action result.</returns>
+    [HttpPut("subjects/{id:guid}/rename")]
+    public async Task<IActionResult> RenameSubject(
+        Guid id,
+        [FromBody] RenameSubjectRequest request,
+        CancellationToken cancellationToken)
+    {
+        var command = new RenameSubjectCommand(
+            id,
+            request.NewName);
 
         var response = await Sender.Send(command, cancellationToken);
 

@@ -113,5 +113,16 @@ public sealed class Subject : AggregateRoot, IAuditableEntity
         return Result.Success();
     }
     
+    public Result Rename(SubjectName newName)
+    {
+        #region Update fields
+        
+        Name = newName;
+        
+        #endregion
+        
+        return Result.Success();
+    }
+    
     #endregion
 }
