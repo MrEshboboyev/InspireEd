@@ -15,6 +15,8 @@ public interface IClassRepository : IRepository<Class>
     /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
     /// <returns>A task that represents the asynchronous operation, containing the class entity.</returns>
     Task<Class> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
+    
+    Task<Class> GetByIdWithAttendancesAsync(Guid id, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Adds a new class entity to the repository.
