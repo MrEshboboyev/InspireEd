@@ -10,6 +10,8 @@ public static class FacultyResponseFactory
             faculty.Id,
             faculty.Name.Value,
             faculty.CreatedOnUtc,
-            faculty.ModifiedOnUtc);
+            faculty.ModifiedOnUtc,
+            faculty.DepartmentHeadIds,
+            faculty.Groups.Select(GroupResponseFactory.Create).ToList());
     }
 }

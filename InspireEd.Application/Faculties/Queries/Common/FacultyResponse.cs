@@ -1,7 +1,9 @@
 ﻿namespace InspireEd.Application.Faculties.Queries.Common;
 
 public sealed record FacultyResponse(
-    Guid FacultyId,
-    string FacultyName,
+    Guid Id,
+    string Name,
     DateTime CreatedOnUtc,
-    DateTime? ModifiedOnUtc);
+    DateTime? ModifiedOnUtc,
+    IEnumerable<Guid> DepartmentHeadIds,
+    IEnumerable<GroupResponse> Groups);

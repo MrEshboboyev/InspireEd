@@ -10,6 +10,7 @@ using InspireEd.Application.Faculties.DepartmentHeads.Commands.DeleteDepartmentH
 using InspireEd.Application.Faculties.DepartmentHeads.Commands.UpdateDepartmentHeadDetails;
 using InspireEd.Application.Faculties.Groups.Commands.UpdateGroup;
 using InspireEd.Application.Faculties.Queries.GetFaculties;
+using InspireEd.Application.Faculties.Queries.GetFacultyDetails;
 using InspireEd.Domain.Users.Enums;
 using InspireEd.Infrastructure.Authentication;
 using InspireEd.Presentation.Abstractions;
@@ -109,6 +110,8 @@ public class AdminsController(ISender sender) : ApiController(sender)
 
     #region Faculties
 
+    #region Get
+
     [HttpGet("faculties")]
     public async Task<IActionResult> GetAllFaculties(
         CancellationToken cancellationToken)
@@ -119,6 +122,26 @@ public class AdminsController(ISender sender) : ApiController(sender)
 
         return response.IsSuccess ? Ok(response.Value) : NotFound(response.Error);
     }
+
+    /// <summary>
+    /// Retrieves details of a faculty by its unique identifier.
+    /// </summary>
+    /// <param name="facultyId">The unique identifier of the faculty.</param>
+    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+    /// <returns>A task that represents the asynchronous operation, containing the action result.</returns>
+    [HttpGet("{facultyId:guid}")]
+    public async Task<IActionResult> GetFacultyDetails(
+        Guid facultyId,
+        CancellationToken cancellationToken)
+    {
+        var query = new GetFacultyDetailsQuery(facultyId);
+
+        var response = await Sender.Send(query, cancellationToken);
+
+        return response.IsSuccess ? Ok(response.Value) : NotFound(response.Error);
+    }
+
+    #endregion
 
     [HttpPost("create-faculty")]
     public async Task<IActionResult> CreateFaculty(
