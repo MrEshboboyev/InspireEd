@@ -3,6 +3,7 @@ using InspireEd.Application.Classes.Attendances.Commands.UpdateAttendance;
 using InspireEd.Application.Classes.Commands.CreateClass;
 using InspireEd.Application.Classes.Commands.DeleteClass;
 using InspireEd.Application.Classes.Commands.UpdateClass;
+using InspireEd.Application.Classes.Commands.UpdateGroupIds;
 using InspireEd.Application.Faculties.Commands.MergeGroups;
 using InspireEd.Application.Faculties.Commands.SplitGroup;
 using InspireEd.Application.Faculties.Groups.Commands.AddMultipleStudentsToGroup;
@@ -225,6 +226,28 @@ public class DepartmentHeadsController(ISender sender) : ApiController(sender)
         CancellationToken cancellationToken)
     {
         var command = new DeleteClassCommand(id);
+
+        var response = await Sender.Send(command, cancellationToken);
+
+        return response.IsSuccess ? NoContent() : BadRequest(response);
+    }
+
+    /// <summary>
+    /// Updates the group IDs associated with the class.
+    /// </summary>
+    /// <param name="classId">The unique identifier of the class.</param>
+    /// <param name="request">The request containing the new group IDs.</param>
+    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+    /// <returns>A task that represents the asynchronous operation, containing the action result.</returns>
+    [HttpPut("classes/{classId:guid}/group-ids")]
+    public async Task<IActionResult> UpdateGroupIds(
+        Guid classId,
+        [FromBody] UpdateGroupIdsRequest request,
+        CancellationToken cancellationToken)
+    {
+        var command = new UpdateGroupIdsCommand(
+            classId,
+            request.GroupIds);
 
         var response = await Sender.Send(command, cancellationToken);
 

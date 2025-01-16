@@ -133,7 +133,20 @@ public sealed class Class : AggregateRoot
         
         return Result.Success();
     }
+
+    public Result UpdateGroupIds(List<Guid> groupIds)
+    {
+        #region Update group ids
     
+        _groupIds.Clear();
+        _groupIds.AddRange(groupIds);
+
+        #endregion
+
+        return Result.Success();
+    }
+
+
     #endregion
     
     #region Attendance methods
