@@ -171,5 +171,16 @@ public sealed class Class : AggregateRoot
         return Result.Success(attendance);
     }
     
+    public Result RemoveAttendance(Attendance attendance)
+    {
+        #region Remove attendance
+        
+        _attendances.Remove(attendance);
+        
+        #endregion
+        
+        return Result.Success();
+    }
+
     #endregion
 }

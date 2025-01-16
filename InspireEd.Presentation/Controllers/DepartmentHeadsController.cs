@@ -1,4 +1,5 @@
-﻿using InspireEd.Application.Classes.Attendances.Commands.UpdateAttendance;
+﻿using InspireEd.Application.Classes.Attendances.Commands.DeleteAttendance;
+using InspireEd.Application.Classes.Attendances.Commands.UpdateAttendance;
 using InspireEd.Application.Classes.Commands.CreateClass;
 using InspireEd.Application.Classes.Commands.DeleteClass;
 using InspireEd.Application.Classes.Commands.UpdateClass;
@@ -252,6 +253,26 @@ public class DepartmentHeadsController(ISender sender) : ApiController(sender)
             attendanceId,
             request.AttendanceStatus,
             request.Notes);
+
+        var response = await Sender.Send(command, cancellationToken);
+
+        return response.IsSuccess ? NoContent() : BadRequest(response);
+    }
+
+    /// <summary>
+    /// Deletes an attendance record by its unique identifier.
+    /// </summary>
+    /// <param name="classId">The unique identifier of the class.</param>
+    /// <param name="attendanceId">The unique identifier of the attendance record.</param>
+    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+    /// <returns>A task that represents the asynchronous operation, containing the action result.</returns>
+    [HttpDelete("classes/{classId:guid}/attendances/{attendanceId:guid}")]
+    public async Task<IActionResult> DeleteAttendance(
+        Guid classId,
+        Guid attendanceId,
+        CancellationToken cancellationToken)
+    {
+        var command = new DeleteAttendanceCommand(classId, attendanceId);
 
         var response = await Sender.Send(command, cancellationToken);
 
