@@ -8,6 +8,7 @@ using InspireEd.Application.Faculties.Commands.UpdateFaculty;
 using InspireEd.Application.Faculties.DepartmentHeads.Commands.CreateDepartmentHead;
 using InspireEd.Application.Faculties.DepartmentHeads.Commands.DeleteDepartmentHead;
 using InspireEd.Application.Faculties.DepartmentHeads.Commands.UpdateDepartmentHeadDetails;
+using InspireEd.Application.Faculties.DepartmentHeads.Queries.GetDepartmentHeadDetails;
 using InspireEd.Application.Faculties.Groups.Commands.UpdateGroup;
 using InspireEd.Application.Faculties.Queries.GetFaculties;
 using InspireEd.Application.Faculties.Queries.GetFacultyDetails;
@@ -28,6 +29,28 @@ namespace InspireEd.Presentation.Controllers;
 public class AdminsController(ISender sender) : ApiController(sender)
 {
     #region Department Head
+
+    #region Get
+
+    /// <summary>
+    /// Retrieves details of a department head by their unique identifier.
+    /// </summary>
+    /// <param name="departmentHeadId">The unique identifier of the department head.</param>
+    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+    /// <returns>A task that represents the asynchronous operation, containing the action result.</returns>
+    [HttpGet("department-heads/{departmentHeadId:guid}")]
+    public async Task<IActionResult> GetDepartmentHeadDetails(
+        Guid departmentHeadId,
+        CancellationToken cancellationToken)
+    {
+        var query = new GetDepartmentHeadDetailsQuery(departmentHeadId);
+
+        var response = await Sender.Send(query, cancellationToken);
+
+        return response.IsSuccess ? Ok(response.Value) : NotFound(response.Error);
+    }
+
+    #endregion
 
     [HttpPost("create-department-head")]
     public async Task<IActionResult> CreateDepartmentHead(

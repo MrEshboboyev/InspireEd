@@ -16,6 +16,12 @@ public interface IUserRepository
     /// <returns>The user corresponding to the given identifier.</returns>
     Task<User> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
     
+    /// <summary>
+    /// Retrieves multiple users by their unique identifiers.
+    /// </summary>
+    /// <param name="ids">The unique identifiers of the users.</param>
+    /// <param name="cancellationToken">Optional cancellation token.</param>
+    /// <returns>List of users corresponding to the given identifiers.</returns>
     Task<List<User>> GetByIdsAsync(List<Guid> ids, CancellationToken cancellationToken = default);
 
     /// <summary>
@@ -53,5 +59,33 @@ public interface IUserRepository
     /// <param name="user">The user entity to update.</param>
     void Update(User user);
     
+    /// <summary>
+    /// Deletes an existing user from the repository.
+    /// </summary>
+    /// <param name="user">The user entity to delete.</param>
     void Delete(User user);
+
+    /// <summary>
+    /// Assigns a role to an existing user.
+    /// </summary>
+    /// <param name="userId">The unique identifier of the user.</param>
+    /// <param name="role">The role to assign.</param>
+    /// <param name="cancellationToken">Optional cancellation token.</param>
+    Task AssignRoleAsync(Guid userId, Role role, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Removes a role from an existing user.
+    /// </summary>
+    /// <param name="userId">The unique identifier of the user.</param>
+    /// <param name="role">The role to remove.</param>
+    /// <param name="cancellationToken">Optional cancellation token.</param>
+    Task RemoveRoleAsync(Guid userId, Role role, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Retrieves a user by role.
+    /// </summary>
+    /// <param name="role">The role of the user.</param>
+    /// <param name="cancellationToken">Optional cancellation token.</param>
+    /// <returns>The user corresponding to the given role.</returns>
+    Task<User> GetUserByRoleAsync(Role role, CancellationToken cancellationToken);
 }

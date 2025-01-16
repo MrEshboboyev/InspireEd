@@ -94,6 +94,13 @@ public static class DomainErrors
             "The provided credentials are invalid");
     }
 
+    public static class DepartmentHead
+    {
+        public static readonly Func<Guid, Error> NotFound = id => new Error(
+            "DepartmentHead.NotFound",
+            $"The department head with the identifier {id} was not found.");
+    }
+
     #endregion
 
     #endregion
