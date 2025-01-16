@@ -3,8 +3,8 @@
 namespace InspireEd.Application.Faculties.DepartmentHeads.Commands.UpdateDepartmentHeadDetails;
 
 public sealed record UpdateDepartmentHeadDetailsCommand(
-    Guid FacultyId,
     Guid DepartmentHeadId,
     string FirstName,
     string LastName,
-    string Email) : ICommand;
+    string Email,
+    string Password) : ICommand;

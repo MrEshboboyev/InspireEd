@@ -6,9 +6,6 @@ internal class UpdateDepartmentHeadDetailsCommandValidator : AbstractValidator<U
 {
     public UpdateDepartmentHeadDetailsCommandValidator()
     {
-        RuleFor(command => command.FacultyId)
-            .NotEmpty().WithMessage("FacultyId is required.");
-
         RuleFor(command => command.DepartmentHeadId)
             .NotEmpty().WithMessage("DepartmentHeadId is required.");
 
@@ -21,5 +18,8 @@ internal class UpdateDepartmentHeadDetailsCommandValidator : AbstractValidator<U
         RuleFor(command => command.Email)
             .NotEmpty().WithMessage("Email is required.")
             .EmailAddress().WithMessage("A valid email address is required.");
+
+        RuleFor(command => command.Password)
+            .NotEmpty().WithMessage("Password is required.");
     }
 }

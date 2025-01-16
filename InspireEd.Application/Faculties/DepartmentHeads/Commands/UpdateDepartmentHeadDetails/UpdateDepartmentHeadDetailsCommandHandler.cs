@@ -1,6 +1,5 @@
 ﻿using InspireEd.Application.Abstractions.Messaging;
 using InspireEd.Domain.Errors;
-using InspireEd.Domain.Faculties.Repositories;
 using InspireEd.Domain.Repositories;
 using InspireEd.Domain.Shared;
 using InspireEd.Domain.Users.Repositories;
@@ -9,7 +8,6 @@ using InspireEd.Domain.Users.ValueObjects;
 namespace InspireEd.Application.Faculties.DepartmentHeads.Commands.UpdateDepartmentHeadDetails;
 
 internal sealed class UpdateDepartmentHeadDetailsCommandHandler(
-    IFacultyRepository facultyRepository,
     IUserRepository userRepository,
     IUnitOfWork unitOfWork) : ICommandHandler<UpdateDepartmentHeadDetailsCommand>
 {
@@ -17,24 +15,9 @@ internal sealed class UpdateDepartmentHeadDetailsCommandHandler(
         UpdateDepartmentHeadDetailsCommand request,
         CancellationToken cancellationToken)
     {
-        var (facultyId, departmentHeadId, firstName, lastName, email) = request;
+        var (departmentHeadId, firstName, lastName, email, password) = request;
 
-        #region Get Faculty and Department Head
-
-        var faculty = await facultyRepository.GetByIdAsync(
-            facultyId,
-            cancellationToken);
-        if (faculty is null)
-        {
-            return Result.Failure(
-                DomainErrors.Faculty.NotFound(facultyId));
-        }
-
-        if (!faculty.DepartmentHeadIds.Contains(departmentHeadId))
-        {
-            return Result.Failure(
-                DomainErrors.Faculty.DepartmentHeadIdDoesNotExist(departmentHeadId));
-        }
+        #region Get Department Head
 
         var user = await userRepository.GetByIdAsync(departmentHeadId, cancellationToken);
         if (user is null)

@@ -79,13 +79,13 @@ public class AdminsController(ISender sender) : ApiController(sender)
             departmentHeadId,
             request.FirstName,
             request.LastName,
-            request.Email);
+            request.Email,
+            request.Password);
 
         var response = await Sender.Send(command, cancellationToken);
 
         return response.IsSuccess ? NoContent() : BadRequest(response);
     }
-    // TO - DO
 
     [HttpDelete("department-heads/{departmentHeadId:guid}")]
     public async Task<IActionResult> DeleteDepartmentHead(
