@@ -1,5 +1,6 @@
 ﻿using InspireEd.Application.Classes.Attendances.Commands.UpdateAttendance;
 using InspireEd.Application.Classes.Commands.CreateClass;
+using InspireEd.Application.Classes.Commands.DeleteClass;
 using InspireEd.Application.Classes.Commands.UpdateClass;
 using InspireEd.Application.Faculties.Commands.MergeGroups;
 using InspireEd.Application.Faculties.Commands.SplitGroup;
@@ -205,6 +206,24 @@ public class DepartmentHeadsController(ISender sender) : ApiController(sender)
             request.TeacherId,
             request.Type,
             request.ScheduledDate);
+
+        var response = await Sender.Send(command, cancellationToken);
+
+        return response.IsSuccess ? NoContent() : BadRequest(response);
+    }
+
+    /// <summary>
+    /// Deletes a class by its unique identifier.
+    /// </summary>
+    /// <param name="id">The unique identifier of the class.</param>
+    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+    /// <returns>A task that represents the asynchronous operation, containing the action result.</returns>
+    [HttpDelete("classes/{id:guid}")]
+    public async Task<IActionResult> DeleteClass(
+        Guid id,
+        CancellationToken cancellationToken)
+    {
+        var command = new DeleteClassCommand(id);
 
         var response = await Sender.Send(command, cancellationToken);
 
