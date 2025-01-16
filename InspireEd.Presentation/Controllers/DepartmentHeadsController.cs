@@ -5,6 +5,7 @@ using InspireEd.Application.Classes.Commands.DeleteClass;
 using InspireEd.Application.Classes.Commands.RescheduleClass;
 using InspireEd.Application.Classes.Commands.UpdateClass;
 using InspireEd.Application.Classes.Commands.UpdateGroupIds;
+using InspireEd.Application.Classes.Queries.GetClassById;
 using InspireEd.Application.Faculties.Commands.MergeGroups;
 using InspireEd.Application.Faculties.Commands.SplitGroup;
 using InspireEd.Application.Faculties.Groups.Commands.AddMultipleStudentsToGroup;
@@ -171,6 +172,29 @@ public class DepartmentHeadsController(ISender sender) : ApiController(sender)
     #endregion
 
     #region Class related
+
+    #region Get
+
+    /// <summary>
+    /// Retrieves details of a class by its unique identifier.
+    /// </summary>
+    /// <param name="id">The unique identifier of the class.</param>
+    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+    /// <returns>A task that represents the asynchronous operation, containing the action result.</returns>
+    [HasPermission(Permission.ViewAssignedClasses)]
+    [HttpGet("classes/{id:guid}")]
+    public async Task<IActionResult> GetClassById(
+        Guid id,
+        CancellationToken cancellationToken)
+    {
+        var query = new GetClassByIdQuery(id);
+
+        var response = await Sender.Send(query, cancellationToken);
+
+        return response.IsSuccess ? Ok(response.Value) : NotFound(response.Error);
+    }
+
+    #endregion
 
     [HasPermission(Permission.AssignClasses)]
     [HttpPost("classes")]
