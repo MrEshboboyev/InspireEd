@@ -6,20 +6,26 @@ namespace InspireEd.Persistence.Faculties.Groups.Repositories;
 
 public sealed class GroupRepository(ApplicationDbContext dbContext) : IGroupRepository
 {
-    private readonly ApplicationDbContext _dbContext = dbContext;
-
     public async Task<List<Group>> GetByIdsAsync(
         List<Guid> groupIds, 
         CancellationToken cancellationToken = default)
-        => await _dbContext
+        => await dbContext
             .Set<Group>()
             .AsNoTracking()
             .Where(g => groupIds.Contains(g.Id))
             .ToListAsync(cancellationToken);
+    
+    public async Task<Group> GetByIdAsync(
+        Guid id, 
+        CancellationToken cancellationToken = default)
+        => await dbContext
+            .Set<Group>()
+            .AsNoTracking()
+            .SingleOrDefaultAsync(g => g.Id == id, cancellationToken);
 
-    public void Add(Group group) => _dbContext.Set<Group>().Add(group);
+    public void Add(Group group) => dbContext.Set<Group>().Add(group);
 
-    public void Update(Group group) => _dbContext.Set<Group>().Update(group);
+    public void Update(Group group) => dbContext.Set<Group>().Update(group);
 
-    public void Remove(Group group) => _dbContext.Set<Group>().Remove(group);
+    public void Remove(Group group) => dbContext.Set<Group>().Remove(group);
 }

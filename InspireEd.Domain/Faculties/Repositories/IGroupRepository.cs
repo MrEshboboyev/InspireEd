@@ -11,6 +11,10 @@ public interface IGroupRepository
         List<Guid> groupIds,
         CancellationToken cancellationToken = default);
     
+    Task<Group> GetByIdAsync(
+        Guid id,
+        CancellationToken cancellationToken = default);
+
     /// <summary>
     /// Adds a new group entity to the repository.
     /// </summary>

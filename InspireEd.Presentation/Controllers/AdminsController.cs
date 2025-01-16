@@ -10,6 +10,7 @@ using InspireEd.Application.Faculties.DepartmentHeads.Commands.DeleteDepartmentH
 using InspireEd.Application.Faculties.DepartmentHeads.Commands.UpdateDepartmentHeadDetails;
 using InspireEd.Application.Faculties.DepartmentHeads.Queries.GetDepartmentHeadDetails;
 using InspireEd.Application.Faculties.Groups.Commands.UpdateGroup;
+using InspireEd.Application.Faculties.Groups.Queries.GetGroupDetails;
 using InspireEd.Application.Faculties.Queries.GetFaculties;
 using InspireEd.Application.Faculties.Queries.GetFacultyDetails;
 using InspireEd.Domain.Users.Enums;
@@ -24,7 +25,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace InspireEd.Presentation.Controllers;
 
-[Route("api/admin")]
+[Route("api/admins")]
 [HasPermission(Permission.FullAccess)]
 public class AdminsController(ISender sender) : ApiController(sender)
 {
@@ -52,7 +53,7 @@ public class AdminsController(ISender sender) : ApiController(sender)
 
     #endregion
 
-    [HttpPost("create-department-head")]
+    [HttpPost("department-heads")]
     public async Task<IActionResult> CreateDepartmentHead(
         [FromBody] CreateDepartmentHeadRequest request,
         CancellationToken cancellationToken)
@@ -70,13 +71,11 @@ public class AdminsController(ISender sender) : ApiController(sender)
 
     [HttpPut("department-heads/{departmentHeadId:guid}")]
     public async Task<IActionResult> UpdateDepartmentHeadDetails(
-        Guid facultyId,
         Guid departmentHeadId,
         [FromBody] UpdateDepartmentHeadDetailsRequest request,
         CancellationToken cancellationToken)
     {
         var command = new UpdateDepartmentHeadDetailsCommand(
-            facultyId,
             departmentHeadId,
             request.FirstName,
             request.LastName,
@@ -86,43 +85,44 @@ public class AdminsController(ISender sender) : ApiController(sender)
 
         return response.IsSuccess ? NoContent() : BadRequest(response);
     }
+    // TO - DO
 
-
-    [HttpPost("delete-department-head")]
+    [HttpDelete("department-heads/{departmentHeadId:guid}")]
     public async Task<IActionResult> DeleteDepartmentHead(
-        [FromBody] DeleteDepartmentHeadRequest request,
+        Guid departmentHeadId,
         CancellationToken cancellationToken)
     {
-        var command = new DeleteDepartmentHeadCommand(
-            request.DepartmentHeadId);
+        var command = new DeleteDepartmentHeadCommand(departmentHeadId);
 
         var response = await Sender.Send(command, cancellationToken);
 
         return response.IsSuccess ? NoContent() : BadRequest(response);
     }
 
-    [HttpPut("add-department-head-to-faculty")]
+    [HttpPut("faculties/{facultyId:guid}/add-department-head")]
     public async Task<IActionResult> AddDepartmentHeadToFaculty(
-        [FromBody] AddDepartmentHeadRequest request,
+        Guid facultyId,
+        Guid departmentHeadId,
         CancellationToken cancellationToken)
     {
         var command = new AddDepartmentHeadToFacultyCommand(
-            request.FacultyId,
-            request.DepartmentHeadId);
+            facultyId,
+            departmentHeadId);
 
         var response = await Sender.Send(command, cancellationToken);
 
         return response.IsSuccess ? NoContent() : BadRequest(response);
     }
 
-    [HttpPut("remove-department-head-from-faculty")]
+    [HttpPut("faculties/{facultyId:guid}/remove-department-head")]
     public async Task<IActionResult> RemoveDepartmentHeadFromFaculty(
-        [FromBody] RemoveDepartmentHeadRequest request,
+        Guid facultyId,
+        Guid departmentHeadId,
         CancellationToken cancellationToken)
     {
         var command = new RemoveDepartmentHeadFromFacultyCommand(
-            request.FacultyId,
-            request.DepartmentHeadId);
+            facultyId,
+            departmentHeadId);
 
         var response = await Sender.Send(command, cancellationToken);
 
@@ -152,7 +152,7 @@ public class AdminsController(ISender sender) : ApiController(sender)
     /// <param name="facultyId">The unique identifier of the faculty.</param>
     /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
     /// <returns>A task that represents the asynchronous operation, containing the action result.</returns>
-    [HttpGet("{facultyId:guid}")]
+    [HttpGet("faculties/{facultyId:guid}")]
     public async Task<IActionResult> GetFacultyDetails(
         Guid facultyId,
         CancellationToken cancellationToken)
@@ -166,7 +166,7 @@ public class AdminsController(ISender sender) : ApiController(sender)
 
     #endregion
 
-    [HttpPost("create-faculty")]
+    [HttpPost("faculties")]
     public async Task<IActionResult> CreateFaculty(
         [FromBody] CreateFacultyRequest request,
         CancellationToken cancellationToken)
@@ -179,13 +179,14 @@ public class AdminsController(ISender sender) : ApiController(sender)
         return response.IsSuccess ? NoContent() : BadRequest(response);
     }
 
-    [HttpPost("update-faculty")]
+    [HttpPut("faculties/{facultyId:guid}")]
     public async Task<IActionResult> UpdateFaculty(
+        Guid facultyId,
         [FromBody] UpdateFacultyRequest request,
         CancellationToken cancellationToken)
     {
         var command = new UpdateFacultyCommand(
-            request.FacultyId,
+            facultyId,
             request.FacultyName);
 
         var response = await Sender.Send(command, cancellationToken);
@@ -193,13 +194,12 @@ public class AdminsController(ISender sender) : ApiController(sender)
         return response.IsSuccess ? NoContent() : BadRequest(response);
     }
 
-    [HttpPost("delete-faculty")]
+    [HttpDelete("faculties/{facultyId:guid}")]
     public async Task<IActionResult> DeleteFaculty(
-        [FromBody] DeleteFacultyRequest request,
+        Guid facultyId,
         CancellationToken cancellationToken)
     {
-        var command = new DeleteFacultyCommand(
-            request.FacultyId);
+        var command = new DeleteFacultyCommand(facultyId);
 
         var response = await Sender.Send(command, cancellationToken);
 
@@ -209,6 +209,28 @@ public class AdminsController(ISender sender) : ApiController(sender)
     #endregion
 
     #region Groups
+
+    #region Get
+
+    /// <summary>
+    /// Retrieves details of a group by its unique identifier.
+    /// </summary>
+    /// <param name="groupId">The unique identifier of the group.</param>
+    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+    /// <returns>A task that represents the asynchronous operation, containing the action result.</returns>
+    [HttpGet("groups/{groupId:guid}")]
+    public async Task<IActionResult> GetGroupDetails(
+        Guid groupId,
+        CancellationToken cancellationToken)
+    {
+        var query = new GetGroupDetailsQuery(groupId);
+
+        var response = await Sender.Send(query, cancellationToken);
+
+        return response.IsSuccess ? Ok(response.Value) : NotFound(response.Error);
+    }
+
+    #endregion
 
     [HttpPost("faculties/{facultyId:guid}/groups")]
     public async Task<IActionResult> CreateGroup(
