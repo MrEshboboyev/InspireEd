@@ -146,7 +146,17 @@ public sealed class Class : AggregateRoot
         return Result.Success();
     }
 
-
+    public Result Reschedule(DateTime newScheduledDate)
+    {
+        #region Reschedule fields
+        
+        ScheduledDate = newScheduledDate;
+        
+        #endregion
+        
+        return Result.Success();
+    }
+    
     #endregion
     
     #region Attendance methods

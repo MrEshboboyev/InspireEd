@@ -2,6 +2,7 @@
 using InspireEd.Application.Classes.Attendances.Commands.UpdateAttendance;
 using InspireEd.Application.Classes.Commands.CreateClass;
 using InspireEd.Application.Classes.Commands.DeleteClass;
+using InspireEd.Application.Classes.Commands.RescheduleClass;
 using InspireEd.Application.Classes.Commands.UpdateClass;
 using InspireEd.Application.Classes.Commands.UpdateGroupIds;
 using InspireEd.Application.Faculties.Commands.MergeGroups;
@@ -248,6 +249,28 @@ public class DepartmentHeadsController(ISender sender) : ApiController(sender)
         var command = new UpdateGroupIdsCommand(
             classId,
             request.GroupIds);
+
+        var response = await Sender.Send(command, cancellationToken);
+
+        return response.IsSuccess ? NoContent() : BadRequest(response);
+    }
+
+    /// <summary>
+    /// Reschedules a class to a new date.
+    /// </summary>
+    /// <param name="id">The unique identifier of the class.</param>
+    /// <param name="request">The request containing the new scheduled date.</param>
+    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+    /// <returns>A task that represents the asynchronous operation, containing the action result.</returns>
+    [HttpPut("{id:guid}/reschedule")]
+    public async Task<IActionResult> RescheduleClass(
+        Guid id,
+        [FromBody] RescheduleClassRequest request,
+        CancellationToken cancellationToken)
+    {
+        var command = new RescheduleClassCommand(
+            id,
+            request.NewScheduledDate);
 
         var response = await Sender.Send(command, cancellationToken);
 
