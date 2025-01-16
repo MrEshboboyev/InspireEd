@@ -1,6 +1,6 @@
 ﻿using InspireEd.Domain.Classes.Enums;
 
-namespace InspireEd.Application.Classes.Queries.GetClassById;
+namespace InspireEd.Application.Classes.Queries.Common;
 
 public sealed record AttendanceResponse(
     Guid Id,

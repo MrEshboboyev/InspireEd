@@ -41,4 +41,6 @@ public interface IClassRepository : IRepository<Class>
     /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
     /// <returns>A task that represents the asynchronous operation, containing the list of student IDs.</returns>
     Task<List<Guid>> GetGroupStudentIds(Guid classId, CancellationToken cancellationToken = default);
+    
+    Task<List<Class>> GetBySubjectIdAsync(Guid subjectId, CancellationToken cancellationToken = default);
 }

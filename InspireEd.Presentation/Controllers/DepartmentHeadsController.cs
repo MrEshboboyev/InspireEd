@@ -6,6 +6,7 @@ using InspireEd.Application.Classes.Commands.RescheduleClass;
 using InspireEd.Application.Classes.Commands.UpdateClass;
 using InspireEd.Application.Classes.Commands.UpdateGroupIds;
 using InspireEd.Application.Classes.Queries.GetClassById;
+using InspireEd.Application.Classes.Queries.GetClassesBySubjectId;
 using InspireEd.Application.Faculties.Commands.MergeGroups;
 using InspireEd.Application.Faculties.Commands.SplitGroup;
 using InspireEd.Application.Faculties.Groups.Commands.AddMultipleStudentsToGroup;
@@ -188,6 +189,24 @@ public class DepartmentHeadsController(ISender sender) : ApiController(sender)
         CancellationToken cancellationToken)
     {
         var query = new GetClassByIdQuery(id);
+
+        var response = await Sender.Send(query, cancellationToken);
+
+        return response.IsSuccess ? Ok(response.Value) : NotFound(response.Error);
+    }
+
+    /// <summary>
+    /// Retrieves classes by the subject's unique identifier.
+    /// </summary>
+    /// <param name="subjectId">The unique identifier of the subject.</param>
+    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+    /// <returns>A task that represents the asynchronous operation, containing the action result.</returns>
+    [HttpGet("classes/{subjectId:guid}/classes")]
+    public async Task<IActionResult> GetClassesBySubjectId(
+        Guid subjectId,
+        CancellationToken cancellationToken)
+    {
+        var query = new GetClassesBySubjectIdQuery(subjectId);
 
         var response = await Sender.Send(query, cancellationToken);
 
