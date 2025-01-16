@@ -1,5 +1,6 @@
 ﻿using InspireEd.Application.Classes.Attendances.Commands.DeleteAttendance;
 using InspireEd.Application.Classes.Attendances.Commands.UpdateAttendance;
+using InspireEd.Application.Classes.Attendances.Queries.GetAttendanceById;
 using InspireEd.Application.Classes.Commands.CreateClass;
 using InspireEd.Application.Classes.Commands.DeleteClass;
 using InspireEd.Application.Classes.Commands.RescheduleClass;
@@ -226,6 +227,25 @@ public class DepartmentHeadsController(ISender sender) : ApiController(sender)
         CancellationToken cancellationToken)
     {
         var query = new GetAttendancesByClassIdQuery(classId);
+
+        var response = await Sender.Send(query, cancellationToken);
+
+        return response.IsSuccess ? Ok(response.Value) : NotFound(response.Error);
+    }
+
+
+    /// <summary>
+    /// Retrieves an attendance record by its unique identifier.
+    /// </summary>
+    /// <param name="attendanceId">The unique identifier of the attendance record.</param>
+    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+    /// <returns>A task that represents the asynchronous operation, containing the action result.</returns>
+    [HttpGet("{attendanceId:guid}")]
+    public async Task<IActionResult> GetAttendanceById(
+        Guid attendanceId,
+        CancellationToken cancellationToken)
+    {
+        var query = new GetAttendanceByIdQuery(attendanceId);
 
         var response = await Sender.Send(query, cancellationToken);
 

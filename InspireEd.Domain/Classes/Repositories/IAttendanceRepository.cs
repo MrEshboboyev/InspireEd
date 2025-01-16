@@ -7,6 +7,8 @@ namespace InspireEd.Domain.Classes.Repositories;
 /// </summary>
 public interface IAttendanceRepository
 {
+    Task<Attendance> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
+    
     /// <summary>
     /// Adds a new attendance record to the repository.
     /// </summary>

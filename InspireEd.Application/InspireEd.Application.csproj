@@ -15,8 +15,4 @@
     <ProjectReference Include="..\InspireEd.Domain\InspireEd.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Classes\Attendances\Queries\" />
-  </ItemGroup>
-
 </Project>
