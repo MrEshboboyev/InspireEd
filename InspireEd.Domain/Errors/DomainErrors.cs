@@ -101,6 +101,13 @@ public static class DomainErrors
             $"The department head with the identifier {id} was not found.");
     }
 
+    public static class Student
+    {
+        public static readonly Func<Guid, Error> NotFound = id => new Error(
+            "Student.NotFound",
+            $"The student with the identifier {id} was not found.");
+    }
+    
     #endregion
 
     #endregion

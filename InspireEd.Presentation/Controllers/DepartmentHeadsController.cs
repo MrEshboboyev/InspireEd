@@ -16,6 +16,7 @@ using InspireEd.Application.Faculties.Groups.Commands.AddStudentToGroup;
 using InspireEd.Application.Faculties.Groups.Commands.RemoveAllStudentsFromGroup;
 using InspireEd.Application.Faculties.Groups.Commands.RemoveStudentFromGroup;
 using InspireEd.Application.Faculties.Groups.Commands.TransferStudentBetweenGroups;
+using InspireEd.Application.Faculties.Groups.Queries.GetStudentDetails;
 using InspireEd.Application.Subjects.Commands.ChangeSubjectCredit;
 using InspireEd.Application.Subjects.Commands.CreateSubject;
 using InspireEd.Application.Subjects.Commands.DeleteSubject;
@@ -171,6 +172,32 @@ public class DepartmentHeadsController(ISender sender) : ApiController(sender)
 
         return response.IsSuccess ? NoContent() : BadRequest(response);
     }
+
+    #region Students
+    
+    #region Get
+
+    /// <summary>
+    /// Retrieves details of a student by their unique identifier.
+    /// </summary>
+    /// <param name="studentId">The unique identifier of the student.</param>
+    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+    /// <returns>A task that represents the asynchronous operation, containing the action result.</returns>
+    [HttpGet("{studentId:guid}")]
+    public async Task<IActionResult> GetStudentDetails(
+        Guid studentId,
+        CancellationToken cancellationToken)
+    {
+        var query = new GetStudentDetailsQuery(studentId);
+
+        var response = await Sender.Send(query, cancellationToken);
+
+        return response.IsSuccess ? Ok(response.Value) : NotFound(response.Error);
+    }
+    
+    #endregion
+
+    #endregion
 
     #endregion
 
