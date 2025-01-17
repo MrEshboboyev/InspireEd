@@ -13,6 +13,7 @@ using InspireEd.Application.Faculties.Groups.Commands.UpdateGroup;
 using InspireEd.Application.Faculties.Groups.Queries.GetAllGroupsInFaculty;
 using InspireEd.Application.Faculties.Groups.Queries.GetAllStudentsInFaculty;
 using InspireEd.Application.Faculties.Groups.Queries.GetGroupDetails;
+using InspireEd.Application.Faculties.Queries.GetAllDepartmentHeadsInFaculty;
 using InspireEd.Application.Faculties.Queries.GetFaculties;
 using InspireEd.Application.Faculties.Queries.GetFacultyDetails;
 using InspireEd.Domain.Users.Enums;
@@ -196,6 +197,24 @@ public class AdminsController(ISender sender) : ApiController(sender)
         CancellationToken cancellationToken)
     {
         var query = new GetAllGroupsInFacultyQuery(facultyId);
+
+        var response = await Sender.Send(query, cancellationToken);
+
+        return response.IsSuccess ? Ok(response.Value) : NotFound(response.Error);
+    }
+
+    /// <summary>
+    /// Retrieves all department heads within a faculty by its unique identifier.
+    /// </summary>
+    /// <param name="facultyId">The unique identifier of the faculty.</param>
+    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+    /// <returns>A task that represents the asynchronous operation, containing the action result.</returns>
+    [HttpGet("{facultyId:guid}/department-heads")]
+    public async Task<IActionResult> GetAllDepartmentHeadsInFaculty(
+        Guid facultyId,
+        CancellationToken cancellationToken)
+    {
+        var query = new GetAllDepartmentHeadsInFacultyQuery(facultyId);
 
         var response = await Sender.Send(query, cancellationToken);
 
