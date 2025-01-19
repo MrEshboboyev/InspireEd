@@ -22,6 +22,7 @@ using InspireEd.Application.Subjects.Commands.CreateSubject;
 using InspireEd.Application.Subjects.Commands.DeleteSubject;
 using InspireEd.Application.Subjects.Commands.RenameSubject;
 using InspireEd.Application.Subjects.Commands.UpdateSubject;
+using InspireEd.Application.Subjects.Queries.GetSubjectById;
 using InspireEd.Domain.Users.Enums;
 using InspireEd.Infrastructure.Authentication;
 using InspireEd.Presentation.Abstractions;
@@ -174,7 +175,7 @@ public class DepartmentHeadsController(ISender sender) : ApiController(sender)
     }
 
     #region Students
-    
+
     #region Get
 
     /// <summary>
@@ -194,7 +195,7 @@ public class DepartmentHeadsController(ISender sender) : ApiController(sender)
 
         return response.IsSuccess ? Ok(response.Value) : NotFound(response.Error);
     }
-    
+
     #endregion
 
     #endregion
@@ -439,6 +440,28 @@ public class DepartmentHeadsController(ISender sender) : ApiController(sender)
     #endregion
 
     #region Subject related
+
+    #region Get
+
+    /// <summary>
+    /// Retrieves details of a subject by its unique identifier.
+    /// </summary>
+    /// <param name="subjectId">The unique identifier of the subject.</param>
+    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+    /// <returns>A task that represents the asynchronous operation, containing the action result.</returns>
+    [HttpGet("subjects/{subjectId:guid}")]
+    public async Task<IActionResult> GetSubjectById(
+        Guid subjectId,
+        CancellationToken cancellationToken)
+    {
+        var query = new GetSubjectByIdQuery(subjectId);
+
+        var response = await Sender.Send(query, cancellationToken);
+
+        return response.IsSuccess ? Ok(response.Value) : NotFound(response.Error);
+    }
+
+    #endregion
 
     /// <summary>
     /// Creates a new subject.
