@@ -24,6 +24,7 @@ using InspireEd.Application.Subjects.Commands.RenameSubject;
 using InspireEd.Application.Subjects.Commands.UpdateSubject;
 using InspireEd.Application.Subjects.Queries.GetAllSubjects;
 using InspireEd.Application.Subjects.Queries.GetSubjectById;
+using InspireEd.Application.Subjects.Queries.GetSubjectsByCreationDateRange;
 using InspireEd.Application.Subjects.Queries.GetSubjectsByCreditRange;
 using InspireEd.Domain.Users.Enums;
 using InspireEd.Infrastructure.Authentication;
@@ -493,6 +494,26 @@ public class DepartmentHeadsController(ISender sender) : ApiController(sender)
         CancellationToken cancellationToken)
     {
         var query = new GetSubjectsByCreditRangeQuery(minCredit, maxCredit);
+
+        var response = await Sender.Send(query, cancellationToken);
+
+        return response.IsSuccess ? Ok(response.Value) : NotFound(response.Error);
+    }
+
+    /// <summary>
+    /// Retrieves subjects created within a specified date range.
+    /// </summary>
+    /// <param name="startDate">The start date of the range.</param>
+    /// <param name="endDate">The end date of the range.</param>
+    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+    /// <returns>A task that represents the asynchronous operation, containing the action result.</returns>
+    [HttpGet("subjects/creation-date-range")]
+    public async Task<IActionResult> GetSubjectsByCreationDateRange(
+        DateTime startDate,
+        DateTime endDate,
+        CancellationToken cancellationToken)
+    {
+        var query = new GetSubjectsByCreationDateRangeQuery(startDate, endDate);
 
         var response = await Sender.Send(query, cancellationToken);
 

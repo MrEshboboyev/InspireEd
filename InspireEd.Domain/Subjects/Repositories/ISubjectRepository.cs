@@ -15,6 +15,12 @@ public interface ISubjectRepository : IRepository<Subject>
         int maxCredit,
         CancellationToken cancellationToken = default);
     
+    Task<List<Subject>> GetByCreationDateRangeAsync(
+        DateTime startDate, 
+        DateTime endDate,
+        CancellationToken cancellationToken = default);
+    
+    
     /// <summary>
     /// Retrieves a subject entity by its unique identifier.
     /// </summary>
