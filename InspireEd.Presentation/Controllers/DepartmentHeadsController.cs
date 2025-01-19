@@ -22,6 +22,7 @@ using InspireEd.Application.Subjects.Commands.CreateSubject;
 using InspireEd.Application.Subjects.Commands.DeleteSubject;
 using InspireEd.Application.Subjects.Commands.RenameSubject;
 using InspireEd.Application.Subjects.Commands.UpdateSubject;
+using InspireEd.Application.Subjects.Queries.GetAllSubjects;
 using InspireEd.Application.Subjects.Queries.GetSubjectById;
 using InspireEd.Domain.Users.Enums;
 using InspireEd.Infrastructure.Authentication;
@@ -455,6 +456,22 @@ public class DepartmentHeadsController(ISender sender) : ApiController(sender)
         CancellationToken cancellationToken)
     {
         var query = new GetSubjectByIdQuery(subjectId);
+
+        var response = await Sender.Send(query, cancellationToken);
+
+        return response.IsSuccess ? Ok(response.Value) : NotFound(response.Error);
+    }
+
+    /// <summary>
+    /// Retrieves all subjects.
+    /// </summary>
+    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+    /// <returns>A task that represents the asynchronous operation, containing the action result.</returns>
+    [HttpGet]
+    public async Task<IActionResult> GetAllSubjects(
+        CancellationToken cancellationToken)
+    {
+        var query = new GetAllSubjectsQuery();
 
         var response = await Sender.Send(query, cancellationToken);
 

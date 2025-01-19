@@ -8,6 +8,8 @@ namespace InspireEd.Domain.Subjects.Repositories;
 /// </summary>
 public interface ISubjectRepository : IRepository<Subject>
 {
+    Task<List<Subject>> GetAllAsync(CancellationToken cancellationToken = default);
+    
     /// <summary>
     /// Retrieves a subject entity by its unique identifier.
     /// </summary>
