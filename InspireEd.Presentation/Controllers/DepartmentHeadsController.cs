@@ -24,6 +24,7 @@ using InspireEd.Application.Subjects.Commands.RenameSubject;
 using InspireEd.Application.Subjects.Commands.UpdateSubject;
 using InspireEd.Application.Subjects.Queries.GetAllSubjects;
 using InspireEd.Application.Subjects.Queries.GetSubjectById;
+using InspireEd.Application.Subjects.Queries.GetSubjectsByCreditRange;
 using InspireEd.Domain.Users.Enums;
 using InspireEd.Infrastructure.Authentication;
 using InspireEd.Presentation.Abstractions;
@@ -472,6 +473,26 @@ public class DepartmentHeadsController(ISender sender) : ApiController(sender)
         CancellationToken cancellationToken)
     {
         var query = new GetAllSubjectsQuery();
+
+        var response = await Sender.Send(query, cancellationToken);
+
+        return response.IsSuccess ? Ok(response.Value) : NotFound(response.Error);
+    }
+
+    /// <summary>
+    /// Retrieves subjects within a specific credit range.
+    /// </summary>
+    /// <param name="minCredit">The minimum credit value.</param>
+    /// <param name="maxCredit">The maximum credit value.</param>
+    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+    /// <returns>A task that represents the asynchronous operation, containing the action result.</returns>
+    [HttpGet("credit-range")]
+    public async Task<IActionResult> GetSubjectsByCreditRange(
+        int minCredit,
+        int maxCredit,
+        CancellationToken cancellationToken)
+    {
+        var query = new GetSubjectsByCreditRangeQuery(minCredit, maxCredit);
 
         var response = await Sender.Send(query, cancellationToken);
 

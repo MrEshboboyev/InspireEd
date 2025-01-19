@@ -10,6 +10,11 @@ public interface ISubjectRepository : IRepository<Subject>
 {
     Task<List<Subject>> GetAllAsync(CancellationToken cancellationToken = default);
     
+    Task<List<Subject>> GetByCreditRangeAsync(
+        int minCredit, 
+        int maxCredit,
+        CancellationToken cancellationToken = default);
+    
     /// <summary>
     /// Retrieves a subject entity by its unique identifier.
     /// </summary>
