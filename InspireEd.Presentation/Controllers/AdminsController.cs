@@ -16,6 +16,7 @@ using InspireEd.Application.Faculties.Groups.Queries.GetGroupDetails;
 using InspireEd.Application.Faculties.Queries.GetAllDepartmentHeadsInFaculty;
 using InspireEd.Application.Faculties.Queries.GetFaculties;
 using InspireEd.Application.Faculties.Queries.GetFacultyDetails;
+using InspireEd.Application.Users.Commands.UpdateUser;
 using InspireEd.Domain.Users.Enums;
 using InspireEd.Infrastructure.Authentication;
 using InspireEd.Presentation.Abstractions;
@@ -23,6 +24,7 @@ using InspireEd.Presentation.Contracts.Admins;
 using InspireEd.Presentation.Contracts.Admins.DepartmentHeads;
 using InspireEd.Presentation.Contracts.Admins.Faculties;
 using InspireEd.Presentation.Contracts.Admins.Groups;
+using InspireEd.Presentation.Contracts.Admins.Users;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -334,6 +336,34 @@ public class AdminsController(ISender sender) : ApiController(sender)
         var response = await Sender.Send(command, cancellationToken);
 
         return response.IsSuccess ? NoContent() : BadRequest(response);
+    }
+
+    #endregion
+
+    #region Users
+
+    /// <summary>
+    /// Updates the details of a user by their unique identifier.
+    /// </summary>
+    /// <param name="userId">The unique identifier of the user.</param>
+    /// <param name="request">The request containing updated user details.</param>
+    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+    /// <returns>A task that represents the asynchronous operation, containing the action result.</returns>
+    [HttpPut("{userId:guid}")]
+    public async Task<IActionResult> UpdateUser(
+        Guid userId,
+        [FromBody] UpdateUserRequest request,
+        CancellationToken cancellationToken)
+    {
+        var command = new UpdateUserCommand(
+            userId,
+            request.FirstName,
+            request.LastName,
+            request.Email);
+
+        var response = await Sender.Send(command, cancellationToken);
+
+        return response.IsSuccess ? NoContent() : BadRequest(response.Error);
     }
 
     #endregion
