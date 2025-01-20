@@ -16,6 +16,7 @@ using InspireEd.Application.Faculties.Groups.Queries.GetGroupDetails;
 using InspireEd.Application.Faculties.Queries.GetAllDepartmentHeadsInFaculty;
 using InspireEd.Application.Faculties.Queries.GetFaculties;
 using InspireEd.Application.Faculties.Queries.GetFacultyDetails;
+using InspireEd.Application.Users.Commands.DeleteUser;
 using InspireEd.Application.Users.Commands.UpdateUser;
 using InspireEd.Domain.Users.Enums;
 using InspireEd.Infrastructure.Authentication;
@@ -360,6 +361,24 @@ public class AdminsController(ISender sender) : ApiController(sender)
             request.FirstName,
             request.LastName,
             request.Email);
+
+        var response = await Sender.Send(command, cancellationToken);
+
+        return response.IsSuccess ? NoContent() : BadRequest(response.Error);
+    }
+
+    /// <summary>
+    /// Deletes a user by their unique identifier.
+    /// </summary>
+    /// <param name="userId">The unique identifier of the user.</param>
+    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+    /// <returns>A task that represents the asynchronous operation, containing the action result.</returns>
+    [HttpDelete("{userId:guid}")]
+    public async Task<IActionResult> DeleteUser(
+        Guid userId,
+        CancellationToken cancellationToken)
+    {
+        var command = new DeleteUserCommand(userId);
 
         var response = await Sender.Send(command, cancellationToken);
 
