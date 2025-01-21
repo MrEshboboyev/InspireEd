@@ -6,11 +6,16 @@ namespace InspireEd.Persistence.Users.Repositories;
 
 public class RoleRepository(ApplicationDbContext dbContext) : IRoleRepository
 {
-    private readonly ApplicationDbContext _dbContext = dbContext;
-
+    public async Task<Role> GetByIdAsync(int id, CancellationToken cancellationToken = default)
+    {
+        return await dbContext
+            .Set<Role>()
+            .FirstOrDefaultAsync(r => r.Id.Equals(id), cancellationToken);
+    }
+    
     public async Task<Role> GetByNameAsync(string name, CancellationToken cancellationToken = default)
     {
-        return await _dbContext.Set<Role>().FirstOrDefaultAsync(r => 
+        return await dbContext.Set<Role>().FirstOrDefaultAsync(r => 
             r.Name.Equals(name), cancellationToken);
     }
 }

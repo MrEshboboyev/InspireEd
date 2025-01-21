@@ -67,7 +67,7 @@ public sealed class User : AggregateRoot, IAuditableEntity
         Role role)
     {
         var user = new User(id, email, passwordHash, firstName, lastName);
-        user.AddRole(role);
+        user.AssignRole(role);
         return user;
     }
 
@@ -75,11 +75,12 @@ public sealed class User : AggregateRoot, IAuditableEntity
 
     #region Methods
 
-    public void AddRole(Role role)
+    public Result AssignRole(Role role)
     {
-        ArgumentNullException.ThrowIfNull(role);
         if (!Roles.Contains(role))
             Roles.Add(role);
+        
+        return Result.Success();
     }
 
     public void RemoveRole(Role role)

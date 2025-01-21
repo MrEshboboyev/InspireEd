@@ -38,6 +38,13 @@ public static class DomainErrors
             "The old password provided is incorrect.");
     }
 
+    public static class Role
+    {
+        public static readonly Func<int, Error> NotFound = id => new Error(
+            "Role.NotFound",
+            $"The role with the identifier {id} was not found.");
+    }
+
     #endregion
 
     #region Value Objects

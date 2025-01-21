@@ -42,32 +42,6 @@ public sealed class UserRepository(ApplicationDbContext dbContext) : IUserReposi
     public void Delete(User user) =>
         _dbContext.Set<User>().Remove(user);
 
-    public async Task AssignRoleAsync(
-        Guid userId,
-        Role role,
-        CancellationToken cancellationToken)
-    {
-        var user = await GetByIdAsync(userId, cancellationToken);
-        if (user != null && !user.Roles.Contains(role))
-        {
-            user.AddRole(role);
-            await _dbContext.SaveChangesAsync(cancellationToken);
-        }
-    }
-
-    public async Task RemoveRoleAsync(
-        Guid userId,
-        Role role, 
-        CancellationToken cancellationToken)
-    {
-        var user = await GetByIdAsync(userId, cancellationToken);
-        if (user != null && user.Roles.Contains(role))
-        {
-            user.RemoveRole(role);
-            await _dbContext.SaveChangesAsync(cancellationToken);
-        }
-    }
-
     public async Task<User> GetUserByRoleAsync(Role role, CancellationToken cancellationToken)
     {
         return await _dbContext.Set<User>()

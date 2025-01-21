@@ -66,22 +66,6 @@ public interface IUserRepository
     void Delete(User user);
 
     /// <summary>
-    /// Assigns a role to an existing user.
-    /// </summary>
-    /// <param name="userId">The unique identifier of the user.</param>
-    /// <param name="role">The role to assign.</param>
-    /// <param name="cancellationToken">Optional cancellation token.</param>
-    Task AssignRoleAsync(Guid userId, Role role, CancellationToken cancellationToken);
-
-    /// <summary>
-    /// Removes a role from an existing user.
-    /// </summary>
-    /// <param name="userId">The unique identifier of the user.</param>
-    /// <param name="role">The role to remove.</param>
-    /// <param name="cancellationToken">Optional cancellation token.</param>
-    Task RemoveRoleAsync(Guid userId, Role role, CancellationToken cancellationToken);
-
-    /// <summary>
     /// Retrieves a user by role.
     /// </summary>
     /// <param name="role">The role of the user.</param>
