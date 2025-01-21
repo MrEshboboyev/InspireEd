@@ -36,6 +36,14 @@ public static class DomainErrors
         public static readonly Error InvalidPassword = new Error(
             "User.InvalidPassword",
             "The old password provided is incorrect.");
+
+        public static readonly Func<int, Error> NoUsersFoundForRole = roleId => new Error(
+            "User.NoUsersFoundForRole",
+            $"No users found for the role with the identifier {roleId}.");
+
+        public static readonly Func<string, Error> NotFoundForEmail = email => new Error(
+            "User.NotFoundForEmail",
+            $"The user with the email {email} was not found.");
     }
 
     public static class Role
@@ -43,15 +51,14 @@ public static class DomainErrors
         public static readonly Func<int, Error> NotFound = id => new Error(
             "Role.NotFound",
             $"The role with the identifier {id} was not found.");
-        
-            public static readonly Error CannotBeNull = new Error(
-                "Role.CannotBeNull",
-                "The role cannot be null.");
 
-            public static readonly Error NotAssignedToUser = new Error(
-                "Role.NotAssignedToUser",
-                "The role is not assigned to this user.");
-        
+        public static readonly Error CannotBeNull = new Error(
+            "Role.CannotBeNull",
+            "The role cannot be null.");
+
+        public static readonly Error NotAssignedToUser = new Error(
+            "Role.NotAssignedToUser",
+            "The role is not assigned to this user.");
     }
 
     #endregion

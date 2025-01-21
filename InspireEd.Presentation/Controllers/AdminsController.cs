@@ -21,6 +21,8 @@ using InspireEd.Application.Users.Commands.DeleteUser;
 using InspireEd.Application.Users.Commands.RemoveRoleFromUser;
 using InspireEd.Application.Users.Commands.UpdateUser;
 using InspireEd.Application.Users.Queries.GetAllUsers;
+using InspireEd.Application.Users.Queries.GetUserByEmail;
+using InspireEd.Application.Users.Queries.GetUsersByRole;
 using InspireEd.Domain.Users.Enums;
 using InspireEd.Infrastructure.Authentication;
 using InspireEd.Presentation.Abstractions;
@@ -354,10 +356,47 @@ public class AdminsController(ISender sender) : ApiController(sender)
     /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
     /// <returns>A task that represents the asynchronous operation, containing the action result.</returns>
     [HttpGet]
+    [HttpGet("users")]
     public async Task<IActionResult> GetAllUsers(
         CancellationToken cancellationToken)
     {
         var query = new GetAllUsersQuery();
+
+        var response = await Sender.Send(query, cancellationToken);
+
+        return response.IsSuccess ? Ok(response.Value) : NotFound(response.Error);
+    }
+
+    /// <summary>
+    /// Retrieves users by their role.
+    /// </summary>
+    /// <param name="roleId">The role identifier.</param>
+    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+    /// <returns>A task that represents the asynchronous operation, containing the action result.</returns>
+    [HttpGet("users/role/{roleId:int}")]
+    public async Task<IActionResult> GetUsersByRole(
+        int roleId,
+        CancellationToken cancellationToken)
+    {
+        var query = new GetUsersByRoleQuery(roleId);
+
+        var response = await Sender.Send(query, cancellationToken);
+
+        return response.IsSuccess ? Ok(response.Value) : NotFound(response.Error);
+    }
+
+    /// <summary>
+    /// Retrieves a user by their email address.
+    /// </summary>
+    /// <param name="email">The email address of the user.</param>
+    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+    /// <returns>A task that represents the asynchronous operation, containing the action result.</returns>
+    [HttpGet("user/email")]
+    public async Task<IActionResult> GetUserByEmail(
+        [FromQuery] string email,
+        CancellationToken cancellationToken)
+    {
+        var query = new GetUserByEmailQuery(email);
 
         var response = await Sender.Send(query, cancellationToken);
 
@@ -373,7 +412,7 @@ public class AdminsController(ISender sender) : ApiController(sender)
     /// <param name="request">The request containing updated user details.</param>
     /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
     /// <returns>A task that represents the asynchronous operation, containing the action result.</returns>
-    [HttpPut("{userId:guid}")]
+    [HttpPut("users/{userId:guid}")]
     public async Task<IActionResult> UpdateUser(
         Guid userId,
         [FromBody] UpdateUserRequest request,

@@ -2,6 +2,7 @@
 using InspireEd.Domain.Users.Repositories;
 using InspireEd.Domain.Users.ValueObjects;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.SqlServer.Server;
 
 namespace InspireEd.Persistence.Users.Repositories;
 
@@ -42,9 +43,13 @@ public sealed class UserRepository(ApplicationDbContext dbContext) : IUserReposi
     public void Delete(User user) =>
         _dbContext.Set<User>().Remove(user);
 
-    public async Task<User> GetUserByRoleAsync(Role role, CancellationToken cancellationToken)
+    public async Task<List<User>> GetByRoleIdAsync(
+        int roleId, 
+        CancellationToken cancellationToken)
     {
-        return await _dbContext.Set<User>()
-            .FirstOrDefaultAsync(user => user.Roles.Contains(role), cancellationToken);
+        return await _dbContext
+            .Set<User>()
+            .Where(user => user.Roles.Count(role => role.Id == roleId) == 1)
+            .ToListAsync(cancellationToken);
     }
 }

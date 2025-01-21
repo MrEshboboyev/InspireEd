@@ -68,8 +68,8 @@ public interface IUserRepository
     /// <summary>
     /// Retrieves a user by role.
     /// </summary>
-    /// <param name="role">The role of the user.</param>
+    /// <param name="roleId">The role id.</param>
     /// <param name="cancellationToken">Optional cancellation token.</param>
     /// <returns>The user corresponding to the given role.</returns>
-    Task<User> GetUserByRoleAsync(Role role, CancellationToken cancellationToken);
+    Task<List<User>> GetByRoleIdAsync(int roleId, CancellationToken cancellationToken);
 }
