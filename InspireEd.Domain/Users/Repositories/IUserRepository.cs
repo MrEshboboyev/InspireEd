@@ -45,7 +45,7 @@ public interface IUserRepository
     /// </summary>
     /// <param name="cancellationToken">Optional cancellation token.</param>
     /// <returns>A list of all users.</returns>
-    Task<List<User>> GetUsersAsync(CancellationToken cancellationToken = default);
+    Task<List<User>> GetAllAsync(CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Adds a new user to the repository.

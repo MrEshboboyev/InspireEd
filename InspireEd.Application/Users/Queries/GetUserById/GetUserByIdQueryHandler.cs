@@ -1,4 +1,5 @@
 ﻿using InspireEd.Application.Abstractions.Messaging;
+using InspireEd.Application.Users.Queries.Common;
 using InspireEd.Domain.Errors;
 using InspireEd.Domain.Shared;
 using InspireEd.Domain.Users.Repositories;
@@ -38,12 +39,8 @@ internal sealed class GetUserByIdQueryHandler(IUserRepository userRepository)
 
         #region Prepare Response
 
-        // Prepare the response with the user's details
-        var response = new UserResponse(
-            user.Id,
-            user.Email.Value,
-            user.FirstName.Value,
-            user.LastName.Value);
+        // Prepare the response with the user's details using UserResponseFactory
+        var response = UserResponseFactory.Create(user);
 
         #endregion
 

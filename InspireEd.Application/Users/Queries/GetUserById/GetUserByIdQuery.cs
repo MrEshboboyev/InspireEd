@@ -1,4 +1,5 @@
 ﻿using InspireEd.Application.Abstractions.Messaging;
+using InspireEd.Application.Users.Queries.Common;
 
 namespace InspireEd.Application.Users.Queries.GetUserById;
 

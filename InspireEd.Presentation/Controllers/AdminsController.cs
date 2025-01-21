@@ -20,6 +20,7 @@ using InspireEd.Application.Users.Commands.AssignRoleToUser;
 using InspireEd.Application.Users.Commands.DeleteUser;
 using InspireEd.Application.Users.Commands.RemoveRoleFromUser;
 using InspireEd.Application.Users.Commands.UpdateUser;
+using InspireEd.Application.Users.Queries.GetAllUsers;
 using InspireEd.Domain.Users.Enums;
 using InspireEd.Infrastructure.Authentication;
 using InspireEd.Presentation.Abstractions;
@@ -344,6 +345,26 @@ public class AdminsController(ISender sender) : ApiController(sender)
     #endregion
 
     #region Users
+
+    #region Get
+
+    /// <summary>
+    /// Retrieves all users.
+    /// </summary>
+    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+    /// <returns>A task that represents the asynchronous operation, containing the action result.</returns>
+    [HttpGet]
+    public async Task<IActionResult> GetAllUsers(
+        CancellationToken cancellationToken)
+    {
+        var query = new GetAllUsersQuery();
+
+        var response = await Sender.Send(query, cancellationToken);
+
+        return response.IsSuccess ? Ok(response.Value) : NotFound(response.Error);
+    }
+
+    #endregion
 
     /// <summary>
     /// Updates the details of a user by their unique identifier.

@@ -9,7 +9,7 @@ public sealed class UserRepository(ApplicationDbContext dbContext) : IUserReposi
 {
     private readonly ApplicationDbContext _dbContext = dbContext;
 
-    public async Task<List<User>> GetUsersAsync(CancellationToken cancellationToken = default)
+    public async Task<List<User>> GetAllAsync(CancellationToken cancellationToken = default)
         => await _dbContext.Set<User>().ToListAsync(cancellationToken);
 
     public async Task<User> GetByIdAsync(Guid id, CancellationToken cancellationToken = default) =>
