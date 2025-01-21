@@ -43,6 +43,15 @@ public static class DomainErrors
         public static readonly Func<int, Error> NotFound = id => new Error(
             "Role.NotFound",
             $"The role with the identifier {id} was not found.");
+        
+            public static readonly Error CannotBeNull = new Error(
+                "Role.CannotBeNull",
+                "The role cannot be null.");
+
+            public static readonly Error NotAssignedToUser = new Error(
+                "Role.NotAssignedToUser",
+                "The role is not assigned to this user.");
+        
     }
 
     #endregion

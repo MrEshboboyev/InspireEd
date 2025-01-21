@@ -18,6 +18,7 @@ using InspireEd.Application.Faculties.Queries.GetFaculties;
 using InspireEd.Application.Faculties.Queries.GetFacultyDetails;
 using InspireEd.Application.Users.Commands.AssignRoleToUser;
 using InspireEd.Application.Users.Commands.DeleteUser;
+using InspireEd.Application.Users.Commands.RemoveRoleFromUser;
 using InspireEd.Application.Users.Commands.UpdateUser;
 using InspireEd.Domain.Users.Enums;
 using InspireEd.Infrastructure.Authentication;
@@ -374,7 +375,7 @@ public class AdminsController(ISender sender) : ApiController(sender)
     /// <param name="userId">The unique identifier of the user.</param>
     /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
     /// <returns>A task that represents the asynchronous operation, containing the action result.</returns>
-    [HttpDelete("{userId:guid}")]
+    [HttpDelete("users/{userId:guid}")]
     public async Task<IActionResult> DeleteUser(
         Guid userId,
         CancellationToken cancellationToken)
@@ -393,13 +394,35 @@ public class AdminsController(ISender sender) : ApiController(sender)
     /// <param name="request">The request containing the role ID.</param>
     /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
     /// <returns>A task that represents the asynchronous operation, containing the action result.</returns>
-    [HttpPost("{userId:guid}/assign-role")]
+    [HttpPost("users/{userId:guid}/assign-role")]
     public async Task<IActionResult> AssignRoleToUser(
         Guid userId,
         [FromBody] AssignRoleToUserRequest request,
         CancellationToken cancellationToken)
     {
         var command = new AssignRoleToUserCommand(
+            userId,
+            request.RoleId);
+
+        var response = await Sender.Send(command, cancellationToken);
+
+        return response.IsSuccess ? Ok() : BadRequest(response.Error);
+    }
+
+    /// <summary>
+    /// Removes a role from a user by their unique identifier.
+    /// </summary>
+    /// <param name="userId">The unique identifier of the user.</param>
+    /// <param name="request">The request containing the role ID.</param>
+    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+    /// <returns>A task that represents the asynchronous operation, containing the action result.</returns>
+    [HttpPost("users/{userId:guid}/remove-role")]
+    public async Task<IActionResult> RemoveRoleFromUser(
+        Guid userId,
+        [FromBody] RemoveRoleFromUserRequest request,
+        CancellationToken cancellationToken)
+    {
+        var command = new RemoveRoleFromUserCommand(
             userId,
             request.RoleId);
 

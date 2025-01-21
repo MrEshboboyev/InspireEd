@@ -1,4 +1,5 @@
-﻿using InspireEd.Domain.Primitives;
+﻿using InspireEd.Domain.Errors;
+using InspireEd.Domain.Primitives;
 using InspireEd.Domain.Shared;
 using InspireEd.Domain.Users.Events;
 using InspireEd.Domain.Users.ValueObjects;
@@ -83,10 +84,31 @@ public sealed class User : AggregateRoot, IAuditableEntity
         return Result.Success();
     }
 
-    public void RemoveRole(Role role)
+    public Result RemoveRole(Role role)
     {
-        ArgumentNullException.ThrowIfNull(role);
+        #region Validate role
+
+        if (role == null)
+        {
+            return Result.Failure(
+                DomainErrors.Role.CannotBeNull);
+        }
+
+        if (!Roles.Contains(role))
+        {
+            return Result.Failure(
+                DomainErrors.Role.NotAssignedToUser);
+        }
+
+        #endregion
+
+        #region Remove role
+
         Roles.Remove(role);
+
+        #endregion
+
+        return Result.Success();
     }
 
     /// <summary>
