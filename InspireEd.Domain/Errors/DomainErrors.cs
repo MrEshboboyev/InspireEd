@@ -32,6 +32,10 @@ public static class DomainErrors
         public static readonly Error InvalidRoleName = new Error(
             "User.InvalidRoleName",
             "The provided role name is invalid.");
+
+        public static readonly Error InvalidPassword = new Error(
+            "User.InvalidPassword",
+            "The old password provided is incorrect.");
     }
 
     #endregion
@@ -107,7 +111,7 @@ public static class DomainErrors
             "Student.NotFound",
             $"The student with the identifier {id} was not found.");
     }
-    
+
     #endregion
 
     #endregion

@@ -109,5 +109,16 @@ public sealed class User : AggregateRoot, IAuditableEntity
         return Result.Success();
     }
 
+    public Result ChangePassword(string newPasswordHash)
+    {
+        #region Update fields
+        
+        PasswordHash = newPasswordHash;
+        
+        #endregion
+        
+        return Result.Success();
+    }
+
     #endregion
 }

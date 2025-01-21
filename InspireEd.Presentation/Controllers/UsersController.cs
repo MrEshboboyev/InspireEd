@@ -1,4 +1,5 @@
-﻿using InspireEd.Application.Users.Commands.CreateUser;
+﻿using InspireEd.Application.Users.Commands.ChangeUserPassword;
+using InspireEd.Application.Users.Commands.CreateUser;
 using InspireEd.Application.Users.Commands.Login;
 using InspireEd.Application.Users.Queries.GetUserById;
 using InspireEd.Presentation.Abstractions;
@@ -22,7 +23,7 @@ public sealed class UsersController(ISender sender) : ApiController(sender)
     /// <returns>An IActionResult containing the user details if found, or an error message.</returns>
     [HttpGet("{id:guid}")]
     public async Task<IActionResult> GetUserById(
-        Guid id, 
+        Guid id,
         CancellationToken cancellationToken)
     {
         var query = new GetUserByIdQuery(id);
@@ -65,7 +66,7 @@ public sealed class UsersController(ISender sender) : ApiController(sender)
             request.Email,
             request.Password,
             request.FirstName,
-            request.LastName, 
+            request.LastName,
             request.RoleName);
 
         var result = await Sender.Send(command, cancellationToken);
@@ -78,5 +79,28 @@ public sealed class UsersController(ISender sender) : ApiController(sender)
             nameof(GetUserById),
             new { id = result.Value },
             result.Value);
+    }
+
+    /// <summary>
+    /// Changes the password of a user by their unique identifier.
+    /// </summary>
+    /// <param name="userId">The unique identifier of the user.</param>
+    /// <param name="request">The request containing old and new passwords.</param>
+    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+    /// <returns>A task that represents the asynchronous operation, containing the action result.</returns>
+    [HttpPut("{userId:guid}/change-password")]
+    public async Task<IActionResult> ChangeUserPassword(
+        Guid userId,
+        [FromBody] ChangeUserPasswordRequest request,
+        CancellationToken cancellationToken)
+    {
+        var command = new ChangeUserPasswordCommand(
+            userId,
+            request.OldPassword,
+            request.NewPassword);
+
+        var response = await Sender.Send(command, cancellationToken);
+
+        return response.IsSuccess ? NoContent() : BadRequest(response.Error);
     }
 }
