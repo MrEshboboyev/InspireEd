@@ -22,6 +22,7 @@ using InspireEd.Application.Users.Commands.RemoveRoleFromUser;
 using InspireEd.Application.Users.Commands.UpdateUser;
 using InspireEd.Application.Users.Queries.GetAllUsers;
 using InspireEd.Application.Users.Queries.GetUserByEmail;
+using InspireEd.Application.Users.Queries.GetUserRoles;
 using InspireEd.Application.Users.Queries.GetUsersByRole;
 using InspireEd.Domain.Users.Enums;
 using InspireEd.Infrastructure.Authentication;
@@ -355,7 +356,6 @@ public class AdminsController(ISender sender) : ApiController(sender)
     /// </summary>
     /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
     /// <returns>A task that represents the asynchronous operation, containing the action result.</returns>
-    [HttpGet]
     [HttpGet("users")]
     public async Task<IActionResult> GetAllUsers(
         CancellationToken cancellationToken)
@@ -397,6 +397,24 @@ public class AdminsController(ISender sender) : ApiController(sender)
         CancellationToken cancellationToken)
     {
         var query = new GetUserByEmailQuery(email);
+
+        var response = await Sender.Send(query, cancellationToken);
+
+        return response.IsSuccess ? Ok(response.Value) : NotFound(response.Error);
+    }
+
+    /// <summary>
+    /// Retrieves the roles assigned to a user by their unique identifier.
+    /// </summary>
+    /// <param name="userId">The unique identifier of the user.</param>
+    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+    /// <returns>A task that represents the asynchronous operation, containing the action result.</returns>
+    [HttpGet("users/{userId:guid}/roles")]
+    public async Task<IActionResult> GetUserRoles(
+        Guid userId,
+        CancellationToken cancellationToken)
+    {
+        var query = new GetUserRolesQuery(userId);
 
         var response = await Sender.Send(query, cancellationToken);
 
