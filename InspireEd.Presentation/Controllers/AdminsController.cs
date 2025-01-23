@@ -24,6 +24,7 @@ using InspireEd.Application.Users.Queries.GetAllUsers;
 using InspireEd.Application.Users.Queries.GetUserByEmail;
 using InspireEd.Application.Users.Queries.GetUserRoles;
 using InspireEd.Application.Users.Queries.GetUsersByRole;
+using InspireEd.Application.Users.Queries.SearchUsersByName;
 using InspireEd.Domain.Users.Enums;
 using InspireEd.Infrastructure.Authentication;
 using InspireEd.Presentation.Abstractions;
@@ -397,6 +398,18 @@ public class AdminsController(ISender sender) : ApiController(sender)
         CancellationToken cancellationToken)
     {
         var query = new GetUserByEmailQuery(email);
+
+        var response = await Sender.Send(query, cancellationToken);
+
+        return response.IsSuccess ? Ok(response.Value) : NotFound(response.Error);
+    }
+    
+    [HttpGet("user/search")]
+    public async Task<IActionResult> SearchUsersByName(
+        [FromQuery] string searchTerm,
+        CancellationToken cancellationToken)
+    {
+        var query = new SearchUsersByNameQuery(searchTerm);
 
         var response = await Sender.Send(query, cancellationToken);
 

@@ -9,6 +9,14 @@ namespace InspireEd.Domain.Users.Repositories;
 public interface IUserRepository
 {
     /// <summary>
+    /// Searches users by their first or last name.
+    /// </summary>
+    /// <param name="searchTerm">The search term for filtering users.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>A list of users matching the search term.</returns>
+    Task<List<User>> SearchByNameAsync(string searchTerm, CancellationToken cancellationToken);
+    
+    /// <summary>
     /// Retrieves a user by their unique identifier.
     /// </summary>
     /// <param name="id">The unique identifier of the user.</param>

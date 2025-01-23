@@ -44,6 +44,10 @@ public static class DomainErrors
         public static readonly Func<string, Error> NotFoundForEmail = email => new Error(
             "User.NotFoundForEmail",
             $"The user with the email {email} was not found.");
+        
+        public static readonly Func<string, Error> NoUsersFoundForSearchTerm = searchTerm => new Error(
+            "User.NoUsersFoundForSearchTerm",
+            $"No users were found matching the search term '{searchTerm}'.");
     }
 
     public static class Role
