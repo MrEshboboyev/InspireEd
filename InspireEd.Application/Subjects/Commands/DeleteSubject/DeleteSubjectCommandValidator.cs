@@ -6,6 +6,6 @@ internal class DeleteSubjectCommandValidator : AbstractValidator<DeleteSubjectCo
 {
     public DeleteSubjectCommandValidator()
     {
-        RuleFor(x => x.Id).NotEmpty();
+        RuleFor(x => x.SubjectId).NotEmpty();
     }
 }

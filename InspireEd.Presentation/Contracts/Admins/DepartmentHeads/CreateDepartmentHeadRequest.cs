@@ -1,4 +1,4 @@
-﻿namespace InspireEd.Presentation.Contracts.Admins;
+﻿namespace InspireEd.Presentation.Contracts.Admins.DepartmentHeads;
 
 public sealed record CreateDepartmentHeadRequest(
     string Email,
