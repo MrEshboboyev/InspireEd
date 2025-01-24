@@ -38,6 +38,5 @@ public class ApplicationServiceInstaller : IServiceInstaller
         
         // Add Services lifetimes
         services.AddScoped<IUserCreationService, UserCreationService>();
-
     }
 }

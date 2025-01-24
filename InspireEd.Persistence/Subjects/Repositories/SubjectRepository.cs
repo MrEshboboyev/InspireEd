@@ -1,5 +1,4 @@
-﻿using InspireEd.Domain.Repositories;
-using InspireEd.Domain.Subjects.Entities;
+﻿using InspireEd.Domain.Subjects.Entities;
 using InspireEd.Domain.Subjects.Repositories;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,7 +7,7 @@ namespace InspireEd.Persistence.Subjects.Repositories;
 /// <summary>
 /// Implements the repository interface for the Subject aggregate root.
 /// </summary>
-internal sealed class SubjectRepository(DbContext context) : ISubjectRepository
+internal sealed class SubjectRepository(ApplicationDbContext context) : ISubjectRepository
 {
     public async Task<List<Subject>> GetAllAsync(CancellationToken cancellationToken = default)
     {

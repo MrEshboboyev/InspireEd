@@ -36,11 +36,11 @@ public class ClassConfiguration : IEntityTypeConfiguration<Class>
         builder.Ignore("_attendances");
         builder.Ignore("_groupIds");
 
-        builder.Metadata.FindNavigation(nameof(Class.Attendances))!
-            .SetPropertyAccessMode(PropertyAccessMode.Field);
-
-        builder.Metadata.FindNavigation(nameof(Class.GroupIds))!
-            .SetPropertyAccessMode(PropertyAccessMode.Field);
+        // builder.Metadata.FindNavigation(nameof(Class.Attendances))!
+        //     .SetPropertyAccessMode(PropertyAccessMode.Field);
+        //
+        // builder.Metadata.FindNavigation(nameof(Class.GroupIds))!
+        //     .SetPropertyAccessMode(PropertyAccessMode.Field);
 
         // Relationships
         builder.HasMany<Attendance>()
