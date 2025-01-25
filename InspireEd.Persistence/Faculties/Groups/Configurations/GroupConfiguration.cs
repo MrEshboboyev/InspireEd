@@ -2,6 +2,7 @@
 using InspireEd.Domain.Faculties.ValueObjects;
 using InspireEd.Persistence.Faculties.Constants;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace InspireEd.Persistence.Faculties.Groups.Configurations;
@@ -24,8 +25,7 @@ internal sealed class GroupConfiguration : IEntityTypeConfiguration<Group>
             .Property(x => x.FacultyId)
             .IsRequired();
 
-        builder
-            .HasOne<Faculty>()
+        builder.HasOne<Faculty>()
             .WithMany()
             .HasForeignKey(x => x.FacultyId)
             .OnDelete(DeleteBehavior.Cascade);
@@ -40,14 +40,16 @@ internal sealed class GroupConfiguration : IEntityTypeConfiguration<Group>
         builder.Property(x => x.CreatedOnUtc).IsRequired();
         builder.Property(x => x.ModifiedOnUtc).IsRequired(false);
 
-        // Configure StudentIds as a value collection
         builder
             .Property(x => x.StudentIds)
             .HasConversion(
-                x => string.Join(",", x),  // Convert collection to string for storage
-                v => v.Split(',', 
-                    StringSplitOptions.RemoveEmptyEntries).Select(Guid.Parse).ToList()) // Convert back to collection
-            .IsRequired();
+                x => string.Join(",", x), // Convert List<Guid> to string
+                v => v.Split(',', StringSplitOptions.RemoveEmptyEntries).Select(Guid.Parse)
+                    .ToList()) // Convert back to List<Guid>
+            .Metadata.SetValueComparer(new ValueComparer<IReadOnlyCollection<Guid>>(
+                (c1, c2) => c1.SequenceEqual(c2),
+                c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode())),
+                c => c.ToList())); // Ensure EF Core can track changes
 
         // Ignore private fields
         builder.Ignore("_studentIds");

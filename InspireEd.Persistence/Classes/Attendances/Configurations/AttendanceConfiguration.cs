@@ -19,24 +19,16 @@ public class AttendanceConfiguration : IEntityTypeConfiguration<Attendance>
         builder.HasKey(a => a.Id);
 
         // Property configurations
-        builder.Property(a => a.StudentId)
-            .IsRequired();
+        builder.Property(a => a.StudentId).IsRequired();
+        builder.HasOne<Class>()
+            .WithMany()
+            .HasForeignKey(a => a.ClassId)
+            .OnDelete(DeleteBehavior.Cascade);
 
-        builder.Property(a => a.ClassId)
-            .IsRequired();
-
-        builder.Property(a => a.Status)
-            .IsRequired()
-            .HasConversion<int>(); // Enum stored as int
-
-        builder.Property(a => a.Notes)
-            .HasMaxLength(500);
-
-        builder.Property(a => a.CreatedOnUtc)
-            .IsRequired();
-
-        builder.Property(a => a.ModifiedOnUtc)
-            .IsRequired(false); // Nullable
+        builder.Property(a => a.Status).IsRequired().HasConversion<int>(); // Enum stored as int
+        builder.Property(a => a.Notes).HasMaxLength(500);
+        builder.Property(a => a.CreatedOnUtc).IsRequired();
+        builder.Property(a => a.ModifiedOnUtc).IsRequired(false);
 
         // Indexes
         builder.HasIndex(a => new { a.ClassId, a.StudentId }).IsUnique();

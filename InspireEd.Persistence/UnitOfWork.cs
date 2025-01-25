@@ -41,6 +41,7 @@ internal sealed class UnitOfWork(ApplicationDbContext dbContext) : IUnitOfWork
     #endregion
 
     #region Private Methods
+    
     /// <summary> 
     /// Converts domain events to outbox messages for reliable event processing. 
     /// </summary>
@@ -92,5 +93,6 @@ internal sealed class UnitOfWork(ApplicationDbContext dbContext) : IUnitOfWork
             }
         }
     }
+    
     #endregion
 }
