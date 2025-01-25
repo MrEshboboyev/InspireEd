@@ -13,11 +13,6 @@ public sealed class Attendance : Entity, IAuditableEntity
     /// <summary>
     /// Initializes a new instance of the <see cref="Attendance"/> class with the specified parameters.
     /// </summary>
-    /// <param name="id">The unique identifier of the attendance record.</param>
-    /// <param name="studentId">The unique identifier of the student.</param>
-    /// <param name="classId">The unique identifier of the class.</param>
-    /// <param name="status">The attendance status.</param>
-    /// <param name="notes">Additional notes for the attendance record.</param>
     internal Attendance(
         Guid id,
         Guid studentId,
@@ -31,50 +26,44 @@ public sealed class Attendance : Entity, IAuditableEntity
         Notes = notes;
     }
 
+    // EF Core requires a parameterless constructor
+    private Attendance() { }
+
     #endregion
 
     #region Properties
 
-    /// <summary>
-    /// Gets or sets the unique identifier of the student.
-    /// </summary>
-    public Guid StudentId { get; set; }
+    /// <summary> Gets the unique identifier of the student. </summary>
+    public Guid StudentId { get; private set; }
 
-    /// <summary>
-    /// Gets or sets the unique identifier of the class.
-    /// </summary>
-    public Guid ClassId { get; set; }
+    /// <summary> Gets the unique identifier of the class. </summary>
+    public Guid ClassId { get; private set; }
 
-    /// <summary>
-    /// Gets or sets the attendance status.
-    /// </summary>
-    public AttendanceStatus Status { get; set; }
+    /// <summary> Navigation property to Class. </summary>
+    public Class Class { get; private set; } = null!; // ✅ Ensures EF Core recognizes this navigation property.
 
-    /// <summary>
-    /// Gets or sets additional notes for the attendance record.
-    /// </summary>
-    public string Notes { get; set; }
+    /// <summary> Gets the attendance status. </summary>
+    public AttendanceStatus Status { get; private set; }
 
-    /// <summary>
-    /// Gets or sets the date and time when the attendance record was created in UTC.
-    /// </summary>
+    /// <summary> Gets additional notes for the attendance record. </summary>
+    public string Notes { get; private set; }
+
+    /// <summary> Gets the date and time when the attendance record was created in UTC. </summary>
     public DateTime CreatedOnUtc { get; set; }
 
-    /// <summary>
-    /// Gets or sets the date and time when the attendance record was last modified in UTC.
-    /// </summary>
+    /// <summary> Gets the date and time when the attendance record was last modified in UTC. </summary>
     public DateTime? ModifiedOnUtc { get; set; }
 
     #endregion
-    
-    #region Own methods
-    
+
+    #region Methods
+
     public void UpdateStatus(AttendanceStatus status, string notes)
     {
         Status = status;
         Notes = notes;
         ModifiedOnUtc = DateTime.UtcNow;
     }
-    
+
     #endregion
 }

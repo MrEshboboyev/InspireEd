@@ -3,6 +3,7 @@ using System;
 using InspireEd.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace InspireEd.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250125132009_ShadowingConflictFixed")]
+    partial class ShadowingConflictFixed
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -31,7 +34,7 @@ namespace InspireEd.Persistence.Migrations
                     b.Property<Guid>("ClassId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid?>("ClassId1")
+                    b.Property<Guid>("ClassId1")
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedOnUtc")
@@ -431,6 +434,12 @@ namespace InspireEd.Persistence.Migrations
 
             modelBuilder.Entity("InspireEd.Domain.Classes.Entities.Attendance", b =>
                 {
+                    b.HasOne("InspireEd.Domain.Classes.Entities.Attendance", null)
+                        .WithMany()
+                        .HasForeignKey("ClassId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("InspireEd.Domain.Classes.Entities.Class", null)
                         .WithMany()
                         .HasForeignKey("ClassId")
@@ -439,7 +448,9 @@ namespace InspireEd.Persistence.Migrations
 
                     b.HasOne("InspireEd.Domain.Classes.Entities.Class", "Class")
                         .WithMany("Attendances")
-                        .HasForeignKey("ClassId1");
+                        .HasForeignKey("ClassId1")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Class");
                 });

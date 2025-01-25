@@ -20,14 +20,10 @@ internal sealed class GroupConfiguration : IEntityTypeConfiguration<Group>
         // Configure the primary key
         builder.HasKey(x => x.Id);
 
-        // Configure foreign key relationship with Faculty
-        builder
-            .Property(x => x.FacultyId)
-            .IsRequired();
-
-        builder.HasOne<Faculty>()
-            .WithMany()
-            .HasForeignKey(x => x.FacultyId)
+        builder.HasOne(g => g.Faculty) // ✅ Ensure explicit navigation property
+            .WithMany(f => f.Groups)  
+            .HasForeignKey(g => g.FacultyId)
+            .IsRequired()
             .OnDelete(DeleteBehavior.Cascade);
 
         // Configure property conversions and constraints

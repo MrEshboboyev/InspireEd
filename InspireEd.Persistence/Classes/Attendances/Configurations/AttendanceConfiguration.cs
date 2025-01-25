@@ -12,25 +12,21 @@ public class AttendanceConfiguration : IEntityTypeConfiguration<Attendance>
 {
     public void Configure(EntityTypeBuilder<Attendance> builder)
     {
-        // Table name
         builder.ToTable(ClassTableNames.Attendances);
 
-        // Primary key
         builder.HasKey(a => a.Id);
 
-        // Property configurations
         builder.Property(a => a.StudentId).IsRequired();
-        builder.HasOne<Class>()
-            .WithMany()
-            .HasForeignKey(a => a.ClassId)
-            .OnDelete(DeleteBehavior.Cascade);
-
-        builder.Property(a => a.Status).IsRequired().HasConversion<int>(); // Enum stored as int
+        builder.Property(a => a.Status).IsRequired().HasConversion<int>();
         builder.Property(a => a.Notes).HasMaxLength(500);
         builder.Property(a => a.CreatedOnUtc).IsRequired();
         builder.Property(a => a.ModifiedOnUtc).IsRequired(false);
 
-        // Indexes
-        builder.HasIndex(a => new { a.ClassId, a.StudentId }).IsUnique();
+        // ✅ Explicitly map ClassId as a foreign key
+        builder.HasOne(a => a.Class)
+            .WithMany(c => c.Attendances)
+            .HasForeignKey(a => a.ClassId)
+            .IsRequired()
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

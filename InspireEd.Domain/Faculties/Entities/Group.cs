@@ -47,7 +47,7 @@ public sealed class Group : Entity, IAuditableEntity
     /// <summary>
     /// Gets or sets the unique identifier of the faculty to which the group belongs.
     /// </summary>
-    public Guid FacultyId { get; set; }
+    public Guid FacultyId { get; private set; }
 
     /// <summary>
     /// Gets or sets the name of the group.
@@ -65,6 +65,9 @@ public sealed class Group : Entity, IAuditableEntity
     /// Gets or sets the date and time when the group was last modified in UTC.
     /// </summary>
     public DateTime? ModifiedOnUtc { get; set; }
+    
+    // ✅ Ensure navigation property exists
+    public Faculty Faculty { get; private set; }
 
     #endregion
     
