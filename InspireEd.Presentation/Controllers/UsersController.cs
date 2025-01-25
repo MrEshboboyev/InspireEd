@@ -2,6 +2,8 @@
 using InspireEd.Application.Users.Commands.CreateUser;
 using InspireEd.Application.Users.Commands.Login;
 using InspireEd.Application.Users.Queries.GetUserById;
+using InspireEd.Domain.Users.Enums;
+using InspireEd.Infrastructure.Authentication;
 using InspireEd.Presentation.Abstractions;
 using InspireEd.Presentation.Contracts.Users;
 using MediatR;
@@ -13,6 +15,7 @@ namespace InspireEd.Presentation.Controllers;
 /// API Controller for managing user-related operations.
 /// </summary>
 [Route("api/users")]
+[HasPermission(Permission.FullAccess)]
 public sealed class UsersController(ISender sender) : ApiController(sender)
 {
     /// <summary>

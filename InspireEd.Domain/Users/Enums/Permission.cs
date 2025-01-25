@@ -15,6 +15,8 @@ public enum Permission
 
     // Department Head Permissions
     AddStudents = 50,          // Add new students to the system
+    RemoveStudents = 51,          // Remove students from the system
+    TransferStudentBetweenGroups = 52,          // Transfer students between groups in the system
     AssignGroups = 60,         // Assign students to groups
     AssignClasses = 70,        // Assign teachers to classes
     ViewFacultyData = 80,      // View all students and teachers in the faculty

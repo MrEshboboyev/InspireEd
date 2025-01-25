@@ -42,8 +42,10 @@ namespace InspireEd.Presentation.Controllers;
 [Route("api/department-heads")]
 public class DepartmentHeadsController(ISender sender) : ApiController(sender)
 {
-    #region Group related
+    #region Faculty related
 
+    #region Group related
+    
     [HasPermission(Permission.AddStudents)]
     [HttpPost("faculties/{facultyId:guid}/groups/{groupId:guid}/add-multiple-students")]
     public async Task<IActionResult> AddMultipleStudentsToGroup(
@@ -63,7 +65,6 @@ public class DepartmentHeadsController(ISender sender) : ApiController(sender)
 
         return response.IsSuccess ? NoContent() : BadRequest(response);
     }
-
 
     [HasPermission(Permission.AddStudents)]
     [HttpPost("faculties/{facultyId:guid}/groups/{groupId:guid}/students")]
@@ -86,9 +87,8 @@ public class DepartmentHeadsController(ISender sender) : ApiController(sender)
         return response.IsSuccess ? NoContent() : BadRequest(response);
     }
 
-    [HasPermission(Permission.AddStudents)]
-    [HttpDelete("faculties/{facultyId:guid}/groups/" +
-                "{groupId:guid}/remove-all-students")]
+    [HasPermission(Permission.RemoveStudents)]
+    [HttpDelete("faculties/{facultyId:guid}/groups/{groupId:guid}/remove-all-students")]
     public async Task<IActionResult> RemoveAllStudentsFromGroup(
         Guid facultyId,
         Guid groupId,
@@ -103,9 +103,8 @@ public class DepartmentHeadsController(ISender sender) : ApiController(sender)
         return response.IsSuccess ? NoContent() : BadRequest(response);
     }
 
-    [HasPermission(Permission.AddStudents)]
-    [HttpDelete("faculties/{facultyId:guid}/groups/" +
-                "{groupId:guid}/students/{studentId:guid}")]
+    [HasPermission(Permission.RemoveStudents)]
+    [HttpDelete("faculties/{facultyId:guid}/groups/{groupId:guid}/students/{studentId:guid}")]
     public async Task<IActionResult> RemoveStudentFromGroup(
         Guid facultyId,
         Guid groupId,
@@ -122,7 +121,7 @@ public class DepartmentHeadsController(ISender sender) : ApiController(sender)
         return response.IsSuccess ? NoContent() : BadRequest(response);
     }
 
-    [HasPermission(Permission.AddStudents)]
+    [HasPermission(Permission.TransferStudentBetweenGroups)]
     [HttpPut("faculties/{facultyId:guid}/groups/{sourceGroupId:guid}" +
              "/students/{studentId:guid}/transfer/{targetGroupId:guid}")]
     public async Task<IActionResult> TransferStudentBetweenGroups(
@@ -176,6 +175,8 @@ public class DepartmentHeadsController(ISender sender) : ApiController(sender)
 
         return response.IsSuccess ? NoContent() : BadRequest(response);
     }
+    
+    #endregion
 
     #region Students
 
@@ -187,7 +188,7 @@ public class DepartmentHeadsController(ISender sender) : ApiController(sender)
     /// <param name="studentId">The unique identifier of the student.</param>
     /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
     /// <returns>A task that represents the asynchronous operation, containing the action result.</returns>
-    [HttpGet("{studentId:guid}")]
+    [HttpGet("students/{studentId:guid}")]
     public async Task<IActionResult> GetStudentDetails(
         Guid studentId,
         CancellationToken cancellationToken)
@@ -234,6 +235,7 @@ public class DepartmentHeadsController(ISender sender) : ApiController(sender)
     /// <param name="subjectId">The unique identifier of the subject.</param>
     /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
     /// <returns>A task that represents the asynchronous operation, containing the action result.</returns>
+    [HasPermission(Permission.ViewAssignedClasses)]
     [HttpGet("classes/{subjectId:guid}")]
     public async Task<IActionResult> GetClassesBySubjectId(
         Guid subjectId,
@@ -252,6 +254,7 @@ public class DepartmentHeadsController(ISender sender) : ApiController(sender)
     /// <param name="classId">The unique identifier of the class.</param>
     /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
     /// <returns>A task that represents the asynchronous operation, containing the action result.</returns>
+    [HasPermission(Permission.ViewAttendance)]
     [HttpGet("classes/{classId:guid}/attendances")]
     public async Task<IActionResult> GetAttendancesByClassId(
         Guid classId,
@@ -271,7 +274,8 @@ public class DepartmentHeadsController(ISender sender) : ApiController(sender)
     /// <param name="attendanceId">The unique identifier of the attendance record.</param>
     /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
     /// <returns>A task that represents the asynchronous operation, containing the action result.</returns>
-    [HttpGet("{attendanceId:guid}")]
+    [HasPermission(Permission.ViewAttendance)]
+    [HttpGet("classes/attendances/{attendanceId:guid}")]
     public async Task<IActionResult> GetAttendanceById(
         Guid attendanceId,
         CancellationToken cancellationToken)
@@ -285,6 +289,8 @@ public class DepartmentHeadsController(ISender sender) : ApiController(sender)
 
     #endregion
 
+    #region Create/Update/Delete
+    
     [HasPermission(Permission.AssignClasses)]
     [HttpPost("classes")]
     public async Task<IActionResult> CreateClass(
@@ -345,6 +351,10 @@ public class DepartmentHeadsController(ISender sender) : ApiController(sender)
 
         return response.IsSuccess ? NoContent() : BadRequest(response);
     }
+    
+    #endregion
+    
+    #region Group related
 
     /// <summary>
     /// Updates the group IDs associated with the class.
@@ -375,7 +385,7 @@ public class DepartmentHeadsController(ISender sender) : ApiController(sender)
     /// <param name="request">The request containing the new scheduled date.</param>
     /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
     /// <returns>A task that represents the asynchronous operation, containing the action result.</returns>
-    [HttpPut("{id:guid}/reschedule")]
+    [HttpPut("classes/{id:guid}/reschedule")]
     public async Task<IActionResult> RescheduleClass(
         Guid id,
         [FromBody] RescheduleClassRequest request,
@@ -389,6 +399,8 @@ public class DepartmentHeadsController(ISender sender) : ApiController(sender)
 
         return response.IsSuccess ? NoContent() : BadRequest(response);
     }
+    
+    #endregion
 
     #region Attendance related
 
@@ -445,6 +457,22 @@ public class DepartmentHeadsController(ISender sender) : ApiController(sender)
     #region Subject related
 
     #region Get
+    
+    /// <summary>
+    /// Retrieves all subjects.
+    /// </summary>
+    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+    /// <returns>A task that represents the asynchronous operation, containing the action result.</returns>
+    [HttpGet("subjects")]
+    public async Task<IActionResult> GetAllSubjects(
+        CancellationToken cancellationToken)
+    {
+        var query = new GetAllSubjectsQuery();
+
+        var response = await Sender.Send(query, cancellationToken);
+
+        return response.IsSuccess ? Ok(response.Value) : NotFound(response.Error);
+    }
 
     /// <summary>
     /// Retrieves details of a subject by its unique identifier.
@@ -465,29 +493,13 @@ public class DepartmentHeadsController(ISender sender) : ApiController(sender)
     }
 
     /// <summary>
-    /// Retrieves all subjects.
-    /// </summary>
-    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
-    /// <returns>A task that represents the asynchronous operation, containing the action result.</returns>
-    [HttpGet]
-    public async Task<IActionResult> GetAllSubjects(
-        CancellationToken cancellationToken)
-    {
-        var query = new GetAllSubjectsQuery();
-
-        var response = await Sender.Send(query, cancellationToken);
-
-        return response.IsSuccess ? Ok(response.Value) : NotFound(response.Error);
-    }
-
-    /// <summary>
     /// Retrieves subjects within a specific credit range.
     /// </summary>
     /// <param name="minCredit">The minimum credit value.</param>
     /// <param name="maxCredit">The maximum credit value.</param>
     /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
     /// <returns>A task that represents the asynchronous operation, containing the action result.</returns>
-    [HttpGet("credit-range")]
+    [HttpGet("subjects/by-credit-range/{minCredit:int}/{maxCredit:int}")]
     public async Task<IActionResult> GetSubjectsByCreditRange(
         int minCredit,
         int maxCredit,
@@ -507,7 +519,7 @@ public class DepartmentHeadsController(ISender sender) : ApiController(sender)
     /// <param name="endDate">The end date of the range.</param>
     /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
     /// <returns>A task that represents the asynchronous operation, containing the action result.</returns>
-    [HttpGet("subjects/creation-date-range")]
+    [HttpGet("subjects/by-creation-date-range/{startDate:datetime}/{endDate:datetime}")]
     public async Task<IActionResult> GetSubjectsByCreationDateRange(
         DateTime startDate,
         DateTime endDate,
@@ -521,6 +533,8 @@ public class DepartmentHeadsController(ISender sender) : ApiController(sender)
     }
 
     #endregion
+    
+    #region Create/Update/Delete
 
     /// <summary>
     /// Creates a new subject.
@@ -629,5 +643,7 @@ public class DepartmentHeadsController(ISender sender) : ApiController(sender)
         return response.IsSuccess ? NoContent() : BadRequest(response);
     }
 
+    #endregion
+    
     #endregion
 }
