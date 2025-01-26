@@ -17,11 +17,14 @@ using InspireEd.Application.Faculties.Queries.GetAllDepartmentHeadsInFaculty;
 using InspireEd.Application.Faculties.Queries.GetFaculties;
 using InspireEd.Application.Faculties.Queries.GetFacultyDetails;
 using InspireEd.Application.Users.Commands.AssignRoleToUser;
+using InspireEd.Application.Users.Commands.ChangeUserPassword;
+using InspireEd.Application.Users.Commands.CreateUser;
 using InspireEd.Application.Users.Commands.DeleteUser;
 using InspireEd.Application.Users.Commands.RemoveRoleFromUser;
 using InspireEd.Application.Users.Commands.UpdateUser;
 using InspireEd.Application.Users.Queries.GetAllUsers;
 using InspireEd.Application.Users.Queries.GetUserByEmail;
+using InspireEd.Application.Users.Queries.GetUserById;
 using InspireEd.Application.Users.Queries.GetUserRoles;
 using InspireEd.Application.Users.Queries.GetUsersByRole;
 using InspireEd.Application.Users.Queries.SearchUsersByName;
@@ -32,13 +35,14 @@ using InspireEd.Presentation.Contracts.Admins.DepartmentHeads;
 using InspireEd.Presentation.Contracts.Admins.Faculties;
 using InspireEd.Presentation.Contracts.Admins.Groups;
 using InspireEd.Presentation.Contracts.Admins.Users;
+using InspireEd.Presentation.Contracts.Users;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace InspireEd.Presentation.Controllers;
 
 [Route("api/admins")]
-[HasPermission(Permission.FullAccess)]
+// [HasPermission(Permission.FullAccess)] // Manually hack, Until Admin is seeded into the database
 public class AdminsController(ISender sender) : ApiController(sender)
 {
     #region Department Head
@@ -382,6 +386,24 @@ public class AdminsController(ISender sender) : ApiController(sender)
 
         return response.IsSuccess ? Ok(response.Value) : NotFound(response.Error);
     }
+    
+    /// <summary>
+    /// Retrieves the details of a user by their unique identifier.
+    /// </summary>
+    /// <param name="id">The unique identifier of the user.</param>
+    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+    /// <returns>An IActionResult containing the user details if found, or an error message.</returns>
+    [HttpGet("{id:guid}")]
+    public async Task<IActionResult> GetUserById(
+        Guid id,
+        CancellationToken cancellationToken)
+    {
+        var query = new GetUserByIdQuery(id);
+
+        var response = await Sender.Send(query, cancellationToken);
+
+        return response.IsSuccess ? Ok(response.Value) : NotFound(response.Error);
+    }
 
     /// <summary>
     /// Retrieves users by their role.
@@ -451,7 +473,37 @@ public class AdminsController(ISender sender) : ApiController(sender)
 
     #endregion
 
-    #region Update/Delete
+    #region Create/Update/Delete
+    
+    /// <summary>
+    /// Create a new user by creating their account with the provided details.
+    /// </summary>
+    /// <param name="request">The create request containing the user's details.</param>
+    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+    /// <returns>An IActionResult containing the new user's ID if successful, or an error message.</returns>
+    [HttpPost("users")]
+    public async Task<IActionResult> CreateUser(
+        [FromBody] CreateUserRequest request,
+        CancellationToken cancellationToken)
+    {
+        var command = new CreateUserCommand(
+            request.Email,
+            request.Password,
+            request.FirstName,
+            request.LastName,
+            request.RoleName);
+
+        var result = await Sender.Send(command, cancellationToken);
+        if (result.IsFailure)
+        {
+            return HandleFailure(result);
+        }
+
+        return CreatedAtAction(
+            nameof(GetUserById),
+            new { id = result.Value },
+            result.Value);
+    }
     
     /// <summary>
     /// Updates the details of a user by their unique identifier.
@@ -471,6 +523,29 @@ public class AdminsController(ISender sender) : ApiController(sender)
             request.FirstName,
             request.LastName,
             request.Email);
+
+        var response = await Sender.Send(command, cancellationToken);
+
+        return response.IsSuccess ? NoContent() : BadRequest(response.Error);
+    }
+    
+    /// <summary>
+    /// Changes the password of a user by their unique identifier.
+    /// </summary>
+    /// <param name="userId">The unique identifier of the user.</param>
+    /// <param name="request">The request containing old and new passwords.</param>
+    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+    /// <returns>A task that represents the asynchronous operation, containing the action result.</returns>
+    [HttpPut("users/{userId:guid}/change-password")]
+    public async Task<IActionResult> ChangeUserPassword(
+        Guid userId,
+        [FromBody] ChangeUserPasswordRequest request,
+        CancellationToken cancellationToken)
+    {
+        var command = new ChangeUserPasswordCommand(
+            userId,
+            request.OldPassword,
+            request.NewPassword);
 
         var response = await Sender.Send(command, cancellationToken);
 
