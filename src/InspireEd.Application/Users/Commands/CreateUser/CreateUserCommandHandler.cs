@@ -28,15 +28,23 @@ internal sealed class CreateUserCommandHandler(
     public async Task<Result<Guid>> Handle(CreateUserCommand request,
         CancellationToken cancellationToken)
     {
+        var (email, password, firstName, lastName, roleName) = request;
+        
         #region Checking Email is Unique
 
         // Validate and create the Email value object
-        Result<Email> emailResult = Email.Create(request.Email);
+        var emailResult = Email.Create(email);
+        if (emailResult.IsFailure)
+        {
+            return Result.Failure<Guid>(
+                emailResult.Error);
+        }
 
         // Check if the email is already in use
         if (!await userRepository.IsEmailUniqueAsync(emailResult.Value, cancellationToken))
         {
-            return Result.Failure<Guid>(DomainErrors.User.EmailAlreadyInUse);
+            return Result.Failure<Guid>(
+                DomainErrors.User.EmailAlreadyInUse);
         }
 
         #endregion
@@ -44,7 +52,7 @@ internal sealed class CreateUserCommandHandler(
         #region Prepare value objects
 
         // Validate and create the FirstName value object
-        Result<FirstName> createFirstNameResult = FirstName.Create(request.FirstName);
+        var createFirstNameResult = FirstName.Create(firstName);
         if (createFirstNameResult.IsFailure)
         {
             return Result.Failure<Guid>(
@@ -52,11 +60,11 @@ internal sealed class CreateUserCommandHandler(
         }
 
         // Validate and create the LastName value object
-        Result<LastName> createLastNameResult = LastName.Create(request.LastName);
+        var createLastNameResult = LastName.Create(lastName);
         if (createLastNameResult.IsFailure)
         {
             return Result.Failure<Guid>(
-                createFirstNameResult.Error);
+                createLastNameResult.Error);
         }
 
         #endregion
