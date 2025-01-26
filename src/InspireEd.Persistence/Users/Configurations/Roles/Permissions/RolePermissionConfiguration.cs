@@ -30,10 +30,13 @@ internal sealed class RolePermissionConfiguration
             Create(Role.DepartmentHead, Permission.AddStudents),
             Create(Role.DepartmentHead, Permission.RemoveStudents),
             Create(Role.DepartmentHead, Permission.TransferStudentBetweenGroups),
-            Create(Role.DepartmentHead, Permission.AssignGroups),
+            Create(Role.DepartmentHead, Permission.ViewStudents),
             Create(Role.DepartmentHead, Permission.ManageGroups),
+            Create(Role.DepartmentHead, Permission.AssignGroups),
             Create(Role.DepartmentHead, Permission.AssignClasses),
             Create(Role.DepartmentHead, Permission.ViewFacultyData),
+            Create(Role.DepartmentHead, Permission.ViewSubjects),
+            Create(Role.DepartmentHead, Permission.ManageSubjects),
 
             // Admin Permissions
             Create(Role.Admin, Permission.FullAccess)

@@ -188,6 +188,7 @@ public class DepartmentHeadsController(ISender sender) : ApiController(sender)
     /// <param name="studentId">The unique identifier of the student.</param>
     /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
     /// <returns>A task that represents the asynchronous operation, containing the action result.</returns>
+    [HasPermission(Permission.ViewStudents)]
     [HttpGet("students/{studentId:guid}")]
     public async Task<IActionResult> GetStudentDetails(
         Guid studentId,
@@ -463,6 +464,7 @@ public class DepartmentHeadsController(ISender sender) : ApiController(sender)
     /// </summary>
     /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
     /// <returns>A task that represents the asynchronous operation, containing the action result.</returns>
+    [HasPermission(Permission.ViewSubjects)]
     [HttpGet("subjects")]
     public async Task<IActionResult> GetAllSubjects(
         CancellationToken cancellationToken)
@@ -480,6 +482,7 @@ public class DepartmentHeadsController(ISender sender) : ApiController(sender)
     /// <param name="subjectId">The unique identifier of the subject.</param>
     /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
     /// <returns>A task that represents the asynchronous operation, containing the action result.</returns>
+    [HasPermission(Permission.ViewSubjects)]
     [HttpGet("subjects/{subjectId:guid}")]
     public async Task<IActionResult> GetSubjectById(
         Guid subjectId,
@@ -499,6 +502,7 @@ public class DepartmentHeadsController(ISender sender) : ApiController(sender)
     /// <param name="maxCredit">The maximum credit value.</param>
     /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
     /// <returns>A task that represents the asynchronous operation, containing the action result.</returns>
+    [HasPermission(Permission.ViewSubjects)]
     [HttpGet("subjects/by-credit-range/{minCredit:int}/{maxCredit:int}")]
     public async Task<IActionResult> GetSubjectsByCreditRange(
         int minCredit,
@@ -519,6 +523,7 @@ public class DepartmentHeadsController(ISender sender) : ApiController(sender)
     /// <param name="endDate">The end date of the range.</param>
     /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
     /// <returns>A task that represents the asynchronous operation, containing the action result.</returns>
+    [HasPermission(Permission.ViewSubjects)]
     [HttpGet("subjects/by-creation-date-range/{startDate:datetime}/{endDate:datetime}")]
     public async Task<IActionResult> GetSubjectsByCreationDateRange(
         DateTime startDate,
@@ -542,6 +547,7 @@ public class DepartmentHeadsController(ISender sender) : ApiController(sender)
     /// <param name="request">The request containing subject details.</param>
     /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
     /// <returns>A task that represents the asynchronous operation, containing the action result.</returns>
+    [HasPermission(Permission.ManageSubjects)]
     [HttpPost("subjects")]
     public async Task<IActionResult> CreateSubject(
         [FromBody] CreateSubjectRequest request,
@@ -564,6 +570,7 @@ public class DepartmentHeadsController(ISender sender) : ApiController(sender)
     /// <param name="request">The request containing updated subject details.</param>
     /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
     /// <returns>A task that represents the asynchronous operation, containing the action result.</returns>
+    [HasPermission(Permission.ManageSubjects)]
     [HttpPut("subjects/{id:guid}")]
     public async Task<IActionResult> UpdateSubject(
         Guid id,
@@ -587,6 +594,7 @@ public class DepartmentHeadsController(ISender sender) : ApiController(sender)
     /// <param name="id">The unique identifier of the subject.</param>
     /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
     /// <returns>A task that represents the asynchronous operation, containing the action result.</returns>
+    [HasPermission(Permission.ManageSubjects)]
     [HttpDelete("subjects/{id:guid}")]
     public async Task<IActionResult> DeleteSubject(
         Guid id,
@@ -606,6 +614,7 @@ public class DepartmentHeadsController(ISender sender) : ApiController(sender)
     /// <param name="request">The request containing the new credit value.</param>
     /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
     /// <returns>A task that represents the asynchronous operation, containing the action result.</returns>
+    [HasPermission(Permission.ManageSubjects)]
     [HttpPut("subjects/{id:guid}/change-credit")]
     public async Task<IActionResult> ChangeSubjectCredit(
         Guid id,
@@ -628,6 +637,7 @@ public class DepartmentHeadsController(ISender sender) : ApiController(sender)
     /// <param name="request">The request containing the new name for the subject.</param>
     /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
     /// <returns>A task that represents the asynchronous operation, containing the action result.</returns>
+    [HasPermission(Permission.ManageSubjects)]
     [HttpPut("subjects/{id:guid}/rename")]
     public async Task<IActionResult> RenameSubject(
         Guid id,
