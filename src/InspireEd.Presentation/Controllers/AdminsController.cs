@@ -516,15 +516,14 @@ public class AdminsController(ISender sender) : ApiController(sender)
     /// <param name="request">The request containing old and new passwords.</param>
     /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
     /// <returns>A task that represents the asynchronous operation, containing the action result.</returns>
-    [HttpPut("users/{userId:guid}/change-password")]
-    public async Task<IActionResult> ChangeUserPassword(
+    [HttpPut("users/{userId:guid}/update-password")]
+    public async Task<IActionResult> UpdateUserPassword(
         Guid userId,
-        [FromBody] ChangeUserPasswordRequest request,
+        [FromBody] UpdateUserPasswordRequest request,
         CancellationToken cancellationToken)
     {
-        var command = new ChangeUserPasswordCommand(
+        var command = new UpdateUserPasswordCommand(
             userId,
-            request.OldPassword,
             request.NewPassword);
 
         var response = await Sender.Send(command, cancellationToken);

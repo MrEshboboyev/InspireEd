@@ -33,9 +33,9 @@ public static class DomainErrors
             "User.InvalidRoleName",
             "The provided role name is invalid.");
 
-        public static readonly Error InvalidPassword = new Error(
-            "User.InvalidPassword",
-            "The old password provided is incorrect.");
+        public static readonly Error InvalidPasswordChange = new(
+            "User.InvalidPasswordChange",
+            "The password change operation is invalid.");
 
         public static readonly Func<int, Error> NoUsersFoundForRole = roleId => new Error(
             "User.NoUsersFoundForRole",

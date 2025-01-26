@@ -7,16 +7,16 @@ using InspireEd.Domain.Users.Repositories;
 
 namespace InspireEd.Application.Users.Commands.ChangeUserPassword;
 
-internal sealed class ChangeUserPasswordCommandHandler(
+internal sealed class UpdateUserPasswordCommandHandler(
     IUserRepository userRepository,
     IPasswordHasher passwordHasher,
-    IUnitOfWork unitOfWork) : ICommandHandler<ChangeUserPasswordCommand>
+    IUnitOfWork unitOfWork) : ICommandHandler<UpdateUserPasswordCommand>
 {
     public async Task<Result> Handle(
-        ChangeUserPasswordCommand request,
+        UpdateUserPasswordCommand request,
         CancellationToken cancellationToken)
     {
-        var (userId, oldPassword, newPassword) = request;
+        var (userId, newPassword) = request;
         
         #region Get this User
         
@@ -26,24 +26,19 @@ internal sealed class ChangeUserPasswordCommandHandler(
         if (user is null)
         {
             return Result.Failure(
-                DomainErrors.User.NotFound(request.UserId));
-        }
-        
-        #endregion
-
-        #region Checking old password is coorect
-        
-        if (user.PasswordHash != passwordHasher.Hash(oldPassword))
-        {
-            return Result.Failure(
-                DomainErrors.User.InvalidPassword);
+                DomainErrors.User.NotFound(userId));
         }
         
         #endregion
         
         #region Update this User's password
         
-        user.ChangePassword(passwordHasher.Hash(newPassword));
+        var changePasswordResult = user.ChangePassword(passwordHasher.Hash(newPassword));
+        if (changePasswordResult.IsFailure)
+        {
+            return Result.Failure(
+                changePasswordResult.Error);
+        }
         
         #endregion
         

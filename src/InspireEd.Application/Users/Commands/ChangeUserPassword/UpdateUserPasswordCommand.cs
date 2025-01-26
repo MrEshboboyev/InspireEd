@@ -2,7 +2,6 @@
 
 namespace InspireEd.Application.Users.Commands.ChangeUserPassword;
 
-public sealed record ChangeUserPasswordCommand(
+public sealed record UpdateUserPasswordCommand(
     Guid UserId,
-    string OldPassword,
     string NewPassword) : ICommand;

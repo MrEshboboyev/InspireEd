@@ -2,15 +2,12 @@
 
 namespace InspireEd.Application.Users.Commands.ChangeUserPassword;
 
-internal class ChangeUserPasswordCommandValidator : AbstractValidator<ChangeUserPasswordCommand>
+internal class UpdateUserPasswordCommandValidator : AbstractValidator<UpdateUserPasswordCommand>
 {
-    public ChangeUserPasswordCommandValidator()
+    public UpdateUserPasswordCommandValidator()
     {
         RuleFor(command => command.UserId)
             .NotEmpty().WithMessage("UserId is required.");
-        
-        RuleFor(command => command.OldPassword)
-            .NotEmpty().WithMessage("Old password is required.");
         
         RuleFor(command => command.NewPassword)
             .NotEmpty().WithMessage("New password is required.")

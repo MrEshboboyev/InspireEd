@@ -136,12 +136,17 @@ public sealed class User : AggregateRoot, IAuditableEntity
 
     public Result ChangePassword(string newPasswordHash)
     {
+        if (string.IsNullOrWhiteSpace(newPasswordHash))
+        {
+            return Result.Failure(DomainErrors.User.InvalidPasswordChange);
+        }
+
         #region Update fields
-        
+
         PasswordHash = newPasswordHash;
-        
+
         #endregion
-        
+
         return Result.Success();
     }
 
