@@ -7,7 +7,6 @@ using InspireEd.Application.Faculties.Commands.RemoveGroupFromFaculty;
 using InspireEd.Application.Faculties.Commands.UpdateFaculty;
 using InspireEd.Application.Faculties.DepartmentHeads.Commands.CreateDepartmentHead;
 using InspireEd.Application.Faculties.DepartmentHeads.Commands.DeleteDepartmentHead;
-using InspireEd.Application.Faculties.DepartmentHeads.Commands.UpdateDepartmentHeadDetails;
 using InspireEd.Application.Faculties.DepartmentHeads.Queries.GetDepartmentHeadDetails;
 using InspireEd.Application.Faculties.Groups.Commands.UpdateGroup;
 using InspireEd.Application.Faculties.Groups.Queries.GetAllGroupsInFaculty;
@@ -80,24 +79,6 @@ public class AdminsController(ISender sender) : ApiController(sender)
             request.Email,
             request.FirstName,
             request.LastName,
-            request.Password);
-
-        var response = await Sender.Send(command, cancellationToken);
-
-        return response.IsSuccess ? NoContent() : BadRequest(response);
-    }
-
-    [HttpPut("department-heads/{departmentHeadId:guid}")]
-    public async Task<IActionResult> UpdateDepartmentHeadDetails(
-        Guid departmentHeadId,
-        [FromBody] UpdateDepartmentHeadDetailsRequest request,
-        CancellationToken cancellationToken)
-    {
-        var command = new UpdateDepartmentHeadDetailsCommand(
-            departmentHeadId,
-            request.FirstName,
-            request.LastName,
-            request.Email,
             request.Password);
 
         var response = await Sender.Send(command, cancellationToken);
@@ -521,8 +502,7 @@ public class AdminsController(ISender sender) : ApiController(sender)
         var command = new UpdateUserCommand(
             userId,
             request.FirstName,
-            request.LastName,
-            request.Email);
+            request.LastName);
 
         var response = await Sender.Send(command, cancellationToken);
 

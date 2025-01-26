@@ -116,12 +116,14 @@ public sealed class User : AggregateRoot, IAuditableEntity
     /// </summary>
     /// <param name="firstName">The new first name of the user.</param>
     /// <param name="lastName">The new last name of the user.</param>
-    /// <param name="email">The new email of the user.</param>
-    public Result UpdateDetails(FirstName firstName, LastName lastName, Email email)
+    public Result UpdateDetails(FirstName firstName, LastName lastName)
     {
+        #region Update fields
+        
         FirstName = firstName;
         LastName = lastName;
-        Email = email;
+        
+        #endregion
 
         // RaiseDomainEvent(new UserUpdatedDomainEvent(
         //     Id,

@@ -15,7 +15,7 @@ internal sealed class UpdateUserCommandHandler(
         UpdateUserCommand request,
         CancellationToken cancellationToken)
     {
-        var (userId, firstName, lastName, email) = request;
+        var (userId, firstName, lastName) = request;
         
         #region Get this User
         
@@ -43,12 +43,6 @@ internal sealed class UpdateUserCommandHandler(
         {
             return Result.Failure(lastNameResult.Error);
         }
-
-        var emailResult = Email.Create(email);
-        if (emailResult.IsFailure)
-        {
-            return Result.Failure(emailResult.Error);
-        }
         
         #endregion
         
@@ -56,8 +50,7 @@ internal sealed class UpdateUserCommandHandler(
 
         var updateResult = user.UpdateDetails(
             firstNameResult.Value,
-            lastNameResult.Value,
-            emailResult.Value);
+            lastNameResult.Value);
         if (updateResult.IsFailure)
         {
             return Result.Failure(
