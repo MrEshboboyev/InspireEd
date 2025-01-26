@@ -11,9 +11,6 @@ internal sealed class CreateFacultyCommandHandler(
     IFacultyRepository facultyRepository,
     IUnitOfWork unitOfWork) : ICommandHandler<CreateFacultyCommand>
 {
-    private readonly IFacultyRepository _facultyRepository = facultyRepository;
-    private readonly IUnitOfWork _unitOfWork = unitOfWork;
-    
     public async Task<Result> Handle(
         CreateFacultyCommand request,
         CancellationToken cancellationToken)
@@ -41,8 +38,8 @@ internal sealed class CreateFacultyCommandHandler(
         
         #region Add and Update database
         
-        _facultyRepository.Add(faculty);
-        await _unitOfWork.SaveChangesAsync(cancellationToken);
+        facultyRepository.Add(faculty);
+        await unitOfWork.SaveChangesAsync(cancellationToken);
         
         #endregion
         

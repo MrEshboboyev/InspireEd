@@ -206,6 +206,18 @@ public class AdminsController(ISender sender) : ApiController(sender)
         return response.IsSuccess ? NoContent() : BadRequest(response);
     }
 
+    [HttpDelete("faculties/{facultyId:guid}")]
+    public async Task<IActionResult> DeleteFaculty(
+        Guid facultyId,
+        CancellationToken cancellationToken)
+    {
+        var command = new DeleteFacultyCommand(facultyId);
+
+        var response = await Sender.Send(command, cancellationToken);
+
+        return response.IsSuccess ? NoContent() : BadRequest(response);
+    }
+    
     [HttpPut("faculties/{facultyId:guid}")]
     public async Task<IActionResult> UpdateFaculty(
         Guid facultyId,
@@ -215,18 +227,6 @@ public class AdminsController(ISender sender) : ApiController(sender)
         var command = new UpdateFacultyCommand(
             facultyId,
             request.FacultyName);
-
-        var response = await Sender.Send(command, cancellationToken);
-
-        return response.IsSuccess ? NoContent() : BadRequest(response);
-    }
-
-    [HttpDelete("faculties/{facultyId:guid}")]
-    public async Task<IActionResult> DeleteFaculty(
-        Guid facultyId,
-        CancellationToken cancellationToken)
-    {
-        var command = new DeleteFacultyCommand(facultyId);
 
         var response = await Sender.Send(command, cancellationToken);
 

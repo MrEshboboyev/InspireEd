@@ -10,9 +10,6 @@ internal sealed class DeleteFacultyCommandHandler(
     IFacultyRepository facultyRepository,
     IUnitOfWork unitOfWork) : ICommandHandler<DeleteFacultyCommand>
 {
-    private readonly IFacultyRepository _facultyRepository = facultyRepository;
-    private readonly IUnitOfWork _unitOfWork = unitOfWork;
-    
     public async Task<Result> Handle(
         DeleteFacultyCommand request,
         CancellationToken cancellationToken)
@@ -21,7 +18,7 @@ internal sealed class DeleteFacultyCommandHandler(
         
         #region Get this faculty
         
-        var faculty = await _facultyRepository.GetByIdAsync(
+        var faculty = await facultyRepository.GetByIdAsync(
             facultyId,
             cancellationToken);
         if (faculty is null)
@@ -34,8 +31,8 @@ internal sealed class DeleteFacultyCommandHandler(
         
         #region Update database
         
-        _facultyRepository.Remove(faculty);
-        await _unitOfWork.SaveChangesAsync(cancellationToken);
+        facultyRepository.Remove(faculty);
+        await unitOfWork.SaveChangesAsync(cancellationToken);
         
         #endregion
         
