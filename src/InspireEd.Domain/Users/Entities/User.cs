@@ -11,6 +11,12 @@ namespace InspireEd.Domain.Users.Entities;
 /// </summary>
 public sealed class User : AggregateRoot, IAuditableEntity
 {
+    #region Private fields
+    
+    private readonly List<Role> _roles = [];
+    
+    #endregion
+    
     #region Constructors
 
     private User(
@@ -24,7 +30,6 @@ public sealed class User : AggregateRoot, IAuditableEntity
         PasswordHash = passwordHash;
         FirstName = firstName;
         LastName = lastName;
-        Roles = [];
 
         #region Domain Events
 
@@ -50,7 +55,7 @@ public sealed class User : AggregateRoot, IAuditableEntity
     public string PasswordHash { get; private set; }
     public DateTime CreatedOnUtc { get; set; }
     public DateTime? ModifiedOnUtc { get; set; }
-    public ICollection<Role> Roles { get; private set; }
+    public ICollection<Role> Roles => _roles.AsReadOnly();
 
     #endregion
 
@@ -78,8 +83,14 @@ public sealed class User : AggregateRoot, IAuditableEntity
 
     public Result AssignRole(Role role)
     {
-        if (!Roles.Contains(role))
-            Roles.Add(role);
+        if (string.IsNullOrWhiteSpace(role.Name))
+        {
+            return Result.Failure(
+                DomainErrors.User.InvalidRoleName);
+        }
+        
+        if (!_roles.Contains(role))
+            _roles.Add(role);
         
         return Result.Success();
     }

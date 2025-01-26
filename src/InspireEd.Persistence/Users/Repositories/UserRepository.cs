@@ -24,6 +24,12 @@ public sealed class UserRepository(ApplicationDbContext dbContext) : IUserReposi
         await dbContext
             .Set<User>()
             .FirstOrDefaultAsync(user => user.Id == id, cancellationToken);
+    
+    public async Task<User> GetByIdWithRolesAsync(Guid id, CancellationToken cancellationToken = default) =>
+        await dbContext
+            .Set<User>()
+            .Include(user => user.Roles)
+            .FirstOrDefaultAsync(user => user.Id == id, cancellationToken);
 
     public async Task<List<User>> GetByIdsAsync(List<Guid> ids, CancellationToken cancellationToken = default) =>
             await dbContext

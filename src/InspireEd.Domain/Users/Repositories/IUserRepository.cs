@@ -24,6 +24,8 @@ public interface IUserRepository
     /// <returns>The user corresponding to the given identifier.</returns>
     Task<User> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
     
+    Task<User> GetByIdWithRolesAsync(Guid id, CancellationToken cancellationToken = default);
+    
     /// <summary>
     /// Retrieves multiple users by their unique identifiers.
     /// </summary>

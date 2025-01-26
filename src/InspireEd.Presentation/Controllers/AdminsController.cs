@@ -557,18 +557,18 @@ public class AdminsController(ISender sender) : ApiController(sender)
     /// Assigns a role to a user by their unique identifier.
     /// </summary>
     /// <param name="userId">The unique identifier of the user.</param>
-    /// <param name="request">The request containing the role ID.</param>
+    /// <param name="roleId">The unique identifier the role.</param>
     /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
     /// <returns>A task that represents the asynchronous operation, containing the action result.</returns>
-    [HttpPost("users/{userId:guid}/assign-role")]
+    [HttpPut("users/{userId:guid}/assign-role/{roleId:int}")]
     public async Task<IActionResult> AssignRoleToUser(
         Guid userId,
-        [FromBody] AssignRoleToUserRequest request,
+        int roleId,
         CancellationToken cancellationToken)
     {
         var command = new AssignRoleToUserCommand(
             userId,
-            request.RoleId);
+            roleId);
 
         var response = await Sender.Send(command, cancellationToken);
 
@@ -582,7 +582,7 @@ public class AdminsController(ISender sender) : ApiController(sender)
     /// <param name="request">The request containing the role ID.</param>
     /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
     /// <returns>A task that represents the asynchronous operation, containing the action result.</returns>
-    [HttpPost("users/{userId:guid}/remove-role")]
+    [HttpPut("users/{userId:guid}/remove-role")]
     public async Task<IActionResult> RemoveRoleFromUser(
         Guid userId,
         [FromBody] RemoveRoleFromUserRequest request,

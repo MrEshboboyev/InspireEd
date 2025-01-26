@@ -19,7 +19,7 @@ internal sealed class AssignRoleToUserCommandHandler(
         
         #region Get this User and Role
         
-        var user = await userRepository.GetByIdAsync(
+        var user = await userRepository.GetByIdWithRolesAsync(
             userId,
             cancellationToken);
         if (user is null)
@@ -42,7 +42,7 @@ internal sealed class AssignRoleToUserCommandHandler(
         #region Assign Role to User
 
         var assignRoleToUserResult = user.AssignRole(role);
-        if (assignRoleToUserResult.IsSuccess)
+        if (assignRoleToUserResult.IsFailure)
         {
             return Result.Failure(
                 assignRoleToUserResult.Error);
