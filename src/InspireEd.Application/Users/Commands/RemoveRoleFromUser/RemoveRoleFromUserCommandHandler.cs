@@ -19,7 +19,7 @@ internal sealed class RemoveRoleFromUserCommandHandler(
         
         #region Get this User and Role
         
-        var user = await userRepository.GetByIdAsync(
+        var user = await userRepository.GetByIdWithRolesAsync(
             userId,
             cancellationToken);
         if (user is null)
@@ -41,7 +41,12 @@ internal sealed class RemoveRoleFromUserCommandHandler(
         
         #region Remove role from user
 
-        user.RemoveRole(role);
+        var removeRoleFromUserResult = user.RemoveRole(role);
+        if (removeRoleFromUserResult.IsFailure)
+        {
+            return Result.Failure(
+                removeRoleFromUserResult.Error);
+        }
         
         #endregion
         

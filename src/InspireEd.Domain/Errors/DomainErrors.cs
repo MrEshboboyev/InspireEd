@@ -29,13 +29,17 @@ public static class DomainErrors
             "User.InvalidCredentials",
             "The provided credentials are invalid");
 
-        public static readonly Error InvalidRoleName = new Error(
-            "User.InvalidRoleName",
-            "The provided role name is invalid.");
-
         public static readonly Error InvalidPasswordChange = new(
             "User.InvalidPasswordChange",
             "The password change operation is invalid.");
+        
+        public static readonly Error InvalidRoleName = new(
+            "User.InvalidRoleName",
+            "The specified role is invalid.");
+
+        public static readonly Func<int, Error> RoleNotAssigned = roleId => new Error(
+            "User.RoleNotAssigned",
+            $"The specified role with ID {roleId} is not assigned to the user.");
 
         public static readonly Func<int, Error> NoUsersFoundForRole = roleId => new Error(
             "User.NoUsersFoundForRole",

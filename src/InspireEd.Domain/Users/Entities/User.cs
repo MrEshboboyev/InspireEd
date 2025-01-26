@@ -55,7 +55,7 @@ public sealed class User : AggregateRoot, IAuditableEntity
     public string PasswordHash { get; private set; }
     public DateTime CreatedOnUtc { get; set; }
     public DateTime? ModifiedOnUtc { get; set; }
-    public ICollection<Role> Roles => _roles.AsReadOnly();
+    public IReadOnlyCollection<Role> Roles => _roles.AsReadOnly();
 
     #endregion
 
@@ -99,23 +99,23 @@ public sealed class User : AggregateRoot, IAuditableEntity
     {
         #region Validate role
 
-        if (role == null)
+        if (role is null)
         {
             return Result.Failure(
-                DomainErrors.Role.CannotBeNull);
+                DomainErrors.User.InvalidRoleName);
         }
 
         if (!Roles.Contains(role))
         {
             return Result.Failure(
-                DomainErrors.Role.NotAssignedToUser);
+                DomainErrors.User.RoleNotAssigned(role.Id));
         }
 
         #endregion
 
         #region Remove role
 
-        Roles.Remove(role);
+        _roles.Remove(role);
 
         #endregion
 
