@@ -24,7 +24,7 @@ internal sealed class DeleteUserCommandHandler(
         if (user is null)
         {
             return Result.Failure(
-                DomainErrors.User.NotFound(request.UserId));
+                DomainErrors.User.NotFound(userId));
         }
         
         #endregion
