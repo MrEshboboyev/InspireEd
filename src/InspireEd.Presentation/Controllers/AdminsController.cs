@@ -4,7 +4,7 @@ using InspireEd.Application.Faculties.Commands.CreateFaculty;
 using InspireEd.Application.Faculties.Commands.DeleteFaculty;
 using InspireEd.Application.Faculties.Commands.RemoveDepartmentHeadFromFaculty;
 using InspireEd.Application.Faculties.Commands.RemoveGroupFromFaculty;
-using InspireEd.Application.Faculties.Commands.UpdateFaculty;
+using InspireEd.Application.Faculties.Commands.RenameFaculty;
 using InspireEd.Application.Faculties.DepartmentHeads.Commands.CreateDepartmentHead;
 using InspireEd.Application.Faculties.DepartmentHeads.Commands.DeleteDepartmentHead;
 using InspireEd.Application.Faculties.DepartmentHeads.Queries.GetDepartmentHeadDetails;
@@ -218,15 +218,15 @@ public class AdminsController(ISender sender) : ApiController(sender)
         return response.IsSuccess ? NoContent() : BadRequest(response);
     }
     
-    [HttpPut("faculties/{facultyId:guid}")]
-    public async Task<IActionResult> UpdateFaculty(
+    [HttpPut("faculties/{facultyId:guid}/rename/{newName}")]
+    public async Task<IActionResult> RenameFaculty(
         Guid facultyId,
-        [FromBody] UpdateFacultyRequest request,
+        string newName,
         CancellationToken cancellationToken)
     {
-        var command = new UpdateFacultyCommand(
+        var command = new RenameFacultyCommand(
             facultyId,
-            request.FacultyName);
+            newName);
 
         var response = await Sender.Send(command, cancellationToken);
 

@@ -1,11 +1,11 @@
 ﻿using FluentValidation;
 using InspireEd.Domain.Faculties.ValueObjects;
 
-namespace InspireEd.Application.Faculties.Commands.UpdateFaculty;
+namespace InspireEd.Application.Faculties.Commands.RenameFaculty;
 
-internal class UpdateFacultyCommandValidator : AbstractValidator<UpdateFacultyCommand>
+internal class RenameFacultyCommandValidator : AbstractValidator<RenameFacultyCommand>
 {
-    public UpdateFacultyCommandValidator()
+    public RenameFacultyCommandValidator()
     {
         RuleFor(obj => obj.FacultyId).NotEmpty();
         

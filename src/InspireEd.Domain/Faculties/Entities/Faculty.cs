@@ -69,11 +69,21 @@ public sealed class Faculty : AggregateRoot, IAuditableEntity
 
     #region Own methods
 
-    public Result UpdateName(FacultyName name)
+    public Result UpdateName(FacultyName newName)
     {
+        #region Validate
+
+        if (string.IsNullOrEmpty(newName.Value))
+        {
+            return Result.Failure(
+                DomainErrors.FacultyName.Empty);
+        }
+        
+        #endregion
+        
         #region Modified fields
 
-        Name = name;
+        Name = newName;
 
         #endregion
 

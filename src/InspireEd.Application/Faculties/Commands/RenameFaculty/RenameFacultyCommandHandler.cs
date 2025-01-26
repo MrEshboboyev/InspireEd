@@ -5,24 +5,21 @@ using InspireEd.Domain.Faculties.ValueObjects;
 using InspireEd.Domain.Repositories;
 using InspireEd.Domain.Shared;
 
-namespace InspireEd.Application.Faculties.Commands.UpdateFaculty;
+namespace InspireEd.Application.Faculties.Commands.RenameFaculty;
 
-internal sealed class UpdateFacultyCommandHandler(
+internal sealed class RenameFacultyCommandHandler(
     IFacultyRepository facultyRepository,
-    IUnitOfWork unitOfWork) : ICommandHandler<UpdateFacultyCommand>
+    IUnitOfWork unitOfWork) : ICommandHandler<RenameFacultyCommand>
 {
-    private readonly IFacultyRepository _facultyRepository = facultyRepository;
-    private readonly IUnitOfWork _unitOfWork = unitOfWork;
-    
     public async Task<Result> Handle(
-        UpdateFacultyCommand request,
+        RenameFacultyCommand request,
         CancellationToken cancellationToken)
     {
         var (facultyId, facultyName) = request;
         
         #region Get this faculty
         
-        var faculty = await _facultyRepository.GetByIdAsync(
+        var faculty = await facultyRepository.GetByIdAsync(
             facultyId,
             cancellationToken);
         if (faculty is null)
@@ -44,16 +41,21 @@ internal sealed class UpdateFacultyCommandHandler(
         
         #endregion
         
-        #region Update this faculty
+        #region Update this faculty name
         
-        faculty.UpdateName(createFacultyNameResult.Value);
+        var updateFacultyNameResult = faculty.UpdateName(createFacultyNameResult.Value);
+        if (updateFacultyNameResult.IsFailure)
+        {
+            return Result.Failure(
+                updateFacultyNameResult.Error);
+        }
         
         #endregion
         
         #region Update database
         
-        _facultyRepository.Update(faculty);
-        await _unitOfWork.SaveChangesAsync(cancellationToken);
+        facultyRepository.Update(faculty);
+        await unitOfWork.SaveChangesAsync(cancellationToken);
         
         #endregion
         
