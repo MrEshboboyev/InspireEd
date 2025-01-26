@@ -24,10 +24,12 @@ internal sealed class LoginCommandHandler(
     public async Task<Result<string>> Handle(LoginCommand request,
         CancellationToken cancellationToken)
     {
+        var (email, password) = request;
+        
         #region Checking user exists by this email
 
         // Validate and create the Email value object
-        Result<Email> createEmailResult = Email.Create(request.Email);
+        Result<Email> createEmailResult = Email.Create(email);
         if (createEmailResult.IsFailure)
         {
             return Result.Failure<string>(
@@ -40,7 +42,7 @@ internal sealed class LoginCommandHandler(
             cancellationToken);
 
         // Verify if user exists and the password matches
-        if (user is null || !passwordHasher.Verify(request.Password, user.PasswordHash))
+        if (user is null || !passwordHasher.Verify(password, user.PasswordHash))
         {
             return Result.Failure<string>(
                 DomainErrors.User.InvalidCredentials);

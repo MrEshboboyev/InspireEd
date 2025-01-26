@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace InspireEd.Presentation.Controllers;
 
 /// <summary>
-/// API Controller for managing user-related operations.
+/// API Controller for managing auth-related operations.
 /// </summary>
 [Route("api/auth")]
 public sealed class AuthController(ISender sender) : ApiController(sender)
