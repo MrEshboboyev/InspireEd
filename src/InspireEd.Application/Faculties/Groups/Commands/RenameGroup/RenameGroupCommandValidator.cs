@@ -1,11 +1,11 @@
 ﻿using FluentValidation;
 using InspireEd.Domain.Faculties.ValueObjects;
 
-namespace InspireEd.Application.Faculties.Groups.Commands.UpdateGroup;
+namespace InspireEd.Application.Faculties.Groups.Commands.RenameGroup;
 
-internal class UpdateGroupCommandValidator : AbstractValidator<UpdateGroupCommand>
+internal class RenameGroupCommandValidator : AbstractValidator<RenameGroupCommand>
 {
-    public UpdateGroupCommandValidator()
+    public RenameGroupCommandValidator()
     {
         RuleFor(obj => obj.FacultyId).NotEmpty();
         

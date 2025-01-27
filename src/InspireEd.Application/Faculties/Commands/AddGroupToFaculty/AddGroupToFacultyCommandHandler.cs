@@ -12,10 +12,6 @@ internal sealed class AddGroupToFacultyCommandHandler(
     IGroupRepository groupRepository,
     IUnitOfWork unitOfWork) : ICommandHandler<AddGroupToFacultyCommand>
 {
-    private readonly IFacultyRepository _facultyRepository = facultyRepository;
-    private readonly IGroupRepository _groupRepository = groupRepository;
-    private readonly IUnitOfWork _unitOfWork = unitOfWork;
-
     public async Task<Result> Handle(
         AddGroupToFacultyCommand request,
         CancellationToken cancellationToken)
@@ -24,10 +20,10 @@ internal sealed class AddGroupToFacultyCommandHandler(
         
         #region Get this Faculty
         
-        var faculty = await _facultyRepository.GetByIdAsync(
+        var faculty = await facultyRepository.GetByIdWithGroupsAsync(
             facultyId,
             cancellationToken);
-        if (faculty == null)
+        if (faculty is null)
         {
             return Result.Failure(
                 DomainErrors.Faculty.NotFound(facultyId));
@@ -61,8 +57,8 @@ internal sealed class AddGroupToFacultyCommandHandler(
         
         #region Add and update database
         
-        _groupRepository.Add(addGroupResult.Value);
-        await _unitOfWork.SaveChangesAsync(cancellationToken);
+        groupRepository.Add(addGroupResult.Value);
+        await unitOfWork.SaveChangesAsync(cancellationToken);
         
         #endregion
         

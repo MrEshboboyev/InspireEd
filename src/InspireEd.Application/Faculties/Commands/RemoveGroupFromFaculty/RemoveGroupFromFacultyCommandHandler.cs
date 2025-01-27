@@ -10,9 +10,6 @@ internal sealed class RemoveGroupFromFacultyCommandHandler(
     IFacultyRepository facultyRepository,
     IUnitOfWork unitOfWork) : ICommandHandler<RemoveGroupFromFacultyCommand>
 {
-    private readonly IFacultyRepository _facultyRepository = facultyRepository;
-    private readonly IUnitOfWork _unitOfWork = unitOfWork;
-
     public async Task<Result> Handle(
         RemoveGroupFromFacultyCommand request,
         CancellationToken cancellationToken)
@@ -21,10 +18,10 @@ internal sealed class RemoveGroupFromFacultyCommandHandler(
         
         #region Get this Faculty
         
-        var faculty = await _facultyRepository.GetByIdAsync(
+        var faculty = await facultyRepository.GetByIdWithGroupsAsync(
             facultyId,
             cancellationToken);
-        if (faculty == null)
+        if (faculty is null)
         {
             return Result.Failure(
                 DomainErrors.Faculty.NotFound(facultyId));
@@ -46,8 +43,8 @@ internal sealed class RemoveGroupFromFacultyCommandHandler(
         
         #region Update database
         
-        _facultyRepository.Update(faculty);
-        await _unitOfWork.SaveChangesAsync(cancellationToken);
+        facultyRepository.Update(faculty);
+        await unitOfWork.SaveChangesAsync(cancellationToken);
         
         #endregion
         

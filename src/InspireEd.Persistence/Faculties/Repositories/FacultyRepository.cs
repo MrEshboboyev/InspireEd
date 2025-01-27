@@ -20,6 +20,13 @@ public sealed class FacultyRepository(ApplicationDbContext dbContext) : IFaculty
         => await dbContext
             .Set<Faculty>()
             .AsNoTracking()
+            .FirstOrDefaultAsync(f => f.Id == id, cancellationToken);
+    
+    public async Task<Faculty> GetByIdWithGroupsAsync(
+        Guid id,
+        CancellationToken cancellationToken = default)
+        => await dbContext
+            .Set<Faculty>()
             .Include(f => f.Groups)
             .FirstOrDefaultAsync(f => f.Id == id, cancellationToken);
 

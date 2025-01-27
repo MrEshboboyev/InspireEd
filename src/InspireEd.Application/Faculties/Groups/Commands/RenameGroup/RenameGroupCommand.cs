@@ -1,8 +1,8 @@
 ﻿using InspireEd.Application.Abstractions.Messaging;
 
-namespace InspireEd.Application.Faculties.Groups.Commands.UpdateGroup;
+namespace InspireEd.Application.Faculties.Groups.Commands.RenameGroup;
 
-public sealed record UpdateGroupCommand(
+public sealed record RenameGroupCommand(
     Guid FacultyId,
     Guid GroupId,
     string GroupName) : ICommand;

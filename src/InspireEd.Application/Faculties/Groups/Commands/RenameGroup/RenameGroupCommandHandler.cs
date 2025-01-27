@@ -5,27 +5,24 @@ using InspireEd.Domain.Faculties.ValueObjects;
 using InspireEd.Domain.Repositories;
 using InspireEd.Domain.Shared;
 
-namespace InspireEd.Application.Faculties.Groups.Commands.UpdateGroup;
+namespace InspireEd.Application.Faculties.Groups.Commands.RenameGroup;
 
-internal sealed class UpdateGroupCommandHandler(
+internal sealed class RenameGroupCommandHandler(
     IFacultyRepository facultyRepository,
-    IUnitOfWork unitOfWork) : ICommandHandler<UpdateGroupCommand>
+    IUnitOfWork unitOfWork) : ICommandHandler<RenameGroupCommand>
 {
-    private readonly IFacultyRepository _facultyRepository = facultyRepository;
-    private readonly IUnitOfWork _unitOfWork = unitOfWork;
-
     public async Task<Result> Handle(
-        UpdateGroupCommand request,
+        RenameGroupCommand request,
         CancellationToken cancellationToken)
     {
         var (facultyId, groupId, groupName) = request;
         
         #region Get this Faculty
         
-        var faculty = await _facultyRepository.GetByIdAsync(
+        var faculty = await facultyRepository.GetByIdWithGroupsAsync(
             facultyId,
             cancellationToken);
-        if (faculty == null)
+        if (faculty is null)
         {
             return Result.Failure(
                 DomainErrors.Faculty.NotFound(facultyId));
@@ -59,8 +56,8 @@ internal sealed class UpdateGroupCommandHandler(
         
         #region Update database
         
-        _facultyRepository.Update(faculty);
-        await _unitOfWork.SaveChangesAsync(cancellationToken);
+        facultyRepository.Update(faculty);
+        await unitOfWork.SaveChangesAsync(cancellationToken);
         
         #endregion
         

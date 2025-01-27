@@ -17,6 +17,8 @@ public interface IFacultyRepository : IRepository<Faculty>
     /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
     /// <returns>A task that represents the asynchronous operation, containing the faculty entity.</returns>
     Task<Faculty> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
+    
+    Task<Faculty> GetByIdWithGroupsAsync(Guid id, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Adds a new faculty entity to the repository.

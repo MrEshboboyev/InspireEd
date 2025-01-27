@@ -5,7 +5,7 @@ using InspireEd.Application.Faculties.Commands.DeleteFaculty;
 using InspireEd.Application.Faculties.Commands.RemoveDepartmentHeadFromFaculty;
 using InspireEd.Application.Faculties.Commands.RemoveGroupFromFaculty;
 using InspireEd.Application.Faculties.Commands.RenameFaculty;
-using InspireEd.Application.Faculties.Groups.Commands.UpdateGroup;
+using InspireEd.Application.Faculties.Groups.Commands.RenameGroup;
 using InspireEd.Application.Faculties.Groups.Queries.GetAllGroupsInFaculty;
 using InspireEd.Application.Faculties.Groups.Queries.GetAllStudentsInFaculty;
 using InspireEd.Application.Faculties.Groups.Queries.GetGroupDetails;
@@ -234,7 +234,7 @@ public class AdminsController(ISender sender) : ApiController(sender)
     #region Create/Update/Delete
     
     [HttpPost("faculties/{facultyId:guid}/groups")]
-    public async Task<IActionResult> CreateGroup(
+    public async Task<IActionResult> AddGroupToFaculty(
         Guid facultyId,
         [FromBody] AddGroupToFacultyRequest request,
         CancellationToken cancellationToken)
@@ -249,7 +249,7 @@ public class AdminsController(ISender sender) : ApiController(sender)
     }
 
     [HttpDelete("faculties/{facultyId:guid}/groups/{groupId:guid}")]
-    public async Task<IActionResult> RemoveGroup(
+    public async Task<IActionResult> RemoveGroupFromFaculty(
         Guid facultyId,
         Guid groupId,
         CancellationToken cancellationToken)
@@ -263,17 +263,17 @@ public class AdminsController(ISender sender) : ApiController(sender)
         return response.IsSuccess ? NoContent() : BadRequest(response);
     }
 
-    [HttpPut("faculties/{facultyId:guid}/groups/{groupId:guid}")]
-    public async Task<IActionResult> UpdateGroup(
+    [HttpPut("faculties/{facultyId:guid}/groups/{groupId:guid}/rename/{newName}")]
+    public async Task<IActionResult> RenameGroup(
         Guid facultyId,
         Guid groupId,
-        [FromBody] UpdateGroupRequest request,
+        string newName,
         CancellationToken cancellationToken)
     {
-        var command = new UpdateGroupCommand(
+        var command = new RenameGroupCommand(
             facultyId,
             groupId,
-            request.GroupName);
+            newName);
 
         var response = await Sender.Send(command, cancellationToken);
 
