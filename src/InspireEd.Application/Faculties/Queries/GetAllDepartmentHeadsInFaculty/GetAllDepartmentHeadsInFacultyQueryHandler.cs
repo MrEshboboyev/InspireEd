@@ -1,5 +1,5 @@
 ﻿using InspireEd.Application.Abstractions.Messaging;
-using InspireEd.Application.Faculties.DepartmentHeads.Queries.Common;
+using InspireEd.Application.Faculties.Queries.Common;
 using InspireEd.Domain.Faculties.Repositories;
 using InspireEd.Domain.Errors;
 using InspireEd.Domain.Shared;

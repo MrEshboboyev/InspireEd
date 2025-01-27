@@ -5,9 +5,6 @@ using InspireEd.Application.Faculties.Commands.DeleteFaculty;
 using InspireEd.Application.Faculties.Commands.RemoveDepartmentHeadFromFaculty;
 using InspireEd.Application.Faculties.Commands.RemoveGroupFromFaculty;
 using InspireEd.Application.Faculties.Commands.RenameFaculty;
-using InspireEd.Application.Faculties.DepartmentHeads.Commands.CreateDepartmentHead;
-using InspireEd.Application.Faculties.DepartmentHeads.Commands.DeleteDepartmentHead;
-using InspireEd.Application.Faculties.DepartmentHeads.Queries.GetDepartmentHeadDetails;
 using InspireEd.Application.Faculties.Groups.Commands.UpdateGroup;
 using InspireEd.Application.Faculties.Groups.Queries.GetAllGroupsInFaculty;
 using InspireEd.Application.Faculties.Groups.Queries.GetAllStudentsInFaculty;
@@ -30,7 +27,6 @@ using InspireEd.Application.Users.Queries.SearchUsersByName;
 using InspireEd.Domain.Users.Enums;
 using InspireEd.Infrastructure.Authentication;
 using InspireEd.Presentation.Abstractions;
-using InspireEd.Presentation.Contracts.Admins.DepartmentHeads;
 using InspireEd.Presentation.Contracts.Admins.Faculties;
 using InspireEd.Presentation.Contracts.Admins.Groups;
 using InspireEd.Presentation.Contracts.Admins.Users;
@@ -44,64 +40,6 @@ namespace InspireEd.Presentation.Controllers;
 // [HasPermission(Permission.FullAccess)] // Manually hack, Until Admin is seeded into the database
 public class AdminsController(ISender sender) : ApiController(sender)
 {
-    #region Department Head
-
-    #region Get
-
-    /// <summary>
-    /// Retrieves details of a department head by their unique identifier.
-    /// </summary>
-    /// <param name="departmentHeadId">The unique identifier of the department head.</param>
-    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
-    /// <returns>A task that represents the asynchronous operation, containing the action result.</returns>
-    [HttpGet("department-heads/{departmentHeadId:guid}")]
-    public async Task<IActionResult> GetDepartmentHeadDetails(
-        Guid departmentHeadId,
-        CancellationToken cancellationToken)
-    {
-        var query = new GetDepartmentHeadDetailsQuery(departmentHeadId);
-
-        var response = await Sender.Send(query, cancellationToken);
-
-        return response.IsSuccess ? Ok(response.Value) : NotFound(response.Error);
-    }
-
-    #endregion
-
-    #region Create/Update/Delete
-    
-    [HttpPost("department-heads")]
-    public async Task<IActionResult> CreateDepartmentHead(
-        [FromBody] CreateDepartmentHeadRequest request,
-        CancellationToken cancellationToken)
-    {
-        var command = new CreateDepartmentHeadCommand(
-            request.Email,
-            request.FirstName,
-            request.LastName,
-            request.Password);
-
-        var response = await Sender.Send(command, cancellationToken);
-
-        return response.IsSuccess ? NoContent() : BadRequest(response);
-    }
-
-    [HttpDelete("department-heads/{departmentHeadId:guid}")]
-    public async Task<IActionResult> DeleteDepartmentHead(
-        Guid departmentHeadId,
-        CancellationToken cancellationToken)
-    {
-        var command = new DeleteDepartmentHeadCommand(departmentHeadId);
-
-        var response = await Sender.Send(command, cancellationToken);
-
-        return response.IsSuccess ? NoContent() : BadRequest(response);
-    }
-
-    #endregion
-    
-    #endregion
-
     #region Faculties
 
     #region Get

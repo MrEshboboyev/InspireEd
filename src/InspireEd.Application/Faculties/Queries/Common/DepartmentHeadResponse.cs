@@ -1,4 +1,4 @@
-﻿namespace InspireEd.Application.Faculties.DepartmentHeads.Queries.Common;
+﻿namespace InspireEd.Application.Faculties.Queries.Common;
 
 public sealed record DepartmentHeadResponse(
     Guid Id,

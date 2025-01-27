@@ -1,6 +1,6 @@
 ﻿using InspireEd.Domain.Users.Entities;
 
-namespace InspireEd.Application.Faculties.DepartmentHeads.Queries.Common;
+namespace InspireEd.Application.Faculties.Queries.Common;
 
 public static class DepartmentHeadResponseFactory
 {
