@@ -18,12 +18,11 @@ internal sealed class RemoveAllStudentsFromGroupCommandHandler(
     {
         var (facultyId, groupId) = request;
 
-        // Start a unit of work transaction to ensure atomicity
-        using var transaction = unitOfWork.BeginTransaction();
-
         #region Get this faculty and group
 
-        var faculty = await facultyRepository.GetByIdAsync(facultyId, cancellationToken);
+        var faculty = await facultyRepository.GetByIdWithGroupsAsync(
+            facultyId,
+            cancellationToken);
         if (faculty is null)
         {
             return Result.Failure(
@@ -34,7 +33,7 @@ internal sealed class RemoveAllStudentsFromGroupCommandHandler(
         if (group is null)
         {
             return Result.Failure(
-                DomainErrors.Faculty.GroupDoesNotExist(facultyId));
+                DomainErrors.Faculty.GroupDoesNotExist(groupId));
         }
 
         #endregion
@@ -49,14 +48,12 @@ internal sealed class RemoveAllStudentsFromGroupCommandHandler(
             var removeStudentFromGroupResult = group.RemoveStudent(studentId);
             if (removeStudentFromGroupResult.IsFailure)
             {
-                transaction.Rollback();
                 return Result.Failure(removeStudentFromGroupResult.Error);
             }
 
             var user = users.SingleOrDefault(u => u.Id == studentId);
             if (user is null)
             {
-                transaction.Rollback();
                 return Result.Failure(
                     DomainErrors.User.NotFound(studentId));
             }
@@ -69,8 +66,6 @@ internal sealed class RemoveAllStudentsFromGroupCommandHandler(
         #region Update and save changes
 
         await unitOfWork.SaveChangesAsync(cancellationToken);
-
-        transaction.Commit();
 
         #endregion
 

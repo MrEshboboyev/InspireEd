@@ -104,8 +104,7 @@ public sealed class Group : Entity, IAuditableEntity
     {
         #region Checking studentId exist in this group
         
-        var studentIdExists = _studentIds.Contains(studentId);
-        if (!studentIdExists)
+        if (!_studentIds.Contains(studentId))
         {
             return Result.Failure(
                 DomainErrors.Group.StudentNotExist(Id, studentId));

@@ -20,7 +20,9 @@ internal sealed class RemoveStudentFromGroupCommandHandler(
         
         #region Get faculty, group and student
         
-        var faculty = await facultyRepository.GetByIdAsync(facultyId, cancellationToken);
+        var faculty = await facultyRepository.GetByIdWithGroupsAsync(
+            facultyId,
+            cancellationToken);
         if (faculty is null)
         {
             return Result.Failure(
