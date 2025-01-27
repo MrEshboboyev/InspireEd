@@ -92,7 +92,8 @@ public sealed class Group : Entity, IAuditableEntity
     {
         #region Add student id to group
         
-        _studentIds.Add(studentId);
+        if (!_studentIds.Contains(studentId))
+            _studentIds.Add(studentId);
         
         #endregion
         

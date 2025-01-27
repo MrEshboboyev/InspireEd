@@ -21,7 +21,7 @@ internal sealed class AddMultipleStudentsToGroupCommandHandler(
 
         #region Get this faculty and group
 
-        var faculty = await facultyRepository.GetByIdAsync(facultyId, cancellationToken);
+        var faculty = await facultyRepository.GetByIdWithGroupsAsync(facultyId, cancellationToken);
         if (faculty is null)
         {
             return Result.Failure(
@@ -41,32 +41,38 @@ internal sealed class AddMultipleStudentsToGroupCommandHandler(
 
         foreach (var (firstName, lastName, email, password) in students)
         {
+            #region Create new User with Student role
+            
             var createUserResult = await userCreationService.CreateUserAsync(
                 firstName,
                 lastName,
                 email,
                 password,
-                Role.Student.ToString(),
+                Role.Student.Name,
                 cancellationToken);
-
             if (createUserResult.IsFailure)
             {
                 return Result.Failure(createUserResult.Error);
             }
+            
+            #endregion
 
-            var userId = createUserResult.Value;
-
-            var addStudentResult = group.AddStudent(userId);
+            #region Add this Student to group
+            
+            var addStudentResult = group.AddStudent(createUserResult.Value);
             if (addStudentResult.IsFailure)
             {
                 return addStudentResult;
             }
+            
+            #endregion
         }
 
         #endregion
 
         #region Save changes to database
 
+        facultyRepository.Update(faculty);  
         await unitOfWork.SaveChangesAsync(cancellationToken);
 
         #endregion

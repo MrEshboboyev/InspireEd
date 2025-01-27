@@ -31,9 +31,9 @@ using InspireEd.Infrastructure.Authentication;
 using InspireEd.Presentation.Abstractions;
 using InspireEd.Presentation.Contracts.DepartmentHeads.Classes;
 using InspireEd.Presentation.Contracts.DepartmentHeads.Classes.Attendances;
-using InspireEd.Presentation.Contracts.DepartmentHeads.Groups;
+using InspireEd.Presentation.Contracts.DepartmentHeads.Faculties.Groups;
+using InspireEd.Presentation.Contracts.DepartmentHeads.Faculties.Groups.Students;
 using InspireEd.Presentation.Contracts.DepartmentHeads.Subjects;
-using InspireEd.Presentation.Contracts.Users;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -46,19 +46,21 @@ public class DepartmentHeadsController(ISender sender) : ApiController(sender)
 
     #region Group related
     
+    #region Add Students
+    
     [HasPermission(Permission.AddStudents)]
     [HttpPost("faculties/{facultyId:guid}/groups/{groupId:guid}/add-multiple-students")]
     public async Task<IActionResult> AddMultipleStudentsToGroup(
         Guid facultyId,
         Guid groupId,
-        [FromBody] AddMultipleUsersRequest request,
+        [FromBody] AddMultipleStudentsToGroupRequest request,
         CancellationToken cancellationToken)
     {
         var command = new AddMultipleStudentsToGroupCommand(
             facultyId,
             groupId,
-            request.Users.Select(student =>
-                    (student.FirstName, student.LastName, student.Email, student.Password))
+            request.Students
+                .Select(student => (student.FirstName, student.LastName, student.Email, student.Password))
                 .ToList());
 
         var response = await Sender.Send(command, cancellationToken);
@@ -71,7 +73,7 @@ public class DepartmentHeadsController(ISender sender) : ApiController(sender)
     public async Task<IActionResult> AddStudentToGroup(
         Guid facultyId,
         Guid groupId,
-        [FromBody] CreateUserRequest request,
+        [FromBody] AddStudentToGroup request,
         CancellationToken cancellationToken)
     {
         var command = new AddStudentToGroupCommand(
@@ -86,6 +88,10 @@ public class DepartmentHeadsController(ISender sender) : ApiController(sender)
 
         return response.IsSuccess ? NoContent() : BadRequest(response);
     }
+    
+    #endregion
+    
+    #region Remove Students
 
     [HasPermission(Permission.RemoveStudents)]
     [HttpDelete("faculties/{facultyId:guid}/groups/{groupId:guid}/remove-all-students")]
@@ -120,6 +126,10 @@ public class DepartmentHeadsController(ISender sender) : ApiController(sender)
 
         return response.IsSuccess ? NoContent() : BadRequest(response);
     }
+    
+    #endregion
+    
+    #region Transfer Students
 
     [HasPermission(Permission.TransferStudentBetweenGroups)]
     [HttpPut("faculties/{facultyId:guid}/groups/{sourceGroupId:guid}" +
@@ -141,6 +151,10 @@ public class DepartmentHeadsController(ISender sender) : ApiController(sender)
 
         return response.IsSuccess ? NoContent() : BadRequest(response);
     }
+    
+    #endregion
+    
+    #region Manage Groups
 
     [HasPermission(Permission.ManageGroups)]
     [HttpPost("faculties/{facultyId:guid}/groups/merge")]
@@ -175,6 +189,8 @@ public class DepartmentHeadsController(ISender sender) : ApiController(sender)
 
         return response.IsSuccess ? NoContent() : BadRequest(response);
     }
+    
+    #endregion
     
     #endregion
 

@@ -2,18 +2,17 @@
 using InspireEd.Application.Users.Services;
 using InspireEd.Domain.Errors;
 using InspireEd.Domain.Faculties.Repositories;
+using InspireEd.Domain.Repositories;
 using InspireEd.Domain.Shared;
 using InspireEd.Domain.Users.Entities;
 
 namespace InspireEd.Application.Faculties.Groups.Commands.AddStudentToGroup;
 
 internal sealed class AddStudentToGroupCommandHandler(
+    IUserCreationService userCreationService,
     IFacultyRepository facultyRepository,
-    IUserCreationService userCreationService) : ICommandHandler<AddStudentToGroupCommand>
+    IUnitOfWork unitOfWork) : ICommandHandler<AddStudentToGroupCommand>
 {
-    private readonly IFacultyRepository _facultyRepository = facultyRepository;
-    private readonly IUserCreationService _userCreationService = userCreationService;
-    
     public async Task<Result> Handle(
         AddStudentToGroupCommand request, 
         CancellationToken cancellationToken)
@@ -23,7 +22,9 @@ internal sealed class AddStudentToGroupCommandHandler(
         
         #region Get this faculty and group
         
-        var faculty = await _facultyRepository.GetByIdAsync(facultyId, cancellationToken);
+        var faculty = await facultyRepository.GetByIdWithGroupsAsync(
+            facultyId,
+            cancellationToken);
         if (faculty is null)
         {
             return Result.Failure(
@@ -41,12 +42,12 @@ internal sealed class AddStudentToGroupCommandHandler(
         
         #region Create Student
 
-        var createStudentResult = await _userCreationService.CreateUserAsync(
+        var createStudentResult = await userCreationService.CreateUserAsync(
             studentFirstName,
             studentLastName,
             studentEmail,
             studentPassword,
-            Role.Student.ToString(),
+            Role.Student.Name,
             cancellationToken);
         if (createStudentResult.IsFailure)
         {
@@ -64,6 +65,13 @@ internal sealed class AddStudentToGroupCommandHandler(
             return Result.Failure(
                 addStudentIdToGroupResult.Error);
         }
+        
+        #endregion
+        
+        #region Update database
+        
+        facultyRepository.Update(faculty);
+        await unitOfWork.SaveChangesAsync(cancellationToken);
         
         #endregion
         
