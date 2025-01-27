@@ -32,7 +32,7 @@ internal sealed class AddMultipleStudentsToGroupCommandHandler(
         if (group is null)
         {
             return Result.Failure(
-                DomainErrors.Faculty.GroupDoesNotExist(facultyId));
+                DomainErrors.Faculty.GroupDoesNotExist(groupId));
         }
 
         #endregion
