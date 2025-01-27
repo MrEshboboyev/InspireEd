@@ -1,5 +1,7 @@
 using InspireEd.Domain.Faculties.Entities;
 using InspireEd.Domain.Faculties.ValueObjects;
+using InspireEd.Domain.Users.Entities;
+using InspireEd.Domain.Users.ValueObjects;
 
 namespace InspireEd.Application.UnitTests.Faculties.Commands.Common;
 
@@ -10,5 +12,22 @@ public static class Helpers
         var facultyNameObj = FacultyName.Create(facultyName).Value;
 
         return Faculty.Create(id, facultyNameObj);
+    }
+    
+    // Helper method to create a User instance
+    public static User CreateTestUser(Guid id, string email, string passwordHash, string firstName, string lastName, string roleName)
+    {
+        var emailObj = Email.Create(email).Value;
+        var firstNameObj = FirstName.Create(firstName).Value;
+        var lastNameObj = LastName.Create(lastName).Value;
+        var role = Role.FromName(roleName);
+
+        return User.Create(id, emailObj, passwordHash, firstNameObj, lastNameObj, role);
+    }
+    
+    // Helper method to create a Role instance
+    public static Role CreateTestRole(int id, string name)
+    {
+        return new Role (id, name);
     }
 }

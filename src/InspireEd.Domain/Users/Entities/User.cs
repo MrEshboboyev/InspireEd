@@ -89,7 +89,7 @@ public sealed class User : AggregateRoot, IAuditableEntity
                 DomainErrors.User.InvalidRoleName);
         }
         
-        if (!_roles.Contains(role))
+        if (!IsInRole(role))
             _roles.Add(role);
         
         return Result.Success();
@@ -105,7 +105,7 @@ public sealed class User : AggregateRoot, IAuditableEntity
                 DomainErrors.User.InvalidRoleName);
         }
 
-        if (!Roles.Contains(role))
+        if (!IsInRole(role))
         {
             return Result.Failure(
                 DomainErrors.User.RoleNotAssigned(role.Id));
@@ -121,6 +121,8 @@ public sealed class User : AggregateRoot, IAuditableEntity
 
         return Result.Success();
     }
+
+    public bool IsInRole(Role role) => _roles.Contains(role);
 
     /// <summary>
     /// Updates the details of the user.

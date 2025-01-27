@@ -175,7 +175,7 @@ public class AdminsController(ISender sender) : ApiController(sender)
     
     #region Department Head related
     
-    [HttpPut("faculties/{facultyId:guid}/add-department-head")]
+    [HttpPut("faculties/{facultyId:guid}/add-department-head/{departmentHeadId:guid}")]
     public async Task<IActionResult> AddDepartmentHeadToFaculty(
         Guid facultyId,
         Guid departmentHeadId,
@@ -190,7 +190,7 @@ public class AdminsController(ISender sender) : ApiController(sender)
         return response.IsSuccess ? NoContent() : BadRequest(response);
     }
 
-    [HttpPut("faculties/{facultyId:guid}/remove-department-head")]
+    [HttpPut("faculties/{facultyId:guid}/remove-department-head/{departmentHeadId:guid}")]
     public async Task<IActionResult> RemoveDepartmentHeadFromFaculty(
         Guid facultyId,
         Guid departmentHeadId,

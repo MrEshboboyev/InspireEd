@@ -3,6 +3,7 @@ using InspireEd.Domain.Errors;
 using InspireEd.Domain.Faculties.Repositories;
 using InspireEd.Domain.Repositories;
 using InspireEd.Domain.Shared;
+using InspireEd.Domain.Users.Entities;
 using InspireEd.Domain.Users.Repositories;
 
 namespace InspireEd.Application.Faculties.Commands.RemoveDepartmentHeadFromFaculty;
@@ -12,10 +13,6 @@ internal sealed class RemoveDepartmentHeadFromFacultyCommandHandler(
     IUserRepository userRepository,
     IUnitOfWork unitOfWork) : ICommandHandler<RemoveDepartmentHeadFromFacultyCommand>
 {
-    private readonly IFacultyRepository _facultyRepository = facultyRepository;
-    private readonly IUserRepository _userRepository = userRepository;
-    private readonly IUnitOfWork _unitOfWork = unitOfWork;
-    
     public async Task<Result> Handle(
         RemoveDepartmentHeadFromFacultyCommand request,
         CancellationToken cancellationToken)
@@ -24,7 +21,7 @@ internal sealed class RemoveDepartmentHeadFromFacultyCommandHandler(
         
         #region Get Faculty and Department Head
         
-        var faculty = await _facultyRepository.GetByIdAsync(
+        var faculty = await facultyRepository.GetByIdAsync(
             facultyId,
             cancellationToken);
         if (faculty is null)
@@ -33,13 +30,13 @@ internal sealed class RemoveDepartmentHeadFromFacultyCommandHandler(
                 DomainErrors.Faculty.NotFound(facultyId));
         }
         
-        var departmentHead = await _userRepository.GetByIdAsync(
+        var departmentHead = await userRepository.GetByIdWithRolesAsync(
             departmentHeadId,
             cancellationToken);
-        if (departmentHead is null)
+        if (departmentHead is null || !departmentHead.IsInRole(Role.DepartmentHead))
         {
             return Result.Failure(
-                DomainErrors.User.NotFound(departmentHeadId));
+                DomainErrors.DepartmentHead.NotFound(departmentHeadId));
         }
         
         #endregion
@@ -57,8 +54,8 @@ internal sealed class RemoveDepartmentHeadFromFacultyCommandHandler(
         
         #region Update database
         
-        _facultyRepository.Update(faculty);
-        await _unitOfWork.SaveChangesAsync(cancellationToken);
+        facultyRepository.Update(faculty);
+        await unitOfWork.SaveChangesAsync(cancellationToken);
         
         #endregion
         
