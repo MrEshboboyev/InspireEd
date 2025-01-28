@@ -8,6 +8,8 @@ namespace InspireEd.Domain.Classes.Repositories;
 /// </summary>
 public interface IClassRepository : IRepository<Class>
 {
+    Task<List<Class>> GetAllAsync(CancellationToken cancellationToken = default);
+    
     /// <summary>
     /// Retrieves a class entity by its unique identifier.
     /// </summary>

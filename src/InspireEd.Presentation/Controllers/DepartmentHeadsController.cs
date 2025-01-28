@@ -6,6 +6,7 @@ using InspireEd.Application.Classes.Commands.DeleteClass;
 using InspireEd.Application.Classes.Commands.RescheduleClass;
 using InspireEd.Application.Classes.Commands.UpdateClass;
 using InspireEd.Application.Classes.Commands.UpdateGroupIds;
+using InspireEd.Application.Classes.Queries.GetAllClasses;
 using InspireEd.Application.Classes.Queries.GetAttendancesByClassId;
 using InspireEd.Application.Classes.Queries.GetClassById;
 using InspireEd.Application.Classes.Queries.GetClassesBySubjectId;
@@ -442,6 +443,18 @@ public class DepartmentHeadsController(ISender sender) : ApiController(sender)
     #region Class related
 
     #region Get
+    
+    [HasPermission(Permission.AssignClasses)]
+    [HttpGet("classes")]
+    public async Task<IActionResult> GetAllClasses(
+        CancellationToken cancellationToken)
+    {
+        var query = new GetAllClassesQuery();
+
+        var response = await Sender.Send(query, cancellationToken);
+
+        return response.IsSuccess ? Ok(response.Value) : NotFound(response.Error);
+    }
 
     /// <summary>
     /// Retrieves details of a class by its unique identifier.
@@ -449,7 +462,7 @@ public class DepartmentHeadsController(ISender sender) : ApiController(sender)
     /// <param name="id">The unique identifier of the class.</param>
     /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
     /// <returns>A task that represents the asynchronous operation, containing the action result.</returns>
-    [HasPermission(Permission.ViewAssignedClasses)]
+    [HasPermission(Permission.AssignClasses)]
     [HttpGet("classes/{id:guid}")]
     public async Task<IActionResult> GetClassById(
         Guid id,
@@ -468,8 +481,8 @@ public class DepartmentHeadsController(ISender sender) : ApiController(sender)
     /// <param name="subjectId">The unique identifier of the subject.</param>
     /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
     /// <returns>A task that represents the asynchronous operation, containing the action result.</returns>
-    [HasPermission(Permission.ViewAssignedClasses)]
-    [HttpGet("classes/{subjectId:guid}")]
+    [HasPermission(Permission.AssignClasses)]
+    [HttpGet("classes/by-subject/{subjectId:guid}")]
     public async Task<IActionResult> GetClassesBySubjectId(
         Guid subjectId,
         CancellationToken cancellationToken)
@@ -487,7 +500,7 @@ public class DepartmentHeadsController(ISender sender) : ApiController(sender)
     /// <param name="classId">The unique identifier of the class.</param>
     /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
     /// <returns>A task that represents the asynchronous operation, containing the action result.</returns>
-    [HasPermission(Permission.ViewAttendance)]
+    [HasPermission(Permission.AssignClasses)]
     [HttpGet("classes/{classId:guid}/attendances")]
     public async Task<IActionResult> GetAttendancesByClassId(
         Guid classId,
@@ -507,7 +520,7 @@ public class DepartmentHeadsController(ISender sender) : ApiController(sender)
     /// <param name="attendanceId">The unique identifier of the attendance record.</param>
     /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
     /// <returns>A task that represents the asynchronous operation, containing the action result.</returns>
-    [HasPermission(Permission.ViewAttendance)]
+    [HasPermission(Permission.AssignClasses)]
     [HttpGet("classes/attendances/{attendanceId:guid}")]
     public async Task<IActionResult> GetAttendanceById(
         Guid attendanceId,

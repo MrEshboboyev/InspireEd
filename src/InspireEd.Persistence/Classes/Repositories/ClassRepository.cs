@@ -7,6 +7,13 @@ namespace InspireEd.Persistence.Classes.Repositories;
 
 public sealed class ClassRepository(ApplicationDbContext dbContext) : IClassRepository
 {
+    public async Task<List<Class>> GetAllAsync(
+        CancellationToken cancellationToken = default)
+        => await dbContext
+            .Set<Class>()
+            .AsNoTracking()
+            .ToListAsync(cancellationToken);
+    
     public async Task<Class> GetByIdAsync(
         Guid id,
         CancellationToken cancellationToken = default)

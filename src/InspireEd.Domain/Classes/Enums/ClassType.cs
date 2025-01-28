@@ -8,15 +8,15 @@ public enum ClassType
     /// <summary>
     /// Indicates a practice class type.
     /// </summary>
-    Practice,
+    Practice = 10,
 
     /// <summary>
     /// Indicates a lecture class type.
     /// </summary>
-    Lecture,
+    Lecture = 20,
 
     /// <summary>
     /// Indicates a laboratory class type.
     /// </summary>
-    Laboratory
+    Laboratory = 30
 }
