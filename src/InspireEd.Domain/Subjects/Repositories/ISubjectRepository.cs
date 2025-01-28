@@ -1,5 +1,6 @@
 ﻿using InspireEd.Domain.Repositories;
 using InspireEd.Domain.Subjects.Entities;
+using InspireEd.Domain.Subjects.ValueObjects;
 
 namespace InspireEd.Domain.Subjects.Repositories;
 
@@ -28,6 +29,10 @@ public interface ISubjectRepository : IRepository<Subject>
     /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
     /// <returns>A task that represents the asynchronous operation, containing the subject entity.</returns>
     Task<Subject> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
+
+    Task<bool> IsNameUniqueAsync(SubjectName subjectName, CancellationToken cancellationToken = default);
+    
+    Task<bool> IsCodeUniqueAsync(SubjectCode subjectCode, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Adds a new subject entity to the repository.

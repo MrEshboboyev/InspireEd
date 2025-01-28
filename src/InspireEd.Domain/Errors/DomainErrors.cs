@@ -246,9 +246,13 @@ public static class DomainErrors
 
     public static class Subject
     {
-        public static readonly Error EmailAlreadyInUse = new(
-            "User.EmailAlreadyInUse",
-            "The specified email is already in use");
+        public static readonly Error NameAlreadyInUse = new(
+            "Subject.NameAlreadyInUse",
+            "The specified name is already in use");
+        
+        public static readonly Error CodeAlreadyInUse = new(
+            "Subject.CodeAlreadyInUse",
+            "The specified code is already in use");
 
         public static readonly Func<Guid, Error> NotFound = id => new Error(
             "Subject.NotFound",
@@ -257,10 +261,6 @@ public static class DomainErrors
         public static readonly Error NotExist = new(
             "Subjects.NotExist",
             $"There is no subjects");
-
-        public static readonly Error InvalidCredentials = new(
-            "User.InvalidCredentials",
-            "The provided credentials are invalid");
     }
 
     #endregion

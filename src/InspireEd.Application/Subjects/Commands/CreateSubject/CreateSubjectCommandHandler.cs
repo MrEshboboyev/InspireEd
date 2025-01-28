@@ -1,4 +1,5 @@
 ﻿using InspireEd.Application.Abstractions.Messaging;
+using InspireEd.Domain.Errors;
 using InspireEd.Domain.Repositories;
 using InspireEd.Domain.Subjects.Entities;
 using InspireEd.Domain.Subjects.Repositories;
@@ -15,24 +16,45 @@ internal sealed class CreateSubjectCommandHandler(
         CreateSubjectCommand request,
         CancellationToken cancellationToken)
     {
+        var (name, code, credit) = request;
+        
         #region Prepare value objects
         
-        var subjectNameResult = SubjectName.Create(request.Name);
+        var subjectNameResult = SubjectName.Create(name);
         if (subjectNameResult.IsFailure)
         {
-            return Result.Failure(subjectNameResult.Error);
+            return Result.Failure(
+                subjectNameResult.Error);
         }
 
-        var subjectCodeResult = SubjectCode.Create(request.Code);
+        var subjectCodeResult = SubjectCode.Create(code);
         if (subjectCodeResult.IsFailure)
         {
-            return Result.Failure(subjectCodeResult.Error);
+            return Result.Failure(
+                subjectCodeResult.Error);
         }
 
-        var subjectCreditResult = SubjectCredit.Create(request.Credit);
+        var subjectCreditResult = SubjectCredit.Create(credit);
         if (subjectCreditResult.IsFailure)
         {
-            return Result.Failure(subjectCreditResult.Error);
+            return Result.Failure(
+                subjectCreditResult.Error);
+        }
+        
+        #endregion
+        
+        #region Checking this Subject Name and Code is unique
+
+        if (!await subjectRepository.IsNameUniqueAsync(subjectNameResult.Value, cancellationToken))
+        {
+            return Result.Failure(
+                DomainErrors.Subject.NameAlreadyInUse);
+        }
+        
+        if (!await subjectRepository.IsCodeUniqueAsync(subjectCodeResult.Value, cancellationToken))
+        {
+            return Result.Failure(
+                DomainErrors.Subject.CodeAlreadyInUse);
         }
         
         #endregion

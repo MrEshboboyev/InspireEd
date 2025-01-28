@@ -15,30 +15,63 @@ internal sealed class UpdateSubjectCommandHandler(
         UpdateSubjectCommand request,
         CancellationToken cancellationToken)
     {
-        var subject = await subjectRepository.GetByIdAsync(request.Id, cancellationToken);
+        var (subjectId, name, code, credit) = request;
         
-        if (subject == null)
+        #region Get this Subject
+        
+        var subject = await subjectRepository.GetByIdAsync(
+            subjectId,
+            cancellationToken);
+        if (subject is null)
         {
-            return Result.Failure(DomainErrors.Subject.NotFound(request.Id));
+            return Result.Failure(
+                DomainErrors.Subject.NotFound(subjectId));
         }
+        
+        #endregion
+        
+        #region Prepare value objects
 
-        var subjectNameResult = SubjectName.Create(request.Name);
+        var subjectNameResult = SubjectName.Create(name);
         if (subjectNameResult.IsFailure)
         {
-            return Result.Failure(subjectNameResult.Error);
+            return Result.Failure(
+                subjectNameResult.Error);
         }
 
-        var subjectCodeResult = SubjectCode.Create(request.Code);
+        var subjectCodeResult = SubjectCode.Create(code);
         if (subjectCodeResult.IsFailure)
         {
-            return Result.Failure(subjectCodeResult.Error);
+            return Result.Failure(
+                subjectCodeResult.Error);
         }
 
-        var subjectCreditResult = SubjectCredit.Create(request.Credit);
+        var subjectCreditResult = SubjectCredit.Create(credit);
         if (subjectCreditResult.IsFailure)
         {
-            return Result.Failure(subjectCreditResult.Error);
+            return Result.Failure(
+                subjectCreditResult.Error);
         }
+        
+        #endregion
+        
+        #region Checking this Subject Name and Code is unique
+
+        if (!await subjectRepository.IsNameUniqueAsync(subjectNameResult.Value, cancellationToken))
+        {
+            return Result.Failure(
+                DomainErrors.Subject.NameAlreadyInUse);
+        }
+        
+        if (!await subjectRepository.IsCodeUniqueAsync(subjectCodeResult.Value, cancellationToken))
+        {
+            return Result.Failure(
+                DomainErrors.Subject.CodeAlreadyInUse);
+        }
+        
+        #endregion
+        
+        #region Update this Subject
 
         var updateSubjectDetails = subject.UpdateSubjectDetails(
             subjectNameResult.Value,
@@ -49,8 +82,15 @@ internal sealed class UpdateSubjectCommandHandler(
             return Result.Failure(
                 updateSubjectDetails.Error);
         }
+        
+        #endregion
+        
+        #region Update database
 
+        subjectRepository.Update(subject);
         await unitOfWork.SaveChangesAsync(cancellationToken);
+        
+        #endregion
         
         return Result.Success();
     }

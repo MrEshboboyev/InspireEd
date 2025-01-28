@@ -102,22 +102,33 @@ public sealed class Subject : AggregateRoot, IAuditableEntity
         return Result.Success();
     }
     
-    public Result ChangeCredit(SubjectCredit newCredit)
+    public Result Rename(SubjectName newName)
     {
         #region Update fields
         
-        Credit = newCredit;
+        Name = newName;
         
         #endregion
         
         return Result.Success();
     }
     
-    public Result Rename(SubjectName newName)
+    public Result ChangeCode(SubjectCode newCode)
     {
         #region Update fields
         
-        Name = newName;
+        Code = newCode;
+        
+        #endregion
+        
+        return Result.Success();
+    }
+    
+    public Result ChangeCredit(SubjectCredit newCredit)
+    {
+        #region Update fields
+        
+        Credit = newCredit;
         
         #endregion
         

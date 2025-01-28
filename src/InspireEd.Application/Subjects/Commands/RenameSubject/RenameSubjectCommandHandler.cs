@@ -25,18 +25,28 @@ internal sealed class RenameSubjectCommandHandler(
         if (subject == null)
         {
             return Result.Failure(
-                DomainErrors.Subject.NotFound(request.Id));
+                DomainErrors.Subject.NotFound(subjectId));
         }
         
         #endregion
         
         #region Prepare value objects
 
-        var subjectNameResult = SubjectName.Create(request.NewName);
+        var subjectNameResult = SubjectName.Create(newName);
         if (subjectNameResult.IsFailure)
         {
             return Result.Failure(
                 subjectNameResult.Error);
+        }
+        
+        #endregion
+        
+        #region Checking this Subject Name is unique
+
+        if (!await subjectRepository.IsNameUniqueAsync(subjectNameResult.Value, cancellationToken))
+        {
+            return Result.Failure(
+                DomainErrors.Subject.NameAlreadyInUse);
         }
         
         #endregion

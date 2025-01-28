@@ -17,6 +17,7 @@ using InspireEd.Application.Faculties.Groups.Commands.RemoveAllStudentsFromGroup
 using InspireEd.Application.Faculties.Groups.Commands.RemoveStudentFromGroup;
 using InspireEd.Application.Faculties.Groups.Commands.TransferStudentBetweenGroups;
 using InspireEd.Application.Faculties.Groups.Queries.GetStudentDetails;
+using InspireEd.Application.Subjects.Commands.ChangeSubjectCode;
 using InspireEd.Application.Subjects.Commands.ChangeSubjectCredit;
 using InspireEd.Application.Subjects.Commands.CreateSubject;
 using InspireEd.Application.Subjects.Commands.DeleteSubject;
@@ -221,6 +222,221 @@ public class DepartmentHeadsController(ISender sender) : ApiController(sender)
 
     #endregion
 
+    #endregion
+    
+    #region Subject related
+
+    #region Get
+    
+    /// <summary>
+    /// Retrieves all subjects.
+    /// </summary>
+    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+    /// <returns>A task that represents the asynchronous operation, containing the action result.</returns>
+    [HasPermission(Permission.ViewSubjects)]
+    [HttpGet("subjects")]
+    public async Task<IActionResult> GetAllSubjects(
+        CancellationToken cancellationToken)
+    {
+        var query = new GetAllSubjectsQuery();
+
+        var response = await Sender.Send(query, cancellationToken);
+
+        return response.IsSuccess ? Ok(response.Value) : NotFound(response.Error);
+    }
+
+    /// <summary>
+    /// Retrieves details of a subject by its unique identifier.
+    /// </summary>
+    /// <param name="subjectId">The unique identifier of the subject.</param>
+    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+    /// <returns>A task that represents the asynchronous operation, containing the action result.</returns>
+    [HasPermission(Permission.ViewSubjects)]
+    [HttpGet("subjects/{subjectId:guid}")]
+    public async Task<IActionResult> GetSubjectById(
+        Guid subjectId,
+        CancellationToken cancellationToken)
+    {
+        var query = new GetSubjectByIdQuery(subjectId);
+
+        var response = await Sender.Send(query, cancellationToken);
+
+        return response.IsSuccess ? Ok(response.Value) : NotFound(response.Error);
+    }
+
+    /// <summary>
+    /// Retrieves subjects within a specific credit range.
+    /// </summary>
+    /// <param name="minCredit">The minimum credit value.</param>
+    /// <param name="maxCredit">The maximum credit value.</param>
+    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+    /// <returns>A task that represents the asynchronous operation, containing the action result.</returns>
+    [HasPermission(Permission.ViewSubjects)]
+    [HttpGet("subjects/by-credit-range/{minCredit:int}/{maxCredit:int}")]
+    public async Task<IActionResult> GetSubjectsByCreditRange(
+        int minCredit,
+        int maxCredit,
+        CancellationToken cancellationToken)
+    {
+        var query = new GetSubjectsByCreditRangeQuery(minCredit, maxCredit);
+
+        var response = await Sender.Send(query, cancellationToken);
+
+        return response.IsSuccess ? Ok(response.Value) : NotFound(response.Error);
+    }
+
+    /// <summary>
+    /// Retrieves subjects created within a specified date range.
+    /// </summary>
+    /// <param name="startDate">The start date of the range.</param>
+    /// <param name="endDate">The end date of the range.</param>
+    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+    /// <returns>A task that represents the asynchronous operation, containing the action result.</returns>
+    [HasPermission(Permission.ViewSubjects)]
+    [HttpGet("subjects/by-creation-date-range/{startDate:datetime}/{endDate:datetime}")]
+    public async Task<IActionResult> GetSubjectsByCreationDateRange(
+        DateTime startDate,
+        DateTime endDate,
+        CancellationToken cancellationToken)
+    {
+        var query = new GetSubjectsByCreationDateRangeQuery(startDate, endDate);
+
+        var response = await Sender.Send(query, cancellationToken);
+
+        return response.IsSuccess ? Ok(response.Value) : NotFound(response.Error);
+    }
+
+    #endregion
+    
+    #region Create/Update/Delete
+
+    /// <summary>
+    /// Creates a new subject.
+    /// </summary>
+    /// <param name="request">The request containing subject details.</param>
+    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+    /// <returns>A task that represents the asynchronous operation, containing the action result.</returns>
+    [HasPermission(Permission.ManageSubjects)]
+    [HttpPost("subjects")]
+    public async Task<IActionResult> CreateSubject(
+        [FromBody] CreateSubjectRequest request,
+        CancellationToken cancellationToken)
+    {
+        var command = new CreateSubjectCommand(
+            request.Name,
+            request.Code,
+            request.Credit);
+
+        var response = await Sender.Send(command, cancellationToken);
+
+        return response.IsSuccess ? NoContent() : BadRequest(response);
+    }
+
+    /// <summary>
+    /// Updates an existing subject's details.
+    /// </summary>
+    /// <param name="id">The unique identifier of the subject.</param>
+    /// <param name="request">The request containing updated subject details.</param>
+    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+    /// <returns>A task that represents the asynchronous operation, containing the action result.</returns>
+    [HasPermission(Permission.ManageSubjects)]
+    [HttpPut("subjects/{id:guid}")]
+    public async Task<IActionResult> UpdateSubject(
+        Guid id,
+        [FromBody] UpdateSubjectRequest request,
+        CancellationToken cancellationToken)
+    {
+        var command = new UpdateSubjectCommand(
+            id,
+            request.Name,
+            request.Code,
+            request.Credit);
+
+        var response = await Sender.Send(command, cancellationToken);
+
+        return response.IsSuccess ? NoContent() : BadRequest(response);
+    }
+
+    /// <summary>
+    /// Deletes a subject by its unique identifier.
+    /// </summary>
+    /// <param name="id">The unique identifier of the subject.</param>
+    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+    /// <returns>A task that represents the asynchronous operation, containing the action result.</returns>
+    [HasPermission(Permission.ManageSubjects)]
+    [HttpDelete("subjects/{id:guid}")]
+    public async Task<IActionResult> DeleteSubject(
+        Guid id,
+        CancellationToken cancellationToken)
+    {
+        var command = new DeleteSubjectCommand(id);
+
+        var response = await Sender.Send(command, cancellationToken);
+
+        return response.IsSuccess ? NoContent() : BadRequest(response);
+    }
+    
+    #region Update
+
+    /// <summary>
+    /// Renames a subject.
+    /// </summary>
+    /// <param name="id">The unique identifier of the subject.</param>
+    /// <param name="newName">The new name for the subject.</param>
+    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+    /// <returns>A task that represents the asynchronous operation, containing the action result.</returns>
+    [HasPermission(Permission.ManageSubjects)]
+    [HttpPut("subjects/{id:guid}/rename/{newName}")]
+    public async Task<IActionResult> RenameSubject(
+        Guid id,
+        string newName,
+        CancellationToken cancellationToken)
+    {
+        var command = new RenameSubjectCommand(
+            id,
+            newName);
+
+        var response = await Sender.Send(command, cancellationToken);
+
+        return response.IsSuccess ? NoContent() : BadRequest(response);
+    }
+
+    [HasPermission(Permission.ManageSubjects)]
+    [HttpPut("subjects/{id:guid}/change-code/{newCode}")]
+    public async Task<IActionResult> ChangeSubjectCode(
+        Guid id,
+        string newCode,
+        CancellationToken cancellationToken)
+    {
+        var command = new ChangeSubjectCodeCommand(
+            id,
+            newCode);
+
+        var response = await Sender.Send(command, cancellationToken);
+
+        return response.IsSuccess ? NoContent() : BadRequest(response);
+    }
+    
+    [HasPermission(Permission.ManageSubjects)]
+    [HttpPut("subjects/{id:guid}/change-credit/{newCredit:int}")]
+    public async Task<IActionResult> ChangeSubjectCredit(
+        Guid id,
+        int newCredit,
+        CancellationToken cancellationToken)
+    {
+        var command = new ChangeSubjectCreditCommand(
+            id,
+            newCredit);
+
+        var response = await Sender.Send(command, cancellationToken);
+
+        return response.IsSuccess ? NoContent() : BadRequest(response);
+    }
+    
+    #endregion
+
+    #endregion
+    
     #endregion
 
     #region Class related
@@ -469,207 +685,5 @@ public class DepartmentHeadsController(ISender sender) : ApiController(sender)
 
     #endregion
 
-    #endregion
-
-    #region Subject related
-
-    #region Get
-    
-    /// <summary>
-    /// Retrieves all subjects.
-    /// </summary>
-    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
-    /// <returns>A task that represents the asynchronous operation, containing the action result.</returns>
-    [HasPermission(Permission.ViewSubjects)]
-    [HttpGet("subjects")]
-    public async Task<IActionResult> GetAllSubjects(
-        CancellationToken cancellationToken)
-    {
-        var query = new GetAllSubjectsQuery();
-
-        var response = await Sender.Send(query, cancellationToken);
-
-        return response.IsSuccess ? Ok(response.Value) : NotFound(response.Error);
-    }
-
-    /// <summary>
-    /// Retrieves details of a subject by its unique identifier.
-    /// </summary>
-    /// <param name="subjectId">The unique identifier of the subject.</param>
-    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
-    /// <returns>A task that represents the asynchronous operation, containing the action result.</returns>
-    [HasPermission(Permission.ViewSubjects)]
-    [HttpGet("subjects/{subjectId:guid}")]
-    public async Task<IActionResult> GetSubjectById(
-        Guid subjectId,
-        CancellationToken cancellationToken)
-    {
-        var query = new GetSubjectByIdQuery(subjectId);
-
-        var response = await Sender.Send(query, cancellationToken);
-
-        return response.IsSuccess ? Ok(response.Value) : NotFound(response.Error);
-    }
-
-    /// <summary>
-    /// Retrieves subjects within a specific credit range.
-    /// </summary>
-    /// <param name="minCredit">The minimum credit value.</param>
-    /// <param name="maxCredit">The maximum credit value.</param>
-    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
-    /// <returns>A task that represents the asynchronous operation, containing the action result.</returns>
-    [HasPermission(Permission.ViewSubjects)]
-    [HttpGet("subjects/by-credit-range/{minCredit:int}/{maxCredit:int}")]
-    public async Task<IActionResult> GetSubjectsByCreditRange(
-        int minCredit,
-        int maxCredit,
-        CancellationToken cancellationToken)
-    {
-        var query = new GetSubjectsByCreditRangeQuery(minCredit, maxCredit);
-
-        var response = await Sender.Send(query, cancellationToken);
-
-        return response.IsSuccess ? Ok(response.Value) : NotFound(response.Error);
-    }
-
-    /// <summary>
-    /// Retrieves subjects created within a specified date range.
-    /// </summary>
-    /// <param name="startDate">The start date of the range.</param>
-    /// <param name="endDate">The end date of the range.</param>
-    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
-    /// <returns>A task that represents the asynchronous operation, containing the action result.</returns>
-    [HasPermission(Permission.ViewSubjects)]
-    [HttpGet("subjects/by-creation-date-range/{startDate:datetime}/{endDate:datetime}")]
-    public async Task<IActionResult> GetSubjectsByCreationDateRange(
-        DateTime startDate,
-        DateTime endDate,
-        CancellationToken cancellationToken)
-    {
-        var query = new GetSubjectsByCreationDateRangeQuery(startDate, endDate);
-
-        var response = await Sender.Send(query, cancellationToken);
-
-        return response.IsSuccess ? Ok(response.Value) : NotFound(response.Error);
-    }
-
-    #endregion
-    
-    #region Create/Update/Delete
-
-    /// <summary>
-    /// Creates a new subject.
-    /// </summary>
-    /// <param name="request">The request containing subject details.</param>
-    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
-    /// <returns>A task that represents the asynchronous operation, containing the action result.</returns>
-    [HasPermission(Permission.ManageSubjects)]
-    [HttpPost("subjects")]
-    public async Task<IActionResult> CreateSubject(
-        [FromBody] CreateSubjectRequest request,
-        CancellationToken cancellationToken)
-    {
-        var command = new CreateSubjectCommand(
-            request.Name,
-            request.Code,
-            request.Credit);
-
-        var response = await Sender.Send(command, cancellationToken);
-
-        return response.IsSuccess ? NoContent() : BadRequest(response);
-    }
-
-    /// <summary>
-    /// Updates an existing subject's details.
-    /// </summary>
-    /// <param name="id">The unique identifier of the subject.</param>
-    /// <param name="request">The request containing updated subject details.</param>
-    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
-    /// <returns>A task that represents the asynchronous operation, containing the action result.</returns>
-    [HasPermission(Permission.ManageSubjects)]
-    [HttpPut("subjects/{id:guid}")]
-    public async Task<IActionResult> UpdateSubject(
-        Guid id,
-        [FromBody] UpdateSubjectRequest request,
-        CancellationToken cancellationToken)
-    {
-        var command = new UpdateSubjectCommand(
-            id,
-            request.Name,
-            request.Code,
-            request.Credit);
-
-        var response = await Sender.Send(command, cancellationToken);
-
-        return response.IsSuccess ? NoContent() : BadRequest(response);
-    }
-
-    /// <summary>
-    /// Deletes a subject by its unique identifier.
-    /// </summary>
-    /// <param name="id">The unique identifier of the subject.</param>
-    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
-    /// <returns>A task that represents the asynchronous operation, containing the action result.</returns>
-    [HasPermission(Permission.ManageSubjects)]
-    [HttpDelete("subjects/{id:guid}")]
-    public async Task<IActionResult> DeleteSubject(
-        Guid id,
-        CancellationToken cancellationToken)
-    {
-        var command = new DeleteSubjectCommand(id);
-
-        var response = await Sender.Send(command, cancellationToken);
-
-        return response.IsSuccess ? NoContent() : BadRequest(response);
-    }
-
-    /// <summary>
-    /// Changes the credit value of a subject.
-    /// </summary>
-    /// <param name="id">The unique identifier of the subject.</param>
-    /// <param name="request">The request containing the new credit value.</param>
-    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
-    /// <returns>A task that represents the asynchronous operation, containing the action result.</returns>
-    [HasPermission(Permission.ManageSubjects)]
-    [HttpPut("subjects/{id:guid}/change-credit")]
-    public async Task<IActionResult> ChangeSubjectCredit(
-        Guid id,
-        [FromBody] ChangeSubjectCreditRequest request,
-        CancellationToken cancellationToken)
-    {
-        var command = new ChangeSubjectCreditCommand(
-            id,
-            request.NewCredit);
-
-        var response = await Sender.Send(command, cancellationToken);
-
-        return response.IsSuccess ? NoContent() : BadRequest(response);
-    }
-
-    /// <summary>
-    /// Renames a subject.
-    /// </summary>
-    /// <param name="id">The unique identifier of the subject.</param>
-    /// <param name="request">The request containing the new name for the subject.</param>
-    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
-    /// <returns>A task that represents the asynchronous operation, containing the action result.</returns>
-    [HasPermission(Permission.ManageSubjects)]
-    [HttpPut("subjects/{id:guid}/rename")]
-    public async Task<IActionResult> RenameSubject(
-        Guid id,
-        [FromBody] RenameSubjectRequest request,
-        CancellationToken cancellationToken)
-    {
-        var command = new RenameSubjectCommand(
-            id,
-            request.NewName);
-
-        var response = await Sender.Send(command, cancellationToken);
-
-        return response.IsSuccess ? NoContent() : BadRequest(response);
-    }
-
-    #endregion
-    
     #endregion
 }
