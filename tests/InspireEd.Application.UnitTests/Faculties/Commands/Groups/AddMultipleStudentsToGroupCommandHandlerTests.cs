@@ -1,5 +1,5 @@
 using InspireEd.Application.Faculties.Groups.Commands.AddMultipleStudentsToGroup;
-using InspireEd.Application.UnitTests.Faculties.Commands.Common;
+using InspireEd.Application.UnitTests.Common;
 using InspireEd.Application.Users.Services;
 using InspireEd.Domain.Errors;
 using InspireEd.Domain.Faculties.Entities;

@@ -1,5 +1,5 @@
 using InspireEd.Application.Faculties.Groups.Commands.RemoveStudentFromGroup;
-using InspireEd.Application.UnitTests.Faculties.Commands.Common;
+using InspireEd.Application.UnitTests.Common;
 using InspireEd.Domain.Errors;
 using InspireEd.Domain.Faculties.Entities;
 using InspireEd.Domain.Faculties.Repositories;

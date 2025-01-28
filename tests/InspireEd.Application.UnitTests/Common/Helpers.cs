@@ -1,9 +1,11 @@
 using InspireEd.Domain.Faculties.Entities;
 using InspireEd.Domain.Faculties.ValueObjects;
+using InspireEd.Domain.Subjects.Entities;
+using InspireEd.Domain.Subjects.ValueObjects;
 using InspireEd.Domain.Users.Entities;
 using InspireEd.Domain.Users.ValueObjects;
 
-namespace InspireEd.Application.UnitTests.Faculties.Commands.Common;
+namespace InspireEd.Application.UnitTests.Common;
 
 public static class Helpers
 {
@@ -30,4 +32,15 @@ public static class Helpers
     {
         return new Role (id, name);
     }
+    
+    public static Subject CreateTestSubject(
+        Guid id,
+        string subjectName,
+        string subjectCode,
+        int subjectCredit) =>
+        Subject.Create(
+            id,
+            SubjectName.Create(subjectName).Value,
+            SubjectCode.Create(subjectCode).Value,
+            SubjectCredit.Create(subjectCredit).Value);
 }
