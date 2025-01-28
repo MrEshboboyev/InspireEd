@@ -1,7 +1,6 @@
 ﻿using InspireEd.Application.Abstractions.Messaging;
 using InspireEd.Domain.Errors;
 using InspireEd.Domain.Repositories;
-using InspireEd.Domain.Subjects.Entities;
 using InspireEd.Domain.Subjects.Repositories;
 using InspireEd.Domain.Shared;
 using InspireEd.Domain.Subjects.ValueObjects;
@@ -21,7 +20,7 @@ internal sealed class ChangeSubjectCreditCommandHandler(
         #region Get this Subject
         
         var subject = await subjectRepository.GetByIdAsync(subjectId, cancellationToken);
-        if (subject == null)
+        if (subject is null)
         {
             return Result.Failure(
                 DomainErrors.Subject.NotFound(request.Id));

@@ -22,7 +22,7 @@ internal sealed class RenameSubjectCommandHandler(
         var subject = await subjectRepository.GetByIdAsync(
             subjectId,
             cancellationToken);
-        if (subject == null)
+        if (subject is null)
         {
             return Result.Failure(
                 DomainErrors.Subject.NotFound(subjectId));
