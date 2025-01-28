@@ -1,6 +1,7 @@
 ﻿using InspireEd.Domain.Classes.Entities;
 using InspireEd.Persistence.Classes.Constants;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace InspireEd.Persistence.Classes.Configurations;
@@ -31,21 +32,20 @@ public class ClassConfiguration : IEntityTypeConfiguration<Class>
 
         builder.Property(c => c.ScheduledDate)
             .IsRequired();
-
+        
+        builder
+            .Property(x => x.GroupIds)
+            .HasConversion(
+                x => string.Join(",", x), // Convert List<Guid> to string
+                v => v.Split(',', StringSplitOptions.RemoveEmptyEntries).Select(Guid.Parse)
+                    .ToList()) // Convert back to List<Guid>
+            .Metadata.SetValueComparer(new ValueComparer<IReadOnlyCollection<Guid>>(
+                (c1, c2) => c1.SequenceEqual(c2),
+                c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode())),
+                c => c.ToList())); // Ensure EF Core can track changes
+        
         // Ignore private fields and configure collections
         builder.Ignore("_attendances");
         builder.Ignore("_groupIds");
-
-        // builder.Metadata.FindNavigation(nameof(Class.Attendances))!
-        //     .SetPropertyAccessMode(PropertyAccessMode.Field);
-        //
-        // builder.Metadata.FindNavigation(nameof(Class.GroupIds))!
-        //     .SetPropertyAccessMode(PropertyAccessMode.Field);
-
-        // Relationships
-        builder.HasMany<Attendance>()
-            .WithOne()
-            .HasForeignKey(a => a.ClassId)
-            .OnDelete(DeleteBehavior.Cascade);
     }
 }

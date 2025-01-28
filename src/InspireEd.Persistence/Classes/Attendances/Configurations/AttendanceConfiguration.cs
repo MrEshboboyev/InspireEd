@@ -15,18 +15,18 @@ public class AttendanceConfiguration : IEntityTypeConfiguration<Attendance>
         builder.ToTable(ClassTableNames.Attendances);
 
         builder.HasKey(a => a.Id);
-
-        builder.Property(a => a.StudentId).IsRequired();
-        builder.Property(a => a.Status).IsRequired().HasConversion<int>();
-        builder.Property(a => a.Notes).HasMaxLength(500);
-        builder.Property(a => a.CreatedOnUtc).IsRequired();
-        builder.Property(a => a.ModifiedOnUtc).IsRequired(false);
-
+        
         // ✅ Explicitly map ClassId as a foreign key
         builder.HasOne(a => a.Class)
             .WithMany(c => c.Attendances)
             .HasForeignKey(a => a.ClassId)
             .IsRequired()
             .OnDelete(DeleteBehavior.Cascade);
+
+        builder.Property(a => a.StudentId).IsRequired();
+        builder.Property(a => a.Status).IsRequired().HasConversion<int>();
+        builder.Property(a => a.Notes).HasMaxLength(500);
+        builder.Property(a => a.CreatedOnUtc).IsRequired();
+        builder.Property(a => a.ModifiedOnUtc).IsRequired(false);
     }
 }
