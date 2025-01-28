@@ -173,17 +173,17 @@ public class DepartmentHeadsController(ISender sender) : ApiController(sender)
     }
 
     [HasPermission(Permission.ManageGroups)]
-    [HttpPost("faculties/{facultyId:guid}/groups/{groupId:guid}/split")]
+    [HttpPost("faculties/{facultyId:guid}/groups/{groupId:guid}/split/{numberOfGroups:int}")]
     public async Task<IActionResult> SplitGroup(
         Guid facultyId,
         Guid groupId,
-        [FromBody] SplitGroupRequest request,
+        int numberOfGroups,
         CancellationToken cancellationToken)
     {
         var command = new SplitGroupCommand(
             facultyId,
             groupId,
-            request.NumberOfGroups);
+            numberOfGroups);
 
         var response = await Sender.Send(command, cancellationToken);
 

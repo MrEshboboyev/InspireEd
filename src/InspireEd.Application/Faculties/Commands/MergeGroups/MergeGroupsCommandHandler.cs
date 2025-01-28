@@ -19,10 +19,13 @@ internal sealed class MergeGroupsCommandHandler(
 
         #region Get Faculty and Groups
 
-        var faculty = await facultyRepository.GetByIdAsync(facultyId, cancellationToken);
+        var faculty = await facultyRepository.GetByIdWithGroupsAsync(
+            facultyId,
+            cancellationToken);
         if (faculty is null)
         {
-            return Result.Failure(DomainErrors.Faculty.NotFound(facultyId));
+            return Result.Failure(
+                DomainErrors.Faculty.NotFound(facultyId));
         }
 
         var groups = faculty.GetGroupsByIds(groupIds);
@@ -36,27 +39,24 @@ internal sealed class MergeGroupsCommandHandler(
 
         #region Merge Groups
 
-        var mergedGroup = faculty.MergeGroups(groups);
-        if (mergedGroup.IsFailure)
+        var mergedGroupResult = faculty.MergeGroups(groups);
+        if (mergedGroupResult.IsFailure)
         {
-            return mergedGroup;
+            return Result.Failure(
+                mergedGroupResult.Error);
         }
 
         foreach (var group in groups)
         {
             faculty.RemoveGroup(group.Id);
-            
-            #region Remove from db
-            
-            groupRepository.Remove(group);
-            
-            #endregion
         }
 
         #endregion
 
         #region Save Changes to Database
 
+        groupRepository.Add(mergedGroupResult.Value);
+        facultyRepository.Update(faculty);
         await unitOfWork.SaveChangesAsync(cancellationToken);
 
         #endregion

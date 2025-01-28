@@ -8,6 +8,7 @@ namespace InspireEd.Application.Faculties.Commands.SplitGroup;
 
 internal sealed class SplitGroupCommandHandler(
     IFacultyRepository facultyRepository,
+    IGroupRepository groupRepository,
     IUnitOfWork unitOfWork) : ICommandHandler<SplitGroupCommand>
 {
     public async Task<Result> Handle(
@@ -18,7 +19,9 @@ internal sealed class SplitGroupCommandHandler(
 
         #region Get Faculty and Group
 
-        var faculty = await facultyRepository.GetByIdAsync(facultyId, cancellationToken);
+        var faculty = await facultyRepository.GetByIdWithGroupsAsync(
+            facultyId,
+            cancellationToken);
         if (faculty is null)
         {
             return Result.Failure(
@@ -36,12 +39,22 @@ internal sealed class SplitGroupCommandHandler(
 
         #region Split Group
 
-        var splitResult = faculty.SplitGroup(group, numberOfGroups);
-        if (splitResult.IsFailure)
+        var splitGroupResult = faculty.SplitGroup(group, numberOfGroups);
+        if (splitGroupResult.IsFailure)
         {
-            return splitResult;
+            return Result.Failure(
+                splitGroupResult.Error);
         }
 
+        #endregion
+        
+        #region Add new Groups to Repository
+        
+        foreach (var partGroup in splitGroupResult.Value)
+        {
+            groupRepository.Add(partGroup);
+        }
+        
         #endregion
 
         #region Update and Save Changes to Database

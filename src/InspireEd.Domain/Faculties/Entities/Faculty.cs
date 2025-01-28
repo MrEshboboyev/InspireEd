@@ -333,11 +333,14 @@ public sealed class Faculty : AggregateRoot, IAuditableEntity
     /// <param name="group">The group to split.</param>
     /// <param name="numberOfGroups">The number of smaller groups to create.</param>
     /// <returns>The result of the split operation.</returns>
-    public Result SplitGroup(Group group, int numberOfGroups)
+    public Result<List<Group>> SplitGroup(Group group, int numberOfGroups)
     {
+        // initialize new collection
+        var groups = new List<Group>();
+        
         if (numberOfGroups < 2 || group.StudentIds.Count < numberOfGroups)
         {
-            return Result.Failure(
+            return Result.Failure<List<Group>>(
                 DomainErrors.Faculty.InvalidSplitGroupParameters);
         }
 
@@ -350,7 +353,8 @@ public sealed class Faculty : AggregateRoot, IAuditableEntity
                 $"{group.Name.Value}-Part{i + 1}");
             if (newGroupName.IsFailure)
             {
-                return Result.Failure(newGroupName.Error);
+                return Result.Failure<List<Group>>(
+                    newGroupName.Error);
             }
 
             var newGroup = new Group(
@@ -366,11 +370,12 @@ public sealed class Faculty : AggregateRoot, IAuditableEntity
             }
 
             _groups.Add(newGroup);
+            groups.Add(newGroup);
         }
 
         _groups.Remove(group);
 
-        return Result.Success();
+        return Result.Success(groups);
     }
 
     #endregion
