@@ -18,7 +18,9 @@ internal sealed class TransferStudentBetweenGroupsCommandHandler(
 
         #region Get Faculty and Groups
 
-        var faculty = await facultyRepository.GetByIdAsync(facultyId, cancellationToken);
+        var faculty = await facultyRepository.GetByIdWithGroupsAsync(
+            facultyId,
+            cancellationToken);
         if (faculty is null)
         {
             return Result.Failure(
@@ -46,7 +48,8 @@ internal sealed class TransferStudentBetweenGroupsCommandHandler(
         var removeStudentResult = sourceGroup.RemoveStudent(studentId);
         if (removeStudentResult.IsFailure)
         {
-            return removeStudentResult;
+            return Result.Failure(
+                removeStudentResult.Error);
         }
 
         #endregion
@@ -58,13 +61,16 @@ internal sealed class TransferStudentBetweenGroupsCommandHandler(
         {
             // Rollback removal from source group
             sourceGroup.AddStudent(studentId);
-            return addStudentResult;
+
+            return Result.Failure(
+                addStudentResult.Error);
         }
 
         #endregion
 
         #region Save Changes to Database
 
+        facultyRepository.Update(faculty);
         await unitOfWork.SaveChangesAsync(cancellationToken);
         
         #endregion
