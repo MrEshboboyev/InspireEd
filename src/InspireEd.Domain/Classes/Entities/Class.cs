@@ -82,6 +82,12 @@ public sealed class Class : AggregateRoot
         DateTime scheduledDate)
     {
         #region Update fields
+
+        if (scheduledDate < DateTime.UtcNow)
+        {
+            return Result.Failure(
+                DomainErrors.Class.InvalidScheduledDate);
+        }
         
         SubjectId = subjectId;
         TeacherId = teacherId;
@@ -109,6 +115,11 @@ public sealed class Class : AggregateRoot
     {
         #region Reschedule fields
         
+        if (newScheduledDate < DateTime.UtcNow)
+        {
+            return Result.Failure(
+                DomainErrors.Class.InvalidScheduledDate);
+        }
         ScheduledDate = newScheduledDate;
         
         #endregion

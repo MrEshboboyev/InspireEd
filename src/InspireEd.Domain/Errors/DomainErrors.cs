@@ -321,6 +321,10 @@ public static class DomainErrors
         public static readonly Func<Guid, Error> NotFoundBySubjectId = subjectId => new Error(
             "Class.NotFoundBySubjectId",
             $"No classes found for the subject with the identifier {subjectId}.");
+            
+        public static readonly Error InvalidScheduledDate = new Error(
+            "Class.InvalidScheduledDate",
+            "Invalid scheduling date the class.");
     }
 
     public static class Attendance

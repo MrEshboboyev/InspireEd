@@ -33,7 +33,7 @@ internal sealed class ChangeClassTeacherCommandHandler(
         var teacher = await userRepository.GetByIdAsync(
             teacherId,
             cancellationToken);
-        if (teacher is null || teacher.IsInRole(Role.Teacher))
+        if (teacher is null || !teacher.IsInRole(Role.Teacher))
         {
             return Result.Failure(
                 DomainErrors.Teacher.NotFound(teacherId));
