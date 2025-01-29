@@ -22,7 +22,7 @@ internal sealed class DeleteClassCommandHandler(
             classId,
             cancellationToken);
         
-        if (classEntity == null)
+        if (classEntity is null)
         {
             return Result.Failure(
                 DomainErrors.Class.NotFound(classId));

@@ -116,6 +116,17 @@ public sealed class Class : AggregateRoot
         return Result.Success();
     }
     
+    public Result ChangeTeacher(Guid newTeacherId)
+    {
+        #region Update fields
+        
+        TeacherId = newTeacherId;
+        
+        #endregion
+        
+        return Result.Success();
+    }
+    
     #endregion
     
     #region Attendance methods

@@ -1,6 +1,7 @@
 ﻿using InspireEd.Application.Classes.Attendances.Commands.DeleteAttendance;
 using InspireEd.Application.Classes.Attendances.Commands.UpdateAttendance;
 using InspireEd.Application.Classes.Attendances.Queries.GetAttendanceById;
+using InspireEd.Application.Classes.Commands.ChangeClassTeacher;
 using InspireEd.Application.Classes.Commands.CreateClass;
 using InspireEd.Application.Classes.Commands.DeleteClass;
 using InspireEd.Application.Classes.Commands.RescheduleClass;
@@ -598,6 +599,43 @@ public class DepartmentHeadsController(ISender sender) : ApiController(sender)
         return response.IsSuccess ? NoContent() : BadRequest(response);
     }
     
+    /// <summary>
+    /// Reschedules a class to a new date.
+    /// </summary>
+    /// <param name="id">The unique identifier of the class.</param>
+    /// <param name="request">The request containing the new scheduled date.</param>
+    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+    /// <returns>A task that represents the asynchronous operation, containing the action result.</returns>
+    [HttpPut("classes/{id:guid}/reschedule")]
+    public async Task<IActionResult> RescheduleClass(
+        Guid id,
+        [FromBody] RescheduleClassRequest request,
+        CancellationToken cancellationToken)
+    {
+        var command = new RescheduleClassCommand(
+            id,
+            request.NewScheduledDate);
+
+        var response = await Sender.Send(command, cancellationToken);
+
+        return response.IsSuccess ? NoContent() : BadRequest(response);
+    }
+    
+    [HttpPut("classes/{id:guid}/change-teacher/{teacherId:guid}")]
+    public async Task<IActionResult> ChangeClassTeacher(
+        Guid id,
+        Guid teacherId,
+        CancellationToken cancellationToken)
+    {
+        var command = new ChangeClassTeacherCommand(
+            id,
+            teacherId);
+
+        var response = await Sender.Send(command, cancellationToken);
+
+        return response.IsSuccess ? NoContent() : BadRequest(response);
+    }
+    
     #endregion
     
     #region Group related
@@ -618,28 +656,6 @@ public class DepartmentHeadsController(ISender sender) : ApiController(sender)
         var command = new UpdateGroupIdsCommand(
             classId,
             request.GroupIds);
-
-        var response = await Sender.Send(command, cancellationToken);
-
-        return response.IsSuccess ? NoContent() : BadRequest(response);
-    }
-
-    /// <summary>
-    /// Reschedules a class to a new date.
-    /// </summary>
-    /// <param name="id">The unique identifier of the class.</param>
-    /// <param name="request">The request containing the new scheduled date.</param>
-    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
-    /// <returns>A task that represents the asynchronous operation, containing the action result.</returns>
-    [HttpPut("classes/{id:guid}/reschedule")]
-    public async Task<IActionResult> RescheduleClass(
-        Guid id,
-        [FromBody] RescheduleClassRequest request,
-        CancellationToken cancellationToken)
-    {
-        var command = new RescheduleClassCommand(
-            id,
-            request.NewScheduledDate);
 
         var response = await Sender.Send(command, cancellationToken);
 

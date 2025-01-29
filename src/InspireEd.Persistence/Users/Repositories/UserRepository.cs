@@ -2,7 +2,6 @@
 using InspireEd.Domain.Users.Repositories;
 using InspireEd.Domain.Users.ValueObjects;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.SqlServer.Server;
 
 namespace InspireEd.Persistence.Users.Repositories;
 
