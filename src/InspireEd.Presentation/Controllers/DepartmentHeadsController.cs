@@ -6,7 +6,7 @@ using InspireEd.Application.Classes.Commands.CreateClass;
 using InspireEd.Application.Classes.Commands.DeleteClass;
 using InspireEd.Application.Classes.Commands.RescheduleClass;
 using InspireEd.Application.Classes.Commands.UpdateClass;
-using InspireEd.Application.Classes.Commands.UpdateGroupIds;
+using InspireEd.Application.Classes.Commands.UpdateClassGroups;
 using InspireEd.Application.Classes.Queries.GetAllClasses;
 using InspireEd.Application.Classes.Queries.GetAttendancesByClassId;
 using InspireEd.Application.Classes.Queries.GetClassById;
@@ -647,13 +647,13 @@ public class DepartmentHeadsController(ISender sender) : ApiController(sender)
     /// <param name="request">The request containing the new group IDs.</param>
     /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
     /// <returns>A task that represents the asynchronous operation, containing the action result.</returns>
-    [HttpPut("classes/{classId:guid}/group-ids")]
-    public async Task<IActionResult> UpdateGroupIds(
+    [HttpPut("classes/{classId:guid}/groups")]
+    public async Task<IActionResult> UpdateClassGroups(
         Guid classId,
         [FromBody] UpdateGroupIdsRequest request,
         CancellationToken cancellationToken)
     {
-        var command = new UpdateGroupIdsCommand(
+        var command = new UpdateClassGroupsCommand(
             classId,
             request.GroupIds);
 

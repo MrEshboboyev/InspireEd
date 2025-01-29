@@ -99,7 +99,7 @@ public sealed class Class : AggregateRoot
         return Result.Success();
     }
 
-    public Result UpdateGroupIds(List<Guid> groupIds)
+    public Result UpdateGroups(List<Guid> groupIds)
     {
         #region Update group ids
     
