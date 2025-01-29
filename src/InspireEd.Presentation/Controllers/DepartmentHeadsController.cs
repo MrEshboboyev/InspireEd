@@ -603,18 +603,18 @@ public class DepartmentHeadsController(ISender sender) : ApiController(sender)
     /// Reschedules a class to a new date.
     /// </summary>
     /// <param name="id">The unique identifier of the class.</param>
-    /// <param name="request">The request containing the new scheduled date.</param>
+    /// <param name="newScheduledDate">The new scheduled date.</param>
     /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
     /// <returns>A task that represents the asynchronous operation, containing the action result.</returns>
-    [HttpPut("classes/{id:guid}/reschedule")]
+    [HttpPut("classes/{id:guid}/reschedule/{newScheduledDate:datetime}")]
     public async Task<IActionResult> RescheduleClass(
         Guid id,
-        [FromBody] RescheduleClassRequest request,
+        DateTime newScheduledDate,
         CancellationToken cancellationToken)
     {
         var command = new RescheduleClassCommand(
             id,
-            request.NewScheduledDate);
+            newScheduledDate);
 
         var response = await Sender.Send(command, cancellationToken);
 

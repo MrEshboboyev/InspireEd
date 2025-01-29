@@ -18,7 +18,7 @@ internal sealed class UpdateClassCommandHandler(
         #region Get Class
         
         var classEntity = await classRepository.GetByIdAsync(classId, cancellationToken);
-        if (classEntity == null)
+        if (classEntity is null)
         {
             return Result.Failure(
                 DomainErrors.Class.NotFound(request.ClassId));
