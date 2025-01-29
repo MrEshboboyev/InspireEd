@@ -27,7 +27,10 @@ public class TeachersController(ISender sender) : ApiController(sender)
     {
         var command = new CreateAttendancesCommand(
             classId,
-            request.Attendances);
+            GetCurrentUserId(),
+            request.Attendances
+                .Select(a => (a.StudentId, a.Status, a.Notes))
+                .ToList());
 
         var response = await Sender.Send(command, cancellationToken);
 

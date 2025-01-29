@@ -3,7 +3,9 @@
 namespace InspireEd.Presentation.Contracts.Teachers.Classes;
 
 public sealed record CreateAttendancesRequest(
-    List<(
-        Guid StudentId,
-        AttendanceStatus Status,
-        string Notes)> Attendances);
+    List<CreateAttendanceRequest> Attendances);
+        
+public sealed record CreateAttendanceRequest(
+    Guid StudentId,
+    AttendanceStatus Status,
+    string Notes);

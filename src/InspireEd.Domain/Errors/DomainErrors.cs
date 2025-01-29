@@ -32,7 +32,7 @@ public static class DomainErrors
         public static readonly Error InvalidPasswordChange = new(
             "User.InvalidPasswordChange",
             "The password change operation is invalid.");
-        
+
         public static readonly Error InvalidRoleName = new(
             "User.InvalidRoleName",
             "The specified role is invalid.");
@@ -48,7 +48,7 @@ public static class DomainErrors
         public static readonly Func<string, Error> NotFoundForEmail = email => new Error(
             "User.NotFoundForEmail",
             $"The user with the email {email} was not found.");
-        
+
         public static readonly Func<string, Error> NoUsersFoundForSearchTerm = searchTerm => new Error(
             "User.NoUsersFoundForSearchTerm",
             $"No users were found matching the search term '{searchTerm}'.");
@@ -112,21 +112,13 @@ public static class DomainErrors
 
     public static class Teacher
     {
-        public static readonly Error EmailAlreadyInUse = new(
-            "User.EmailAlreadyInUse",
-            "The specified email is already in use");
-
         public static readonly Func<Guid, Error> NotFound = id => new Error(
             "Teacher.NotFound",
             $"The teacher with the identifier {id} was not found.");
 
-        public static readonly Error NotExist = new(
-            "Teachers.NotExist",
-            $"There is no teachers");
-
-        public static readonly Error InvalidCredentials = new(
-            "Teacher.InvalidCredentials",
-            "The provided credentials are invalid");
+        public static Error NotAssignedToClass(Guid teacherId, Guid classId) => new(
+            "Teacher.NotAssignedToClass",
+            $"Teacher with ID {teacherId} is not assigned to class {classId}.");
     }
 
     public static class DepartmentHead
@@ -249,7 +241,7 @@ public static class DomainErrors
         public static readonly Error NameAlreadyInUse = new(
             "Subject.NameAlreadyInUse",
             "The specified name is already in use");
-        
+
         public static readonly Error CodeAlreadyInUse = new(
             "Subject.CodeAlreadyInUse",
             "The specified code is already in use");
@@ -321,7 +313,7 @@ public static class DomainErrors
         public static readonly Func<Guid, Error> NotFoundBySubjectId = subjectId => new Error(
             "Class.NotFoundBySubjectId",
             $"No classes found for the subject with the identifier {subjectId}.");
-            
+
         public static readonly Error InvalidScheduledDate = new Error(
             "Class.InvalidScheduledDate",
             "Invalid scheduling date the class.");

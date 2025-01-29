@@ -8,15 +8,15 @@ public enum AttendanceStatus
     /// <summary>
     /// Indicates that the student is present.
     /// </summary>
-    Present,
+    Present = 10,
 
     /// <summary>
     /// Indicates that the student is absent.
     /// </summary>
-    Absent,
+    Absent = 20,
 
     /// <summary>
     /// Indicates that the student is excused.
     /// </summary>
-    Excused
+    Excused = 30
 }

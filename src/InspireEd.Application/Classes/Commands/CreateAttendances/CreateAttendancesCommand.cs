@@ -5,6 +5,7 @@ namespace InspireEd.Application.Classes.Commands.CreateAttendances;
 
 public sealed record CreateAttendancesCommand(
     Guid ClassId,
+    Guid TeacherId,
     List<(
         Guid StudentId,
         AttendanceStatus Status,

@@ -15,6 +15,10 @@ public interface IGroupRepository
         Guid id,
         CancellationToken cancellationToken = default);
 
+    Task<List<Guid>> GetStudentIdsForGroupsAsync(
+        IEnumerable<Guid> groupIds,
+        CancellationToken cancellationToken = default);
+
     /// <summary>
     /// Adds a new group entity to the repository.
     /// </summary>

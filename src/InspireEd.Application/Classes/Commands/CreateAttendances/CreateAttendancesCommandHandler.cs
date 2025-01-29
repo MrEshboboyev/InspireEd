@@ -3,23 +3,25 @@ using InspireEd.Domain.Classes.Repositories;
 using InspireEd.Domain.Errors;
 using InspireEd.Domain.Repositories;
 using InspireEd.Domain.Shared;
+using InspireEd.Domain.Faculties.Repositories;
 
 namespace InspireEd.Application.Classes.Commands.CreateAttendances;
 
 internal sealed class CreateAttendancesCommandHandler(
     IClassRepository classRepository,
     IAttendanceRepository attendanceRepository,
-    IUnitOfWork unitOfWork) : ICommandHandler<CreateAttendancesCommand>
+    IUnitOfWork unitOfWork,
+    IGroupRepository groupRepository) : ICommandHandler<CreateAttendancesCommand>
 {
     public async Task<Result> Handle(
         CreateAttendancesCommand request,
         CancellationToken cancellationToken)
     {
-        var (classId, attendances) = request;
+        var (classId, teacherId, attendances) = request;
 
         #region Get Class and related group student ids
 
-        // get Class
+        // Get Class
         var classEntity = await classRepository.GetByIdAsync(
             classId,
             cancellationToken);
@@ -29,18 +31,25 @@ internal sealed class CreateAttendancesCommandHandler(
                 DomainErrors.Class.NotFound(classId));
         }
 
-        // get StudentIds
-        var groupStudentIds = await classRepository.GetGroupStudentIds(
-            classId,
+        if (classEntity.TeacherId != teacherId)
+        {
+            return Result.Failure(
+                DomainErrors.Teacher.NotAssignedToClass(teacherId, classId));
+        }
+
+        // Get Group StudentIds associated with the Class
+        var groupStudentIds = await groupRepository.GetStudentIdsForGroupsAsync(
+            classEntity.GroupIds, // Using GroupIds from the Class entity
             cancellationToken);
 
         #endregion
 
-        #region Checking request student ids is equal class related group students ids
+        #region Checking if request student ids are valid
 
         var requestStudentIds = attendances
             .Select(a => a.StudentId)
             .ToList();
+
         if (!requestStudentIds.All(id => groupStudentIds.Contains(id)))
         {
             return Result.Failure(
@@ -71,6 +80,7 @@ internal sealed class CreateAttendancesCommandHandler(
 
         #region Update database
 
+        classRepository.Update(classEntity);
         await unitOfWork.SaveChangesAsync(cancellationToken);
 
         #endregion
