@@ -24,7 +24,7 @@ internal sealed class RolePermissionConfiguration
 
             // Teacher Permissions
             Create(Role.Teacher, Permission.ViewAssignedClasses),
-            Create(Role.Teacher, Permission.ManageAttendance),
+            Create(Role.Teacher, Permission.CreateAttendances),
 
             // Department Head Permissions
             Create(Role.DepartmentHead, Permission.AddStudents),
@@ -34,6 +34,8 @@ internal sealed class RolePermissionConfiguration
             Create(Role.DepartmentHead, Permission.ManageGroups),
             Create(Role.DepartmentHead, Permission.AssignGroups),
             Create(Role.DepartmentHead, Permission.AssignClasses),
+            Create(Role.DepartmentHead, Permission.UpdateAttendances),
+            Create(Role.DepartmentHead, Permission.DeleteAttendances),
             Create(Role.DepartmentHead, Permission.ViewFacultyData),
             Create(Role.DepartmentHead, Permission.ViewSubjects),
             Create(Role.DepartmentHead, Permission.ManageSubjects),

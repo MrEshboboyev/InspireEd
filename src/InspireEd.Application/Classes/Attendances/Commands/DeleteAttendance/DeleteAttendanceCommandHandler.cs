@@ -18,10 +18,10 @@ internal sealed class DeleteAttendanceCommandHandler(
         
         #region Get Class and its attendance
         
-        var classEntity = await classRepository.GetByIdAsync(
+        var classEntity = await classRepository.GetByIdWithAttendancesAsync(
             classId,
             cancellationToken);
-        if (classEntity == null)
+        if (classEntity is null)
         {
             return Result.Failure(
                 DomainErrors.Class.NotFound(classId));
@@ -29,10 +29,10 @@ internal sealed class DeleteAttendanceCommandHandler(
 
         var attendance = classEntity.Attendances
             .FirstOrDefault(a => a.Id == attendanceId);
-        if (attendance == null)
+        if (attendance is null)
         {
             return Result.Failure(
-                DomainErrors.Attendance.NotFound(request.AttendanceId));
+                DomainErrors.Attendance.NotFound(attendanceId));
         }
         
         #endregion

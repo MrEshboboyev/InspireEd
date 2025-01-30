@@ -674,6 +674,7 @@ public class DepartmentHeadsController(ISender sender) : ApiController(sender)
     /// <param name="request">The request containing updated attendance details.</param>
     /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
     /// <returns>A task that represents the asynchronous operation, containing the action result.</returns>
+    [HasPermission(Permission.UpdateAttendances)]
     [HttpPut("classes/{classId:guid}/attendances/{attendanceId:guid}")]
     public async Task<IActionResult> UpdateAttendance(
         Guid classId,
@@ -699,6 +700,7 @@ public class DepartmentHeadsController(ISender sender) : ApiController(sender)
     /// <param name="attendanceId">The unique identifier of the attendance record.</param>
     /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
     /// <returns>A task that represents the asynchronous operation, containing the action result.</returns>
+    [HasPermission(Permission.DeleteAttendances)]
     [HttpDelete("classes/{classId:guid}/attendances/{attendanceId:guid}")]
     public async Task<IActionResult> DeleteAttendance(
         Guid classId,

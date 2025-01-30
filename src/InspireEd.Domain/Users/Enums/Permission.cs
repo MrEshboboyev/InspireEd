@@ -16,7 +16,7 @@ public enum Permission
     #region Teacher 
     
     // Teacher Permissions
-    ManageAttendance = 30,     // Mark attendance for assigned lessons
+    CreateAttendances = 30,     // Mark attendance for assigned lessons
     ViewAssignedClasses = 40,  // View the list of assigned classes/groups
     
     #endregion
@@ -43,6 +43,13 @@ public enum Permission
     #region Classes
     
     AssignClasses = 70,        // Assign teachers to classes
+    
+    #region Attendances
+    
+    UpdateAttendances = 75,
+    DeleteAttendances = 76,
+    
+    #endregion
     
     #endregion
     

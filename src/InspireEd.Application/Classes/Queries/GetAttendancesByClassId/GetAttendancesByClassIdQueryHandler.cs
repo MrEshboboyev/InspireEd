@@ -20,7 +20,7 @@ internal sealed class GetAttendancesByClassIdQueryHandler(
         var classEntity = await classRepository.GetByIdWithAttendancesAsync(
             classId,
             cancellationToken);
-        if (classEntity == null)
+        if (classEntity is null)
         {
             return Result.Failure<List<AttendanceResponse>>(
                 DomainErrors.Class.NotFound(classId));

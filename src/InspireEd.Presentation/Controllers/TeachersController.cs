@@ -18,7 +18,7 @@ public class TeachersController(ISender sender) : ApiController(sender)
     /// <param name="request">The request containing attendance details.</param>
     /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
     /// <returns>A task that represents the asynchronous operation, containing the action result.</returns>
-    [HasPermission(Permission.ManageAttendance)]
+    [HasPermission(Permission.CreateAttendances)]
     [HttpPost("classes/{classId:guid}/attendances")]
     public async Task<IActionResult> CreateAttendances(
         Guid classId,

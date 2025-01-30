@@ -11,18 +11,21 @@ internal sealed class UpdateAttendanceCommandHandler(
     IAttendanceRepository attendanceRepository,
     IUnitOfWork unitOfWork) : ICommandHandler<UpdateAttendanceCommand>
 {
-    public async Task<Result> Handle(UpdateAttendanceCommand request, CancellationToken cancellationToken)
+    public async Task<Result> Handle(
+        UpdateAttendanceCommand request,
+        CancellationToken cancellationToken)
     {
         var (classId, attendanceId, attendanceStatus, notes) = request;
         
         #region Get this Class
         
-        var classEntity = await classRepository.GetByIdAsync(
+        var classEntity = await classRepository.GetByIdWithAttendancesAsync(
             classId,
             cancellationToken);
         if (classEntity is null)
         {
-            return Result.Failure(DomainErrors.Class.NotFound(classId));
+            return Result.Failure(
+                DomainErrors.Class.NotFound(classId));
         }
         
         #endregion
