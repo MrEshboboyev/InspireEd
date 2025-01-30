@@ -28,7 +28,6 @@ public sealed class ClassRepository(ApplicationDbContext dbContext) : IClassRepo
         => await dbContext
             .Set<Class>()
             .Include(c => c.Attendances)
-            .AsNoTracking()
             .SingleOrDefaultAsync(x => x.Id == id, cancellationToken);
 
     public void Add(Class classItem) => dbContext.Set<Class>().Add(classItem);

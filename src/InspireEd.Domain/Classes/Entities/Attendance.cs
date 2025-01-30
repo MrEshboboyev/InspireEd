@@ -62,7 +62,6 @@ public sealed class Attendance : Entity, IAuditableEntity
     {
         Status = status;
         Notes = notes;
-        ModifiedOnUtc = DateTime.UtcNow;
     }
 
     #endregion

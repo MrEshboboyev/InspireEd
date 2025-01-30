@@ -150,7 +150,7 @@ public sealed class Class : AggregateRoot
         var attendance = new Attendance(
             Guid.NewGuid(),
             studentId,
-            this.Id,
+            Id,
             attendanceStatus,
             notes);
     
@@ -163,15 +163,24 @@ public sealed class Class : AggregateRoot
         AttendanceStatus status,
         string notes)
     {
+        #region Checking this Attendace exist
+        
         var attendance = _attendances
             .FirstOrDefault(a => a.Id == attendanceId);
-        if (attendance == null)
+        if (attendance is null)
         {
             return Result.Failure<Attendance>(
                 DomainErrors.Attendance.NotFound(attendanceId));
         }
+        
+        #endregion
+        
+        #region Update this Attendance
     
         attendance.UpdateStatus(status, notes);
+        
+        #endregion
+        
         return Result.Success(attendance);
     }
     
