@@ -38,13 +38,5 @@ public interface IClassRepository : IRepository<Class>
     /// <param name="classItem">The class entity to remove.</param>
     void Remove(Class classItem);
 
-    /// <summary>
-    /// Retrieves the IDs of students related to the groups of a specific class.
-    /// </summary>
-    /// <param name="classId">The unique identifier of the class.</param>
-    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
-    /// <returns>A task that represents the asynchronous operation, containing the list of student IDs.</returns>
-    Task<List<Guid>> GetGroupStudentIds(Guid classId, CancellationToken cancellationToken = default);
-    
     Task<List<Class>> GetBySubjectIdAsync(Guid subjectId, CancellationToken cancellationToken = default);
 }
