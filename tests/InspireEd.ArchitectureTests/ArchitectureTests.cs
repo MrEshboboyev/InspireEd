@@ -1,9 +1,4 @@
-﻿using NetArchTest.Rules;
-using Xunit;
-using FluentAssertions;
-
-
-namespace InspireEd.ArchitectureTests;
+﻿namespace InspireEd.ArchitectureTests;
 
 public class ArchitectureTests
 {
@@ -18,7 +13,7 @@ public class ArchitectureTests
     public void Domain_Should_Not_HaveDependencyOnOtherObjects()
     {
         // Arrange
-        var assembly = typeof(Domain.AssemblyReference).Assembly;
+        var assembly = typeof(InspireEd.Domain.AssemblyReference).Assembly;
         
         var otherProjects = new[]
         {
