@@ -39,7 +39,7 @@ public class ArchitectureTests
     public void Application_Should_Not_HaveDependencyOnOtherObjects()
     {
         // Arrange
-        var assembly = typeof(Application.AssemblyReference).Assembly;
+        var assembly = typeof(InspireEd.Application.AssemblyReference).Assembly;
 
         var otherProjects = new[]
         {
@@ -64,7 +64,7 @@ public class ArchitectureTests
     public void Handlers_Should_Have_DependencyOnDomain()
     {
         // Arrange
-        var assembly = typeof(Application.AssemblyReference).Assembly;
+        var assembly = typeof(InspireEd.Application.AssemblyReference).Assembly;
         
         // Act
         var testResult = Types
@@ -83,7 +83,7 @@ public class ArchitectureTests
     public void Infrastructure_Should_Not_HaveDependencyOnOtherObjects()
     {
         // Arrange
-        var assembly = typeof(Infrastructure.AssemblyReference).Assembly;
+        var assembly = typeof(InspireEd.Infrastructure.AssemblyReference).Assembly;
 
         var otherProjects = new[]
         {

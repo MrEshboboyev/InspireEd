@@ -2,7 +2,7 @@
 
 namespace InspireEd.Application.Subjects.Commands.CreateSubject;
 
-public class CreateSubjectCommandValidator : AbstractValidator<CreateSubjectCommand>
+internal class CreateSubjectCommandValidator : AbstractValidator<CreateSubjectCommand>
 {
     public CreateSubjectCommandValidator()
     {

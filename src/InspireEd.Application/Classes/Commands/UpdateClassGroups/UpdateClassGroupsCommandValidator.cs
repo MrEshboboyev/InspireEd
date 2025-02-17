@@ -2,7 +2,7 @@
 
 namespace InspireEd.Application.Classes.Commands.UpdateClassGroups;
 
-public class UpdateClassGroupsCommandValidator : AbstractValidator<UpdateClassGroupsCommand>
+internal class UpdateClassGroupsCommandValidator : AbstractValidator<UpdateClassGroupsCommand>
 {
     public UpdateClassGroupsCommandValidator()
     {

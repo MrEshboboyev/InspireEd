@@ -2,7 +2,7 @@
 
 namespace InspireEd.Application.Subjects.Commands.RenameSubject;
 
-public class RenameSubjectCommandValidator : AbstractValidator<RenameSubjectCommand>
+internal class RenameSubjectCommandValidator : AbstractValidator<RenameSubjectCommand>
 {
     public RenameSubjectCommandValidator()
     {

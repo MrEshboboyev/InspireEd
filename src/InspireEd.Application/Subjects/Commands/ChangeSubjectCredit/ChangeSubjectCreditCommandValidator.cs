@@ -2,7 +2,7 @@
 
 namespace InspireEd.Application.Subjects.Commands.ChangeSubjectCredit;
 
-public class ChangeSubjectCreditCommandValidator : AbstractValidator<ChangeSubjectCreditCommand>
+internal class ChangeSubjectCreditCommandValidator : AbstractValidator<ChangeSubjectCreditCommand>
 {
     public ChangeSubjectCreditCommandValidator()
     {

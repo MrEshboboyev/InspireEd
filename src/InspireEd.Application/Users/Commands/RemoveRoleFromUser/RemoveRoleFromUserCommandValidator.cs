@@ -2,7 +2,7 @@ using FluentValidation;
 
 namespace InspireEd.Application.Users.Commands.RemoveRoleFromUser;
 
-public class RemoveRoleFromUserCommandValidator : AbstractValidator<RemoveRoleFromUserCommand>
+internal class RemoveRoleFromUserCommandValidator : AbstractValidator<RemoveRoleFromUserCommand>
 {
     public RemoveRoleFromUserCommandValidator()
     {

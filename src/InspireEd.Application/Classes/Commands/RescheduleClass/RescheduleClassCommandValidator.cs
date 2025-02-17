@@ -2,7 +2,7 @@
 
 namespace InspireEd.Application.Classes.Commands.RescheduleClass;
 
-public class RescheduleClassCommandValidator : AbstractValidator<RescheduleClassCommand>
+internal class RescheduleClassCommandValidator : AbstractValidator<RescheduleClassCommand>
 {
     public RescheduleClassCommandValidator()
     {

@@ -2,7 +2,7 @@
 
 namespace InspireEd.Application.Subjects.Commands.UpdateSubject;
 
-public class UpdateSubjectCommandValidator : AbstractValidator<UpdateSubjectCommand>
+internal class UpdateSubjectCommandValidator : AbstractValidator<UpdateSubjectCommand>
 {
     public UpdateSubjectCommandValidator()
     {
