@@ -21,6 +21,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InspireEd.Presentation", "s
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InspireEd.Application.UnitTests", "tests\InspireEd.Application.UnitTests\InspireEd.Application.UnitTests.csproj", "{77A331F9-AA1C-4801-8A73-2ED1AE0F1F83}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InspireEd.ArchitectureTests", "tests\InspireEd.ArchitectureTests\InspireEd.ArchitectureTests.csproj", "{84352062-CD68-4D3A-BFDD-1FE0726F698B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -55,12 +57,13 @@ Global
 		{77A331F9-AA1C-4801-8A73-2ED1AE0F1F83}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{77A331F9-AA1C-4801-8A73-2ED1AE0F1F83}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{77A331F9-AA1C-4801-8A73-2ED1AE0F1F83}.Release|Any CPU.Build.0 = Release|Any CPU
+		{84352062-CD68-4D3A-BFDD-1FE0726F698B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{84352062-CD68-4D3A-BFDD-1FE0726F698B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{84352062-CD68-4D3A-BFDD-1FE0726F698B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{84352062-CD68-4D3A-BFDD-1FE0726F698B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {5C6844D3-7483-4EBA-ACB8-E0972FD70F75}
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{27BB1EDF-1B36-4E59-BB31-794DE0021882} = {B5A6467A-9719-438B-8B43-4D37C277DD39}
@@ -70,5 +73,9 @@ Global
 		{7054E66F-3B6A-4776-87FC-82B0ACFCEC63} = {B5A6467A-9719-438B-8B43-4D37C277DD39}
 		{22BB8D17-A93F-4B94-A35F-5CF37012A68B} = {B5A6467A-9719-438B-8B43-4D37C277DD39}
 		{77A331F9-AA1C-4801-8A73-2ED1AE0F1F83} = {9ACD6DC3-46A8-4924-96DC-71772A15721A}
+		{84352062-CD68-4D3A-BFDD-1FE0726F698B} = {9ACD6DC3-46A8-4924-96DC-71772A15721A}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {5C6844D3-7483-4EBA-ACB8-E0972FD70F75}
 	EndGlobalSection
 EndGlobal
