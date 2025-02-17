@@ -11,7 +11,7 @@ public class DomainTests : BaseTest
     {
         var result = Types.InAssembly(DomainAssembly)
             .That()
-            .ImplementInterface(typeof(IDomainEvent))
+            .Inherit(typeof(DomainEvent))
             .Should()
             .BeSealed()
             .GetResult();
