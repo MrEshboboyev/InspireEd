@@ -20,7 +20,8 @@ public class ApplicationServiceInstaller : IServiceInstaller
     public void Install(IServiceCollection services, IConfiguration configuration)
     {
         // Add MediatR services for handling commands and queries
-        services.AddMediatR(AssemblyReference.Assembly);
+        services.AddMediatR(cfg 
+            => cfg.RegisterServicesFromAssembly(AssemblyReference.Assembly));
 
         // Add validation behavior to the pipeline
         services.AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationPipelineBehavior<,>));
