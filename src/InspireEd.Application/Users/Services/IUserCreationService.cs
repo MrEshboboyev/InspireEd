@@ -9,6 +9,6 @@ public interface IUserCreationService
         string lastName,
         string email,
         string password,
-        string? roleName,
+        string roleName,
         CancellationToken cancellationToken);
 }

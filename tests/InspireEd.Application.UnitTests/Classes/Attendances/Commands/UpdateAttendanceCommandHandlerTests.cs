@@ -80,7 +80,7 @@ public class UpdateAttendanceCommandHandlerTests
 
         _classRepositoryMock
             .Setup(repo => repo.GetByIdWithAttendancesAsync(classId, It.IsAny<CancellationToken>()))
-            .ReturnsAsync((Class?)null); // Simulate class not found
+            .ReturnsAsync((Class)null); // Simulate class not found
 
         // Act
         var result = await _handler.Handle(command, CancellationToken.None);

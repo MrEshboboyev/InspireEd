@@ -76,7 +76,7 @@ public class DeleteAttendanceCommandHandlerTests
 
         _classRepositoryMock
             .Setup(repo => repo.GetByIdWithAttendancesAsync(classId, It.IsAny<CancellationToken>()))
-            .ReturnsAsync((Class?)null);
+            .ReturnsAsync((Class)null);
 
         // Act
         var result = await _handler.Handle(command, CancellationToken.None);

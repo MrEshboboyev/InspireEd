@@ -20,7 +20,7 @@ public class UserCreationService(
         string lastName,
         string email,
         string password,
-        string? roleName,
+        string roleName,
         CancellationToken cancellationToken)
     {
         #region Checking Email is Unique

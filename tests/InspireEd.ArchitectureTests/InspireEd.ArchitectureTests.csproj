@@ -1,39 +1,32 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net10.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-    <IsPackable>false</IsPackable>
-  </PropertyGroup>
+	<ItemGroup>
+		<PackageReference Include="coverlet.collector">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="FluentAssertions"/>
+		<PackageReference Include="Microsoft.NET.Test.Sdk"/>
+		<PackageReference Include="NetArchTest.Rules"/>
+		<PackageReference Include="TngTech.ArchUnitNET.xUnit"/>
+		<PackageReference Include="xunit"/>
+		<PackageReference Include="xunit.runner.visualstudio">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+	</ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="coverlet.collector">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="FluentAssertions"/>
-    <PackageReference Include="Microsoft.NET.Test.Sdk"/>
-    <PackageReference Include="NetArchTest.Rules"/>
-    <PackageReference Include="TngTech.ArchUnitNET.xUnit"/>
-    <PackageReference Include="xunit"/>
-    <PackageReference Include="xunit.runner.visualstudio">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\..\src\InspireEd.Application\InspireEd.Application.csproj" />
+		<ProjectReference Include="..\..\src\InspireEd.App\InspireEd.App.csproj" />
+		<ProjectReference Include="..\..\src\InspireEd.Domain\InspireEd.Domain.csproj" />
+		<ProjectReference Include="..\..\src\InspireEd.Infrastructure\InspireEd.Infrastructure.csproj" />
+		<ProjectReference Include="..\..\src\InspireEd.Persistence\InspireEd.Persistence.csproj" />
+		<ProjectReference Include="..\..\src\InspireEd.Presentation\InspireEd.Presentation.csproj" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\src\InspireEd.Application\InspireEd.Application.csproj" />
-    <ProjectReference Include="..\..\src\InspireEd.App\InspireEd.App.csproj" />
-    <ProjectReference Include="..\..\src\InspireEd.Domain\InspireEd.Domain.csproj" />
-    <ProjectReference Include="..\..\src\InspireEd.Infrastructure\InspireEd.Infrastructure.csproj" />
-    <ProjectReference Include="..\..\src\InspireEd.Persistence\InspireEd.Persistence.csproj" />
-    <ProjectReference Include="..\..\src\InspireEd.Presentation\InspireEd.Presentation.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Using Include="Xunit" />
-  </ItemGroup>
+	<ItemGroup>
+		<Using Include="Xunit" />
+	</ItemGroup>
 
 </Project>

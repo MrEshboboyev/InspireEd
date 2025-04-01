@@ -80,7 +80,7 @@ public class UpdateClassCommandHandlerTests
 
         _classRepositoryMock
             .Setup(repo => repo.GetByIdAsync(classId, It.IsAny<CancellationToken>()))
-            .ReturnsAsync((Class?)null);
+            .ReturnsAsync((Class)null);
 
         // Act
         var result = await _handler.Handle(command, CancellationToken.None);

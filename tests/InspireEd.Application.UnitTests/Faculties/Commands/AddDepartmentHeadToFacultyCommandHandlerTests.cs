@@ -81,7 +81,7 @@ public class AddDepartmentHeadToFacultyCommandHandlerTests
 
         _facultyRepositoryMock
             .Setup(repo => repo.GetByIdAsync(facultyId, It.IsAny<CancellationToken>()))
-            .ReturnsAsync((Faculty?)null);
+            .ReturnsAsync((Faculty)null);
 
         // Act
         var result = await _handler.Handle(command, CancellationToken.None);
@@ -111,7 +111,7 @@ public class AddDepartmentHeadToFacultyCommandHandlerTests
 
         _userRepositoryMock
             .Setup(repo => repo.GetByIdWithRolesAsync(departmentHeadId, It.IsAny<CancellationToken>()))
-            .ReturnsAsync((User?)null);
+            .ReturnsAsync((User)null);
 
         // Act
         var result = await _handler.Handle(command, CancellationToken.None);

@@ -126,7 +126,7 @@ public class CreateClassCommandHandlerTests
 
         _subjectRepositoryMock
             .Setup(repo => repo.GetByIdAsync(subjectId, It.IsAny<CancellationToken>()))
-            .ReturnsAsync((Subject?)null);
+            .ReturnsAsync((Subject)null);
 
         // Act
         var result = await _handler.Handle(command, CancellationToken.None);
@@ -170,7 +170,7 @@ public class CreateClassCommandHandlerTests
 
         _userRepositoryMock
             .Setup(repo => repo.GetByIdAsync(teacherId, It.IsAny<CancellationToken>()))
-            .ReturnsAsync((User?)null);
+            .ReturnsAsync((User)null);
 
         // Act
         var result = await _handler.Handle(command, CancellationToken.None);

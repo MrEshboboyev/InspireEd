@@ -64,7 +64,7 @@ public class RemoveGroupFromFacultyCommandHandlerTests
 
         _facultyRepositoryMock
             .Setup(repo => repo.GetByIdWithGroupsAsync(facultyId, It.IsAny<CancellationToken>()))
-            .ReturnsAsync((Faculty?)null);
+            .ReturnsAsync((Faculty)null);
 
         // Act
         var result = await _handler.Handle(command, CancellationToken.None);

@@ -1,24 +1,18 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net10.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
+	<ItemGroup>
+		<PackageReference Include="Microsoft.AspNetCore.Http"/>
+		<PackageReference Include="Microsoft.AspNetCore.Mvc"/>
+	</ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Http"/>
-    <PackageReference Include="Microsoft.AspNetCore.Mvc"/>
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\InspireEd.Application\InspireEd.Application.csproj" />
+		<ProjectReference Include="..\InspireEd.Domain\InspireEd.Domain.csproj" />
+		<ProjectReference Include="..\InspireEd.Infrastructure\InspireEd.Infrastructure.csproj" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\InspireEd.Application\InspireEd.Application.csproj" />
-    <ProjectReference Include="..\InspireEd.Domain\InspireEd.Domain.csproj" />
-    <ProjectReference Include="..\InspireEd.Infrastructure\InspireEd.Infrastructure.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Contracts\DepartmentHeads\Faculties\" />
-  </ItemGroup>
+	<ItemGroup>
+		<Folder Include="Contracts\DepartmentHeads\Faculties\" />
+	</ItemGroup>
 
 </Project>

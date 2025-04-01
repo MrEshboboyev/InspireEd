@@ -1,22 +1,16 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net10.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>disable</Nullable>
-  </PropertyGroup>
+	<ItemGroup>
+		<PackageReference Include="Microsoft.AspNetCore.Authorization"/>
+		<PackageReference Include="Polly"/>
+		<PackageReference Include="Quartz"/>
+		<PackageReference Include="System.IdentityModel.Tokens.Jwt"/>
+	</ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Authorization"/>
-    <PackageReference Include="Polly"/>
-    <PackageReference Include="Quartz"/>
-    <PackageReference Include="System.IdentityModel.Tokens.Jwt"/>
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\InspireEd.Application\InspireEd.Application.csproj" />
-    <ProjectReference Include="..\InspireEd.Domain\InspireEd.Domain.csproj" />
-    <ProjectReference Include="..\InspireEd.Persistence\InspireEd.Persistence.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\InspireEd.Application\InspireEd.Application.csproj" />
+		<ProjectReference Include="..\InspireEd.Domain\InspireEd.Domain.csproj" />
+		<ProjectReference Include="..\InspireEd.Persistence\InspireEd.Persistence.csproj" />
+	</ItemGroup>
 
 </Project>
