@@ -40,6 +40,11 @@ public sealed class Email : ValueObject
         {
             return Result.Failure<Email>(DomainErrors.Email.Empty);
         }
+
+        if (email.Length < 5)
+        {
+            return Result.Failure<Email>(DomainErrors.Email.TooShort);
+        }
         
         if (email.Split('@').Length != 2)
         {

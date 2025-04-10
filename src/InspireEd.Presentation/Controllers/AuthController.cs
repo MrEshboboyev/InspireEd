@@ -1,9 +1,4 @@
-﻿using InspireEd.Application.Users.Commands.ChangeUserPassword;
-using InspireEd.Application.Users.Commands.CreateUser;
-using InspireEd.Application.Users.Commands.Login;
-using InspireEd.Application.Users.Queries.GetUserById;
-using InspireEd.Domain.Users.Enums;
-using InspireEd.Infrastructure.Authentication;
+﻿using InspireEd.Application.Users.Commands.Login;
 using InspireEd.Presentation.Abstractions;
 using InspireEd.Presentation.Contracts.Users;
 using MediatR;

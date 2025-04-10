@@ -1,7 +1,8 @@
-﻿using InspireEd.Application.Abstractions.Security;
-using InspireEd.Application.Abstractions.Messaging;
+﻿using InspireEd.Application.Abstractions.Messaging;
+using InspireEd.Application.Abstractions.Security;
 using InspireEd.Domain.Errors;
 using InspireEd.Domain.Shared;
+using InspireEd.Domain.Users.Entities;
 using InspireEd.Domain.Users.Repositories;
 using InspireEd.Domain.Users.ValueObjects;
 
@@ -25,39 +26,39 @@ internal sealed class LoginCommandHandler(
         CancellationToken cancellationToken)
     {
         var (email, password) = request;
-        
-        #region Checking user exists by this email
 
-        // Validate and create the Email value object
-        Result<Email> createEmailResult = Email.Create(email);
-        if (createEmailResult.IsFailure)
-        {
-            return Result.Failure<string>(
-                createEmailResult.Error);
-        }
+        // Use LINQ-style query syntax for the login flow
+        return await (
+            from emailValue in Email.Create(email)
+            from user in GetUserAsync(emailValue, cancellationToken)
+            from verifiedUser in VerifyPassword(user, password)
+            from token in GenerateTokenAsync(verifiedUser)
+            select token
+        );
+    }
 
-        // Retrieve the user by email
-        var user = await userRepository.GetByEmailAsync(
-            createEmailResult.Value,
-            cancellationToken);
+    // Helper methods to facilitate the LINQ approach
 
-        // Verify if user exists and the password matches
-        if (user is null || !passwordHasher.Verify(password, user.PasswordHash))
-        {
-            return Result.Failure<string>(
-                DomainErrors.User.InvalidCredentials);
-        }
+    private async Task<Result<User>> GetUserAsync(Email email, CancellationToken cancellationToken)
+    {
+        var user = await userRepository.GetByEmailAsync(email, cancellationToken);
+        return user is not null
+            ? Result.Success(user)
+            : Result.Failure<User>(DomainErrors.User.InvalidCredentials);
+    }
 
-        #endregion
+    private Task<Result<User>> VerifyPassword(User user, string password)
+    {
+        var result = passwordHasher.Verify(password, user.PasswordHash)
+            ? Result.Success(user)
+            : Result.Failure<User>(DomainErrors.User.InvalidCredentials);
 
-        #region Generate token
+        return Task.FromResult(result);
+    }
 
-        // Generate a JWT token for the authenticated user
+    private async Task<Result<string>> GenerateTokenAsync(User user)
+    {
         var token = await jwtProvider.GenerateAsync(user);
-
-        #endregion
-
-        // Return the generated token
         return Result.Success(token);
     }
 }
